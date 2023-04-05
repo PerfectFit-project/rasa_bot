@@ -6,18 +6,7 @@ intents:
 - start_session1
 - confirm_purpose
 - confirm_usage
-- confirm_intro_session1
-
-### Middle sessions (2, 3, 4)
-- start_session_mid
-- mood_curr_session_mid
-
-### Not-first sessions (2, 3, 4, 5)
-- confirm_intro_session_notfirst
-
-### Last session
-- start_session_last
-- mood_curr_session_last
+- confirm_intro_session
 
 ### activity experience and dropout
 - effort_answer
@@ -26,7 +15,10 @@ intents:
 - confirm_dropout
 
 ### states
-- confirm_state_1
+- confirm_state_PMT_V
+- confirm_state_PMT_S
+- confirm_state_PMT_RE
+- confirm_state_PMT_SE
 
 # propose new activity
 - confirm_activity_read
@@ -39,12 +31,24 @@ entities:
 - session_num:
     influence_conversation: false
 
+- user_gender:
+    influence_conversation: false
+
 - mood:
     influence_conversation: false
 - mood_quadrant:
     influence_conversation: false
 
-- state_1:
+- state_V:
+    influence_conversation: false
+
+- state_S:
+    influence_conversation: false
+
+- state_RE:
+    influence_conversation: false
+
+- state_SE:
     influence_conversation: false
 
 - effort:
@@ -69,6 +73,13 @@ slots:
     mappings:
     - type: from_entity
       entity: session_num
+  user_gender_set:
+    type: text
+    initial_value: 'she/her'
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: user_gender
   mood:
     type: text
     initial_value: ''
@@ -106,13 +117,37 @@ slots:
     - type: custom
         
   ### states
-  state_1:
+  state_V:
     type: text
     initial_value: ''
     influence_conversation: false
     mappings:
     - type: from_entity
-      entity: state_1
+      entity: state_V
+
+  state_S:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: state_S   
+
+  state_RE:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: state_RE
+
+  state_SE:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: state_SE    
 
       
   ### activity experience
@@ -161,7 +196,7 @@ responses:
 
   ### Intro first session
   utter_greet_first_time:
-  - text: "Hey there, I'm your virtual coach Mel."
+  - text: "Hey there, I'm your virtual coach Sam."
   utter_ask_user_name_slot:
   - text: "How may I call you?"
   utter_confirm_name:
@@ -191,143 +226,26 @@ responses:
     - payload: /confirm_usage
       title: "Nice, sounds easy enough!"
     text: "Most of the time, you can just click on one of the buttons like you already did. If no buttons appear, just make use of the text field below."
-  utter_intro_session1_1:
+  utter_intro_session_1:
   - text: "Now, let me tell you what we will do in this session."
-  utter_intro_session1_2:
-  - text: "First, I'll ask you a few questions to learn about your current situation with regard to preparing for quitting smoking."
-  utter_intro_session1_3:
-  - text: "Next, I'll recommend you a preparatory activity to do after this and before the next session, which you'll get invited to about 2 days from now."
-  utter_intro_session1_4:
+  utter_intro_session_2:
+  - text: "First, I'll ask you a question to learn about your current situation with regard to preparing for quitting smoking."
+  utter_intro_session_3:
+  - text: "Next, I'll recommend you to read a text, watch a video or do an activity."
+  utter_intro_session_4:
   - text: "And in the end, I'll briefly tell you about our next session."
-  utter_intro_session1_5:
-  - text: "And don't worry, I'll also send you your activity in a message on Prolific right after this session ends."
-  utter_intro_session1_6:
-  - text: "Please note that doing your recommended activity after this session is voluntary and does not impact your payment."
-  utter_intro_session1_7:
+  utter_intro_session_5:
+  - text: "We will repeat this a few times. I will let you know when it's the end to close the window."
+  utter_intro_session_6:
+  - text: "Please note that doing your recommended activity is voluntary and does not impact your payment."
+  utter_intro_session_7:
   - buttons:
-    - payload : /confirm_intro_session1
+    - payload : /confirm_intro_session
       title: "Now"
-    text: "Let me know when you've finished reading our plan for today's session."
+    text: "Let me know when you've finished reading our plan of the session."
     
 
-  ### Greeting later sessions
-  utter_greet_repeat:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "Hi {user_name_slot_not_first}, nice to see you again!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "Hello {user_name_slot_not_first}, welcome back!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "Hello, it's great to see you again {user_name_slot_not_first}!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5"
-      text: "Hi {user_name_slot_not_first}, I'm happy to see you again!"
 
-    - text: "Hey there, good to see you again!"
-    - text: "Welcome back! It's good to see you again."
-    
-    
-  ### Intro middle sessions
-  utter_intro_session_mid_1:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "Before we begin, let me quickly give you an overview of what this session looks like."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "Before we dive into the session, I want to take a moment to give you an overview of what it entails."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "Let me start by providing you with a quick summary of what you can expect in this session before we get started."
-  utter_intro_session_mid_2:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "I'll first ask you about your experience, if you have any, with your activity from last time."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "I'd again like to start off by asking about your experience, if any, with the activity from our last session."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "First we'll take a look at your experience, if any, with the activity I gave you in our last session."
-  utter_intro_session_mid_3:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "Then I'll again ask you a few questions to learn about your current situation regarding preparing for quitting smoking."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "Moving on, I'll ask you a few questions to get a better understanding of where you're at in terms of preparing to quit smoking."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "Just like last time, I'll then ask you a few questions to understand your current situation and preparation for quitting smoking."
-  utter_intro_session_mid_4:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "And finally, I'll recommend you a new preparatory activity to do after this and before the next session, which you'll again get invited to about 2 days from now."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "And then I'll give you a new preparatory activity for after this and before the next session."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "I'll then use your answers to choose a new preparatory activity for you."    
-  utter_intro_session_mid_5:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "Let me know when you've finished reading this session overview."
-      buttons:
-      - payload: /confirm_intro_session_notfirst
-        title: "I've finished"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "Once you're done reading this session overview, please give me a heads up."
-      buttons:
-      - payload: /confirm_intro_session_notfirst
-        title: "I'm done"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "Kindly let me know when you've finished going through this session overview."
-      buttons:
-      - payload: /confirm_intro_session_notfirst
-        title: "I've finished now"
-          
   ### Intro last session
   utter_intro_session_last_1:
   - text: "So what are we going to do in our last session?"
@@ -632,32 +550,79 @@ responses:
     
   ### Ask state questions
   utter_state_question_intro:
-  - text: "Now I will ask you a question about your current situation regarding preparing for quitting smoking."
-  utter_state_question_1:
+  - text: "Now I will ask you to rate the following statement based on your current situation regarding preparing for quitting smoking."
+
+  utter_state_question_PMT_V:
   - buttons:
-    - payload: /confirm_state_1{"state_1":"-5"}
-      title: "-5 (make it a lot harder)"
-    - payload: /confirm_state_1{"state_1":"-4"}
-      title: "-4"
-    - payload: /confirm_state_1{"state_1":"-3"}
-      title: "-3"
-    - payload: /confirm_state_1{"state_1":"-2"}
-      title: "-2"
-    - payload: /confirm_state_1{"state_1":"-1"}
-      title: "-1"
-    - payload: /confirm_state_1{"state_1":"0"}
-      title: "0 (neutral)"
-    - payload: /confirm_state_1{"state_1":"1"}
-      title: "1"
-    - payload: /confirm_state_1{"state_1":"2"}
+    - payload: /confirm_state_PMT_V{"state_V":"1"}
+      title: "1 (definitely disagree)"
+    - payload: /confirm_state_PMT_V{"state_V":"2"}
       title: "2"
-    - payload: /confirm_state_1{"state_1":"3"}
+    - payload: /confirm_state_PMT_V{"state_V":"3"}
       title: "3"
-    - payload: /confirm_state_1{"state_1":"4"}
+    - payload: /confirm_state_PMT_V{"state_V":"4"}
       title: "4"
-    - payload: /confirm_state_1{"state_1":"5"}
-      title: "5 (make it a lot easier)"
-    text: "How do you think do self-confidence and motivation affect quitting smoking?"
+    - payload: /confirm_state_PMT_V{"state_V":"5"}
+      title: "5"
+    - payload: /confirm_state_PMT_V{"state_V":"6"}
+      title: "6"
+    - payload: /confirm_state_PMT_V{"state_V":"7"}
+      title: "7 (definitely agree)"
+    text: "[Vulnerability item question]"
+
+  utter_state_question_PMT_S:
+  - buttons:
+    - payload: /confirm_state_PMT_S{"state_S":"1"}
+      title: "1 (definitely disagree)"
+    - payload: /confirm_state_PMT_S{"state_S":"2"}
+      title: "2"
+    - payload: /confirm_state_PMT_S{"state_S":"3"}
+      title: "3"
+    - payload: /confirm_state_PMT_S{"state_S":"4"}
+      title: "4"
+    - payload: /confirm_state_PMT_S{"state_S":"5"}
+      title: "5"
+    - payload: /confirm_state_PMT_S{"state_S":"6"}
+      title: "6"
+    - payload: /confirm_state_PMT_S{"state_S":"7"}
+      title: "7 (definitely agree)"
+    text: "[Severity item question]"
+
+  utter_state_question_PMT_RE:
+  - buttons:
+    - payload: /confirm_state_PMT_RE{"state_RE":"1"}
+      title: "1 (definitely disagree)"
+    - payload: /confirm_state_PMT_RE{"state_RE":"2"}
+      title: "2"
+    - payload: /confirm_state_PMT_RE{"state_RE":"3"}
+      title: "3"
+    - payload: /confirm_state_PMT_RE{"state_RE":"4"}
+      title: "4"
+    - payload: /confirm_state_PMT_RE{"state_RE":"5"}
+      title: "5"
+    - payload: /confirm_state_PMT_RE{"state_RE":"6"}
+      title: "6"
+    - payload: /confirm_state_PMT_RE{"state_RE":"7"}
+      title: "7 (definitely agree)"
+    text: "[Response efficacy item question]"
+
+  utter_state_question_PMT_SE:
+  - buttons:
+    - payload: /confirm_state_PMT_SE{"state_SE":"1"}
+      title: "1 (definitely disagree)"
+    - payload: /confirm_state_PMT_SE{"state_SE":"2"}
+      title: "2"
+    - payload: /confirm_state_PMT_SE{"state_SE":"3"}
+      title: "3"
+    - payload: /confirm_state_PMT_SE{"state_SE":"4"}
+      title: "4"
+    - payload: /confirm_state_PMT_SE{"state_SE":"5"}
+      title: "5"
+    - payload: /confirm_state_PMT_SE{"state_SE":"6"}
+      title: "6"
+    - payload: /confirm_state_PMT_SE{"state_SE":"7"}
+      title: "7 (definitely agree)"
+    text: "[Self efficacy item question]"
   
   ### Propose activity
   utter_transition_new_activity:
@@ -690,6 +655,7 @@ responses:
     - text: "Now let's turn our attention to an activity that can benefit your current situation."
     - text: "Let's move on to an activity that can support you in your efforts to prepare for quitting smoking."
     - text: "Next, we'll take a closer look at an activity that can assist you in preparing to quit smoking."
+  
   utter_propose_new_activity_intro:
     - condition:
         - type: slot
@@ -718,6 +684,7 @@ responses:
       text: "I expect that this new activity is helpful for you:"
       
     - text: "I think that this activity would be useful for you:"
+    
   utter_activity:
     - text: "I suggest you visualize your desired future self."
   utter_activity_read:
@@ -1006,260 +973,7 @@ responses:
     - payload: /mood_curr_session1{"mood":"neutral", "mood_quadrant":"neutral"}
       title: Neutral
     text: "How are you feeling today?"
-  utter_ask_for_mood_session_mid:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2" 
-      text: "Last time you felt {mood_prev_session}. How are you feeling today?"
-      buttons:
-      - payload: /mood_curr_session_mid{"mood":"satisfied", "mood_quadrant":"ha_hv"}
-        title: Satisfied
-      - payload: /mood_curr_session_mid{"mood":"pleased", "mood_quadrant":"ha_hv"}
-        title: Pleased
-      - payload: /mood_curr_session_mid{"mood":"delighted", "mood_quadrant":"ha_hv"}
-        title: Delighted
-      - payload: /mood_curr_session_mid{"mood":"happy", "mood_quadrant":"ha_hv"}
-        title: Happy
-      - payload: /mood_curr_session_mid{"mood":"glad", "mood_quadrant":"ha_hv"}
-        title: Glad
-      - payload: /mood_curr_session_mid{"mood":"excited", "mood_quadrant":"ha_hv"}
-        title: Excited
-      - payload: /mood_curr_session_mid{"mood":"aroused", "mood_quadrant":"ha_hv"}
-        title: Aroused
-      - payload: /mood_curr_session_mid{"mood":"astonished", "mood_quadrant":"ha_hv"}
-        title: Astonished
-      - payload: /mood_curr_session_mid{"mood":"alarmed", "mood_quadrant":"ha_lv"}
-        title: Alarmed
-      - payload: /mood_curr_session_mid{"mood":"angry", "mood_quadrant":"ha_lv"}
-        title: Angry
-      - payload: /mood_curr_session_mid{"mood":"annoyed", "mood_quadrant":"ha_lv"}
-        title: Annoyed
-      - payload: /mood_curr_session_mid{"mood":"distressed", "mood_quadrant":"ha_lv"}
-        title: Distressed
-      - payload: /mood_curr_session_mid{"mood":"afraid", "mood_quadrant":"ha_lv"}
-        title: Afraid
-      - payload: /mood_curr_session_mid{"mood":"frustrated", "mood_quadrant":"ha_lv"}
-        title: Frustrated
-      - payload: /mood_curr_session_mid{"mood":"miserable", "mood_quadrant":"la_lv"}
-        title: Miserable
-      - payload: /mood_curr_session_mid{"mood":"depressed", "mood_quadrant":"la_lv"}
-        title: Depressed
-      - payload: /mood_curr_session_mid{"mood":"gloomy", "mood_quadrant":"la_lv"}
-        title: Gloomy
-      - payload: /mood_curr_session_mid{"mood":"tense", "mood_quadrant":"la_lv"}
-        title: Tense
-      - payload: /mood_curr_session_mid{"mood":"droopy", "mood_quadrant":"la_lv"}
-        title: Droopy
-      - payload: /mood_curr_session_mid{"mood":"sad", "mood_quadrant":"la_lv"}
-        title: Sad
-      - payload: /mood_curr_session_mid{"mood":"tired", "mood_quadrant":"la_lv"}
-        title: Tired
-      - payload: /mood_curr_session_mid{"mood":"bored", "mood_quadrant":"la_lv"}
-        title: Bored
-      - payload: /mood_curr_session_mid{"mood":"sleepy", "mood_quadrant":"la_lv"}
-        title: Sleepy
-      - payload: /mood_curr_session_mid{"mood":"serene", "mood_quadrant":"la_hv"}
-        title: Serene
-      - payload: /mood_curr_session_mid{"mood":"relaxed", "mood_quadrant":"la_hv"}
-        title: Relaxed
-      - payload: /mood_curr_session_mid{"mood":"calm", "mood_quadrant":"la_hv"}
-        title: Calm
-      - payload: /mood_curr_session_mid{"mood":"tranquil", "mood_quadrant":"la_hv"}
-        title: Tranquil
-      - payload: /mood_curr_session_mid{"mood":"content", "mood_quadrant":"la_hv"}
-        title: Content
-      - payload: /mood_curr_session_mid{"mood":"neutral", "mood_quadrant":"neutral"}
-        title: Neutral
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3" 
-      text: "How are you feeling today?"
-      buttons:
-        - payload: /mood_curr_session_mid{"mood":"satisfied", "mood_quadrant":"ha_hv"}
-          title: Satisfied
-        - payload: /mood_curr_session_mid{"mood":"pleased", "mood_quadrant":"ha_hv"}
-          title: Pleased
-        - payload: /mood_curr_session_mid{"mood":"delighted", "mood_quadrant":"ha_hv"}
-          title: Delighted
-        - payload: /mood_curr_session_mid{"mood":"happy", "mood_quadrant":"ha_hv"}
-          title: Happy
-        - payload: /mood_curr_session_mid{"mood":"glad", "mood_quadrant":"ha_hv"}
-          title: Glad
-        - payload: /mood_curr_session_mid{"mood":"excited", "mood_quadrant":"ha_hv"}
-          title: Excited
-        - payload: /mood_curr_session_mid{"mood":"aroused", "mood_quadrant":"ha_hv"}
-          title: Aroused
-        - payload: /mood_curr_session_mid{"mood":"astonished", "mood_quadrant":"ha_hv"}
-          title: Astonished
-        - payload: /mood_curr_session_mid{"mood":"alarmed", "mood_quadrant":"ha_lv"}
-          title: Alarmed
-        - payload: /mood_curr_session_mid{"mood":"angry", "mood_quadrant":"ha_lv"}
-          title: Angry
-        - payload: /mood_curr_session_mid{"mood":"annoyed", "mood_quadrant":"ha_lv"}
-          title: Annoyed
-        - payload: /mood_curr_session_mid{"mood":"distressed", "mood_quadrant":"ha_lv"}
-          title: Distressed
-        - payload: /mood_curr_session_mid{"mood":"afraid", "mood_quadrant":"ha_lv"}
-          title: Afraid
-        - payload: /mood_curr_session_mid{"mood":"frustrated", "mood_quadrant":"ha_lv"}
-          title: Frustrated
-        - payload: /mood_curr_session_mid{"mood":"miserable", "mood_quadrant":"la_lv"}
-          title: Miserable
-        - payload: /mood_curr_session_mid{"mood":"depressed", "mood_quadrant":"la_lv"}
-          title: Depressed
-        - payload: /mood_curr_session_mid{"mood":"gloomy", "mood_quadrant":"la_lv"}
-          title: Gloomy
-        - payload: /mood_curr_session_mid{"mood":"tense", "mood_quadrant":"la_lv"}
-          title: Tense
-        - payload: /mood_curr_session_mid{"mood":"droopy", "mood_quadrant":"la_lv"}
-          title: Droopy
-        - payload: /mood_curr_session_mid{"mood":"sad", "mood_quadrant":"la_lv"}
-          title: Sad
-        - payload: /mood_curr_session_mid{"mood":"tired", "mood_quadrant":"la_lv"}
-          title: Tired
-        - payload: /mood_curr_session_mid{"mood":"bored", "mood_quadrant":"la_lv"}
-          title: Bored
-        - payload: /mood_curr_session_mid{"mood":"sleepy", "mood_quadrant":"la_lv"}
-          title: Sleepy
-        - payload: /mood_curr_session_mid{"mood":"serene", "mood_quadrant":"la_hv"}
-          title: Serene
-        - payload: /mood_curr_session_mid{"mood":"relaxed", "mood_quadrant":"la_hv"}
-          title: Relaxed
-        - payload: /mood_curr_session_mid{"mood":"calm", "mood_quadrant":"la_hv"}
-          title: Calm
-        - payload: /mood_curr_session_mid{"mood":"tranquil", "mood_quadrant":"la_hv"}
-          title: Tranquil
-        - payload: /mood_curr_session_mid{"mood":"content", "mood_quadrant":"la_hv"}
-          title: Content
-        - payload: /mood_curr_session_mid{"mood":"neutral", "mood_quadrant":"neutral"}
-          title: Neutral
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4" 
-      text: "Last session you were feeling {mood_prev_session}. How are you feeling today?"
-      buttons:
-        - payload: /mood_curr_session_mid{"mood":"satisfied", "mood_quadrant":"ha_hv"}
-          title: Satisfied
-        - payload: /mood_curr_session_mid{"mood":"pleased", "mood_quadrant":"ha_hv"}
-          title: Pleased
-        - payload: /mood_curr_session_mid{"mood":"delighted", "mood_quadrant":"ha_hv"}
-          title: Delighted
-        - payload: /mood_curr_session_mid{"mood":"happy", "mood_quadrant":"ha_hv"}
-          title: Happy
-        - payload: /mood_curr_session_mid{"mood":"glad", "mood_quadrant":"ha_hv"}
-          title: Glad
-        - payload: /mood_curr_session_mid{"mood":"excited", "mood_quadrant":"ha_hv"}
-          title: Excited
-        - payload: /mood_curr_session_mid{"mood":"aroused", "mood_quadrant":"ha_hv"}
-          title: Aroused
-        - payload: /mood_curr_session_mid{"mood":"astonished", "mood_quadrant":"ha_hv"}
-          title: Astonished
-        - payload: /mood_curr_session_mid{"mood":"alarmed", "mood_quadrant":"ha_lv"}
-          title: Alarmed
-        - payload: /mood_curr_session_mid{"mood":"angry", "mood_quadrant":"ha_lv"}
-          title: Angry
-        - payload: /mood_curr_session_mid{"mood":"annoyed", "mood_quadrant":"ha_lv"}
-          title: Annoyed
-        - payload: /mood_curr_session_mid{"mood":"distressed", "mood_quadrant":"ha_lv"}
-          title: Distressed
-        - payload: /mood_curr_session_mid{"mood":"afraid", "mood_quadrant":"ha_lv"}
-          title: Afraid
-        - payload: /mood_curr_session_mid{"mood":"frustrated", "mood_quadrant":"ha_lv"}
-          title: Frustrated
-        - payload: /mood_curr_session_mid{"mood":"miserable", "mood_quadrant":"la_lv"}
-          title: Miserable
-        - payload: /mood_curr_session_mid{"mood":"depressed", "mood_quadrant":"la_lv"}
-          title: Depressed
-        - payload: /mood_curr_session_mid{"mood":"gloomy", "mood_quadrant":"la_lv"}
-          title: Gloomy
-        - payload: /mood_curr_session_mid{"mood":"tense", "mood_quadrant":"la_lv"}
-          title: Tense
-        - payload: /mood_curr_session_mid{"mood":"droopy", "mood_quadrant":"la_lv"}
-          title: Droopy
-        - payload: /mood_curr_session_mid{"mood":"sad", "mood_quadrant":"la_lv"}
-          title: Sad
-        - payload: /mood_curr_session_mid{"mood":"tired", "mood_quadrant":"la_lv"}
-          title: Tired
-        - payload: /mood_curr_session_mid{"mood":"bored", "mood_quadrant":"la_lv"}
-          title: Bored
-        - payload: /mood_curr_session_mid{"mood":"sleepy", "mood_quadrant":"la_lv"}
-          title: Sleepy
-        - payload: /mood_curr_session_mid{"mood":"serene", "mood_quadrant":"la_hv"}
-          title: Serene
-        - payload: /mood_curr_session_mid{"mood":"relaxed", "mood_quadrant":"la_hv"}
-          title: Relaxed
-        - payload: /mood_curr_session_mid{"mood":"calm", "mood_quadrant":"la_hv"}
-          title: Calm
-        - payload: /mood_curr_session_mid{"mood":"tranquil", "mood_quadrant":"la_hv"}
-          title: Tranquil
-        - payload: /mood_curr_session_mid{"mood":"content", "mood_quadrant":"la_hv"}
-          title: Content
-        - payload: /mood_curr_session_mid{"mood":"neutral", "mood_quadrant":"neutral"}
-          title: Neutral
-  utter_ask_for_mood_session_last:
-  - buttons:
-    - payload: /mood_curr_session_last{"mood":"satisfied", "mood_quadrant":"ha_hv"}
-      title: Satisfied
-    - payload: /mood_curr_session_last{"mood":"pleased", "mood_quadrant":"ha_hv"}
-      title: Pleased
-    - payload: /mood_curr_session_last{"mood":"delighted", "mood_quadrant":"ha_hv"}
-      title: Delighted
-    - payload: /mood_curr_session_last{"mood":"happy", "mood_quadrant":"ha_hv"}
-      title: Happy
-    - payload: /mood_curr_session_last{"mood":"glad", "mood_quadrant":"ha_hv"}
-      title: Glad
-    - payload: /mood_curr_session_last{"mood":"excited", "mood_quadrant":"ha_hv"}
-      title: Excited
-    - payload: /mood_curr_session_last{"mood":"aroused", "mood_quadrant":"ha_hv"}
-      title: Aroused
-    - payload: /mood_curr_session_last{"mood":"astonished", "mood_quadrant":"ha_hv"}
-      title: Astonished
-    - payload: /mood_curr_session_last{"mood":"alarmed", "mood_quadrant":"ha_lv"}
-      title: Alarmed
-    - payload: /mood_curr_session_last{"mood":"angry", "mood_quadrant":"ha_lv"}
-      title: Angry
-    - payload: /mood_curr_session_last{"mood":"annoyed", "mood_quadrant":"ha_lv"}
-      title: Annoyed
-    - payload: /mood_curr_session_last{"mood":"distressed", "mood_quadrant":"ha_lv"}
-      title: Distressed
-    - payload: /mood_curr_session_last{"mood":"afraid", "mood_quadrant":"ha_lv"}
-      title: Afraid
-    - payload: /mood_curr_session_last{"mood":"frustrated", "mood_quadrant":"ha_lv"}
-      title: Frustrated
-    - payload: /mood_curr_session_last{"mood":"miserable", "mood_quadrant":"la_lv"}
-      title: Miserable
-    - payload: /mood_curr_session_last{"mood":"depressed", "mood_quadrant":"la_lv"}
-      title: Depressed
-    - payload: /mood_curr_session_last{"mood":"gloomy", "mood_quadrant":"la_lv"}
-      title: Gloomy
-    - payload: /mood_curr_session_last{"mood":"tense", "mood_quadrant":"la_lv"}
-      title: Tense
-    - payload: /mood_curr_session_last{"mood":"droopy", "mood_quadrant":"la_lv"}
-      title: Droopy
-    - payload: /mood_curr_session_last{"mood":"sad", "mood_quadrant":"la_lv"}
-      title: Sad
-    - payload: /mood_curr_session_last{"mood":"tired", "mood_quadrant":"la_lv"}
-      title: Tired
-    - payload: /mood_curr_session_last{"mood":"bored", "mood_quadrant":"la_lv"}
-      title: Bored
-    - payload: /mood_curr_session_last{"mood":"sleepy", "mood_quadrant":"la_lv"}
-      title: Sleepy
-    - payload: /mood_curr_session_last{"mood":"serene", "mood_quadrant":"la_hv"}
-      title: Serene
-    - payload: /mood_curr_session_last{"mood":"relaxed", "mood_quadrant":"la_hv"}
-      title: Relaxed
-    - payload: /mood_curr_session_last{"mood":"calm", "mood_quadrant":"la_hv"}
-      title: Calm
-    - payload: /mood_curr_session_last{"mood":"tranquil", "mood_quadrant":"la_hv"}
-      title: Tranquil
-    - payload: /mood_curr_session_last{"mood":"content", "mood_quadrant":"la_hv"}
-      title: Content
-    - payload: /mood_curr_session_last{"mood":"neutral", "mood_quadrant":"neutral"}
-      title: Neutral
-    text: "Welcome to your last session! How are you feeling today?"
+
   # Response depends on quadrant that mood falls in
   utter_mood_response:
   # high arousal, high valence
@@ -1555,6 +1269,8 @@ actions:
 - validate_user_name_form
 - validate_activity_experience_form
 - validate_activity_experience_mod_form
+
+- action_choose_activity
 
 - action_end_dialog
 - action_default_fallback_end_dialog

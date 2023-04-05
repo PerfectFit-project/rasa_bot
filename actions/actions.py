@@ -6,8 +6,10 @@
 
 
 from datetime import datetime
-from definitions import (DATABASE_HOST, DATABASE_PASSWORD, 
-                         DATABASE_PORT, DATABASE_USER)
+from definitions import (ACTIVITY_CLUSTERS, 
+                         DATABASE_HOST, DATABASE_PASSWORD, 
+                         DATABASE_PORT, DATABASE_USER, df_act,
+                         NUM_ACTIVITIES)
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import FollowupAction, SlotSet
@@ -155,7 +157,7 @@ class ActionLoadSessionNotFirst(Action):
             # check if user has done previous session before '
             # (i.e., if session data is saved from previous session)
             query = ("SELECT * FROM sessiondata WHERE prolific_id = %s and session_num = %s and response_type = %s")
-            cur.execute(query, [prolific_id, str(int(session_num) - 1), "state_1"])
+            cur.execute(query, [prolific_id, str(int(session_num) - 1), "state_V"])
             done_previous_result = cur.fetchone()
             
             if done_previous_result is None:
@@ -283,7 +285,7 @@ class ActionSaveSession(Action):
         prolific_id = tracker.current_state()['sender_id']
         session_num = tracker.get_slot("session_num")
         
-        slots_to_save = ["mood", "state_1"]
+        slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE", "user_gender"]
         for slot in slots_to_save:
         
             save_sessiondata_entry(cur, conn, prolific_id, session_num,
@@ -358,3 +360,130 @@ class ValidateActivityExperienceModForm(FormValidationAction):
             return {"activity_experience_mod_slot": None}
 
         return {"activity_experience_mod_slot": value}
+
+
+def get_previous_activity_indices_from_db(prolific_id):
+    
+    conn = mysql.connector.connect(
+        user=DATABASE_USER,
+        password=DATABASE_PASSWORD,
+        host=DATABASE_HOST,
+        port=DATABASE_PORT,
+        database='db'
+    )
+    cur = conn.cursor(prepared=True)
+    
+    # get previous activity index from db
+    query = ("SELECT response_value FROM sessiondata WHERE prolific_id = %s and response_type = %s")
+    cur.execute(query, [prolific_id, "activity_new_index"])
+    result = cur.fetchall()
+    
+    # So far, we have sth. like [('49',), ('44',)]
+    result = [i[0] for i in result]
+    
+    conn.close()
+    
+    return result
+
+
+def get_activity_cluster_counts_from_db():
+    "Compute how many times each activity cluster has already been chosen."
+
+    conn = mysql.connector.connect(
+        user=DATABASE_USER,
+        password=DATABASE_PASSWORD,
+        host=DATABASE_HOST,
+        port=DATABASE_PORT,
+        database='db'
+    )
+    cur = conn.cursor(prepared=True)
+    
+    # Get cluster indices from database
+    query = ("SELECT response_value FROM sessiondata WHERE response_type = %s")
+    cur.execute(query, ["cluster_new_index"])
+    result = cur.fetchall()
+    
+    cluster_indices = [int(i[0]) for i in result]
+    
+    #logging.info("Cluster indices db:" + str(cluster_indices))
+    
+    cluster_counts = [cluster_indices.count(i) for i in ACTIVITY_CLUSTERS]
+    
+    return cluster_counts
+
+
+def get_activity_counts_from_db():
+    "Compute how many times each activity has already been chosen."
+
+    conn = mysql.connector.connect(
+        user=DATABASE_USER,
+        password=DATABASE_PASSWORD,
+        host=DATABASE_HOST,
+        port=DATABASE_PORT,
+        database='db'
+    )
+    cur = conn.cursor(prepared=True)
+    
+    # Get cluster indices from database
+    query = ("SELECT response_value FROM sessiondata WHERE response_type = %s")
+    cur.execute(query, ["activity_new_index"])
+    result = cur.fetchall()
+    
+    activity_indices = [int(i[0]) for i in result]
+    
+    #logging.info("Activity indices db:" + str(activity_indices))
+    
+    activity_counts = [activity_indices.count(i) for i in range(0, NUM_ACTIVITIES)]
+    
+    return activity_counts
+
+    
+class ActionChooseActivity(Action):
+
+    def name(self) -> Text:
+        return "action_choose_activity"
+
+    def run(self, dispatcher, tracker, domain):
+
+        prolific_id = tracker.current_state()['sender_id']
+        user_age = tracker.get_slot("session_num")
+        user_gender = tracker.get_slot("user_gender")
+        state_SE = tracker.get_slot("state_SE")
+        
+        # get indices of previously assigned activities
+        # this returns a list of strings
+        curr_act_ind_list = get_previous_activity_indices_from_db(prolific_id)
+        
+        if curr_act_ind_list is None:
+            curr_act_ind_list = []
+            
+        #logging.info("previous activities:" + str(curr_act_ind_list))
+        
+        # check excluded activities for previously assigned activities
+        excluded = []
+        for i in curr_act_ind_list:
+            excluded += df_act.loc[int(i), 'Exclusion']
+            
+        logging.info("excluded based on previous: " + str(excluded))
+            
+        # get eligible activities (not done before and not excluded)
+        remaining_indices = [i for i in range(NUM_ACTIVITIES) if not str(i) in curr_act_ind_list and not str(i) in excluded]
+
+        logging.info(remaining_indices)
+
+        # [TODO: add algorithm to decide which activity is selected]
+
+        logging.info(str(df_act.loc[0,"Content"]))
+
+        # [TODO: text formatting of the text]
+
+        msg = str(df_act.loc[0,"Content"])
+
+        dispatcher.utter_message(text=msg)
+        dispatcher.utter_message(text=user_age)
+        dispatcher.utter_message(text=state_SE)
+        dispatcher.utter_message(text=user_gender)
+
+        
+        return []
+    

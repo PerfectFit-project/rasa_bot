@@ -39,70 +39,59 @@ rules:
   - action: user_name_form
   - active_loop: null
   - action: utter_confirm_name
-  - action: utter_ask_for_mood_session1
+#  - action: utter_ask_for_mood_session1    # temporary disable this
+  - action: utter_intro_session_7           # and enable the following line
+                                            # to make testing faster  
+# - rule: mood session 1 
+#   steps:
+#   - intent: mood_curr_session1
+#   - action: utter_mood_response
+#   - action: action_save_name_to_db
+#   - action: utter_purpose_1
+#   - action: utter_purpose_2
+#   - action: utter_purpose_3
+#   - action: utter_purpose_4
+#   - action: utter_purpose_5
   
-- rule: mood session 1 
-  steps:
-  - intent: mood_curr_session1
-  - action: utter_mood_response
-  - action: action_save_name_to_db
-  - action: utter_purpose_1
-  - action: utter_purpose_2
-  - action: utter_purpose_3
-  - action: utter_purpose_4
-  - action: utter_purpose_5
+# - rule: usage session 1
+#   steps:
+#   - intent: confirm_purpose
+#   - action: utter_prompt_usage
+#   - action: utter_explain_usage
   
-- rule: usage session 1
+# - rule: intro session
+#   steps:
+#   - intent: confirm_usage
+#   - action: utter_intro_session_1
+#   - action: utter_intro_session_2
+#   - action: utter_intro_session_3
+#   - action: utter_intro_session_4
+#   - action: utter_intro_session_5
+#   - action: utter_intro_session_6
+#   - action: utter_intro_session_7
+
+- rule: state questions session
   steps:
-  - intent: confirm_purpose
-  - action: utter_prompt_usage
-  - action: utter_explain_usage
-  
-- rule: intro session 1
-  steps:
-  - intent: confirm_usage
-  - action: utter_intro_session1_1
-  - action: utter_intro_session1_2
-  - action: utter_intro_session1_3
-  - action: utter_intro_session1_4
-  - action: utter_intro_session1_5
-  - action: utter_intro_session1_6
-  - action: utter_intro_session1_7
-  
-- rule: state questions session 1
-  steps:
-  - intent: confirm_intro_session1
+  - intent: confirm_intro_session
   - action: utter_state_question_intro
-  - action: utter_state_question_1
-  
+#  - action: utter_state_question_PMT_V   # comment this line for testing
+  - action: utter_state_question_PMT_SE   # only for testing, or else remove it
 
-- rule: start session mid (2, 3, 4) session loaded
+- rule: state question severity
   steps:
-  - intent: start_session_mid
-  - action: action_load_session_not_first
-  - slot_was_set: 
-    - session_loaded: true
-  - action: utter_greet_repeat
-  - action: utter_ask_for_mood_session_mid
-  
-- rule: start session mid (2, 3, 4) session not loaded so end dialog
-  steps:
-  - intent: start_session_mid
-  - action: action_load_session_not_first
-  - slot_was_set: 
-    - session_loaded: false
-  - action: utter_default_close_session
-  - action: action_end_dialog
-  
+  - intent: confirm_state_PMT_V
+  - action: utter_state_question_PMT_S
 
-- rule: start session last session loaded
+- rule: state question response-efficacy
   steps:
-  - intent: start_session_last
-  - action: action_load_session_not_first
-  - slot_was_set: 
-    - session_loaded: true
-  - action: utter_greet_repeat
-  - action: utter_ask_for_mood_session_last
+  - intent: confirm_state_PMT_S
+  - action: utter_state_question_PMT_RE
+
+- rule: state question self-efficacy
+  steps:
+  - intent: confirm_state_PMT_RE
+  - action: utter_state_question_PMT_SE
+
   
 - rule: start session last session not loaded so end dialog
   steps:
@@ -112,27 +101,6 @@ rules:
     - session_loaded: false
   - action: utter_default_close_session
   - action: action_end_dialog
-  
-  
-- rule: mood and intro session mid
-  steps:
-  - intent: mood_curr_session_mid
-  - action: utter_mood_response
-  - action: utter_intro_session_mid_1
-  - action: utter_intro_session_mid_2
-  - action: utter_intro_session_mid_3
-  - action: utter_intro_session_mid_4
-  - action: utter_intro_session_mid_5
-  
-  
-- rule: mood and intro session last
-  steps:
-  - intent: mood_curr_session_last
-  - action: utter_mood_response
-  - action: utter_intro_session_last_1
-  - action: utter_intro_session_last_2
-  - action: utter_intro_session_last_3
-  - action: utter_intro_session_last_4
   
 
 - rule: activity effort session notfirst
@@ -171,7 +139,7 @@ rules:
   - action: action_save_activity_experience
   - action: utter_thanks
   - action: utter_state_question_intro
-  - action: utter_state_question_1
+  - action: utter_state_question_PMT_V
   
 - rule: activity experience denied
   steps:
@@ -193,10 +161,13 @@ rules:
   
 - rule: end state answering
   steps:
-  - intent: confirm_state_1
+  - intent: confirm_state_PMT_SE
   - action: utter_transition_new_activity
-  - action: utter_propose_new_activity_intro
-  - action: utter_activity
+  - action: action_choose_activity
+  - slot_was_set:
+    - user_gender_set: userGender
+  #- action: utter_propose_new_activity_intro
+  #- action: utter_activity
   - action: utter_activity_read
   
 - rule: read activity

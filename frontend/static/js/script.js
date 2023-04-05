@@ -6,32 +6,25 @@ $(document).ready(function () {
     const urlParams = new URLSearchParams(queryString);
     const userid = urlParams.get('userid');
 	user_id = userid;
-	//get session number
-	const session_num = urlParams.get('n');
 	
-	// Make fullscreen
-	if ($('.widget').width() == 350) {
-		$('.widget').css("width" , "98%");
-		$('.widget').css("height" , "100%");
-	} else {
-		$('.widget').css("width" , "350px");
-		$('.widget').css("height" , "100%");
-	}
+	//get session number
+	const session_num = urlParams.get('a');
+
+	// get user gender
+	const userGender = urlParams.get('g');
+
+		// Make fullscreen
+		if ($('.widget').width() == 350) {
+			$('.widget').css("width" , "98%");
+			$('.widget').css("height" , "100%");
+		} else {
+			$('.widget').css("width" , "350px");
+			$('.widget').css("height" , "100%");
+		}
+	
 	
 	//start a session
-	if (session_num == "1"){
-		send('/start_session1{"session_num":"1"}');
-	} else if (session_num == "2"){
-		send('/start_session_mid{"session_num":"2"}');
-    } else if (session_num == "3"){
-		send('/start_session_mid{"session_num":"3"}');
-    } else if (session_num == "4"){
-		send('/start_session_mid{"session_num":"4"}');
-    } else if (session_num == "5"){
-		send('/start_session_last{"session_num":"5"}');
-	}
-	
-
+	send('/start_session1{"session_num":"1"}');
 })
 
 //=====================================	user enter or sends the message =====================
@@ -98,7 +91,7 @@ function send(message) {
 	var url = document.location.protocol + "//" + document.location.hostname;
 	$.ajax({
 
-		url: url + "/rasa/webhooks/rest/webhook",
+		url: "http://localhost:5005/webhooks/rest/webhook",
 		type: "POST",
 		contentType: "application/json",
 		data: JSON.stringify({ message: message, sender: user_id }),
