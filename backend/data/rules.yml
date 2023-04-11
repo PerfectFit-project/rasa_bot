@@ -18,6 +18,7 @@ rules:
   - slot_was_set:
     - session_loaded: true
   - action: utter_greet_first_time
+  - action: action_choose_activity      # add this for testing, remove for production
   - action: user_name_form
   - active_loop: user_name_form
   wait_for_user_input: false
@@ -93,23 +94,6 @@ rules:
   - action: utter_state_question_PMT_SE
 
   
-- rule: start session last session not loaded so end dialog
-  steps:
-  - intent: start_session_last
-  - action: action_load_session_not_first
-  - slot_was_set: 
-    - session_loaded: false
-  - action: utter_default_close_session
-  - action: action_end_dialog
-  
-
-- rule: activity effort session notfirst
-  steps:
-  - intent: confirm_intro_session_notfirst
-  - action: utter_last_activity_short
-  - action: utter_last_activity_effort_intro
-  - action: utter_last_activity_effort
-  
 
 - rule: activity experience
   steps:
@@ -164,8 +148,6 @@ rules:
   - intent: confirm_state_PMT_SE
   - action: utter_transition_new_activity
   - action: action_choose_activity
-  - slot_was_set:
-    - user_gender_set: userGender
   #- action: utter_propose_new_activity_intro
   #- action: utter_activity
   - action: utter_activity_read

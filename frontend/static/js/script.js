@@ -8,7 +8,10 @@ $(document).ready(function () {
 	user_id = userid;
 	
 	//get session number
-	const session_num = urlParams.get('a');
+	const session_num = urlParams.get('sessionid');
+
+	// get user age
+	userAge = urlParams.get('a');
 
 	// get user gender
 	const userGender = urlParams.get('g');

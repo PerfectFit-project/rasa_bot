@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Text
 
 import logging
 import mysql.connector
-
+import random
 
 class ActionEndDialog(Action):
     """Action to cleanly terminate the dialog."""
@@ -285,7 +285,7 @@ class ActionSaveSession(Action):
         prolific_id = tracker.current_state()['sender_id']
         session_num = tracker.get_slot("session_num")
         
-        slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE", "user_gender"]
+        slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE"]
         for slot in slots_to_save:
         
             save_sessiondata_entry(cur, conn, prolific_id, session_num,
@@ -361,8 +361,26 @@ class ValidateActivityExperienceModForm(FormValidationAction):
 
         return {"activity_experience_mod_slot": value}
 
+def getPersonalizedActivitiesList(age, gender):
 
-def get_previous_activity_indices_from_db(prolific_id):
+    df_act_copy = df_act.copy(True)
+
+    for index, row in df_act_copy.iterrows():
+        if (row['Gender'] == 'female' and gender == 'male') or (row['Gender'] == 'male' and gender == 'female'):        # delete rows that are of opposite gender
+            df_act_copy.drop(index, inplace=True)
+
+        if (row['Age']) == '50' and (age < 50 or age > 60):     # delete rows that are of a different age range (50-60 only)
+            df_act_copy.drop(index, inplace=True)
+
+        if (row['Age']) == '40' and (age < 40 or age > 49):     # delete rows that are of a different age range (40-49 only)
+            df_act_copy.drop(index, inplace=True)
+
+        if (row['Age']) == '30' and (age > 39):     # delete rows that are of a different age range (39++ only)
+            df_act_copy.drop(index, inplace=True)
+
+    return df_act_copy
+
+""" def get_previous_activity_indices_from_db(prolific_id):
     
     conn = mysql.connector.connect(
         user=DATABASE_USER,
@@ -383,10 +401,70 @@ def get_previous_activity_indices_from_db(prolific_id):
     
     conn.close()
     
-    return result
+    return result """
 
 
-def get_activity_cluster_counts_from_db():
+def get_user_activity_history(prolific_id):
+        
+    conn = mysql.connector.connect(
+        user=DATABASE_USER,
+        password=DATABASE_PASSWORD,
+        host=DATABASE_HOST,
+        port=DATABASE_PORT,
+        database='db'
+    )
+    cur = conn.cursor(prepared=True)
+    
+    query = ("SELECT activity_index FROM activity_history WHERE prolific_id = %s")
+    cur.execute(query, [prolific_id])
+    result = cur.fetchall()
+
+    already_done_activities_indices = [int(i[0]) for i in result]
+    
+    logging.info("Already done activities indices: " + str(already_done_activities_indices))
+
+    conn.close()
+        
+    return already_done_activities_indices
+
+    
+class ActionChooseActivity(Action):
+        
+    def name(self) -> Text:
+        return "action_choose_activity"
+
+    def run(self, dispatcher, tracker, domain):
+
+        age = 29
+        gender = "female"
+
+        prolific_id = tracker.current_state()['sender_id']
+
+        # get a df with personalized activities
+        personal_act_df = getPersonalizedActivitiesList(age, gender)
+
+        # get list of indices of personalized activities
+        personal_act_ind_list = personal_act_df['Number']
+
+        # get list of indices of previously done activities
+        done_activities_list = get_user_activity_history(prolific_id)
+
+        if done_activities_list !=[]:
+            # remove already_done_activities from the personalized_list and create a new list with available activities
+            logging.info("Select random activity from the newly available activities list")
+            personal_act_ind_list = [x for x in personal_act_ind_list if x not in set(done_activities_list)]
+
+        chosen_ind_activity = random.choice(personal_act_ind_list)
+
+        logging.info("Chosen activity: "+ str(personal_act_df.loc[ chosen_ind_activity,'Content']))
+
+        #[TODO: check if it's text/video or activity and make it work accordingly]
+
+        dispatcher.utter_message(text=str(personal_act_df.loc[ chosen_ind_activity,'Content']))
+        return []
+
+
+""" def get_activity_cluster_counts_from_db():
     "Compute how many times each activity cluster has already been chosen."
 
     conn = mysql.connector.connect(
@@ -409,10 +487,10 @@ def get_activity_cluster_counts_from_db():
     
     cluster_counts = [cluster_indices.count(i) for i in ACTIVITY_CLUSTERS]
     
-    return cluster_counts
+    return cluster_counts """
 
 
-def get_activity_counts_from_db():
+""" def get_activity_counts_from_db():
     "Compute how many times each activity has already been chosen."
 
     conn = mysql.connector.connect(
@@ -435,10 +513,10 @@ def get_activity_counts_from_db():
     
     activity_counts = [activity_indices.count(i) for i in range(0, NUM_ACTIVITIES)]
     
-    return activity_counts
+    return activity_counts """
 
     
-class ActionChooseActivity(Action):
+""" class ActionChooseActivity(Action):
 
     def name(self) -> Text:
         return "action_choose_activity"
@@ -446,10 +524,9 @@ class ActionChooseActivity(Action):
     def run(self, dispatcher, tracker, domain):
 
         prolific_id = tracker.current_state()['sender_id']
-        user_age = tracker.get_slot("session_num")
-        user_gender = tracker.get_slot("user_gender")
+        session_num = tracker.get_slot("session_num")
         state_SE = tracker.get_slot("state_SE")
-        
+
         # get indices of previously assigned activities
         # this returns a list of strings
         curr_act_ind_list = get_previous_activity_indices_from_db(prolific_id)
@@ -480,10 +557,10 @@ class ActionChooseActivity(Action):
         msg = str(df_act.loc[0,"Content"])
 
         dispatcher.utter_message(text=msg)
-        dispatcher.utter_message(text=user_age)
+        dispatcher.utter_message(text="Session num:" + session_num)
+        dispatcher.utter_message(text="Prolific id:" + prolific_id)
         dispatcher.utter_message(text=state_SE)
-        dispatcher.utter_message(text=user_gender)
 
         
-        return []
+        return [] """
     
