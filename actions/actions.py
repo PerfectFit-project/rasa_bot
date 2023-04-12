@@ -380,29 +380,6 @@ def getPersonalizedActivitiesList(age, gender):
 
     return df_act_copy
 
-""" def get_previous_activity_indices_from_db(prolific_id):
-    
-    conn = mysql.connector.connect(
-        user=DATABASE_USER,
-        password=DATABASE_PASSWORD,
-        host=DATABASE_HOST,
-        port=DATABASE_PORT,
-        database='db'
-    )
-    cur = conn.cursor(prepared=True)
-    
-    # get previous activity index from db
-    query = ("SELECT response_value FROM sessiondata WHERE prolific_id = %s and response_type = %s")
-    cur.execute(query, [prolific_id, "activity_new_index"])
-    result = cur.fetchall()
-    
-    # So far, we have sth. like [('49',), ('44',)]
-    result = [i[0] for i in result]
-    
-    conn.close()
-    
-    return result """
-
 
 def get_user_activity_history(prolific_id):
         
@@ -427,6 +404,30 @@ def get_user_activity_history(prolific_id):
         
     return already_done_activities_indices
 
+def saveActivityToDB(prolific_id, chosen_activity_index):
+
+        now = datetime.now()
+        formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+
+        conn = mysql.connector.connect(
+            user=DATABASE_USER,
+            password=DATABASE_PASSWORD,
+            host=DATABASE_HOST,
+            port=DATABASE_PORT,
+            database='db'
+        )
+
+        cur = conn.cursor(prepared=True)
+        query = "INSERT INTO activity_history(prolific_id, activity_index, activity_response, time) VALUES(%s, %s, %s, %s)"
+        queryMatch = [prolific_id, 
+                      chosen_activity_index,
+                      None,
+                      formatted_date]
+        cur.execute(query, queryMatch)
+        conn.commit()
+        conn.close()
+
+        return []
     
 class ActionChooseActivity(Action):
         
@@ -435,7 +436,7 @@ class ActionChooseActivity(Action):
 
     def run(self, dispatcher, tracker, domain):
 
-        age = 29
+        age = 29                # for testing purposes, delete them on production
         gender = "female"
 
         prolific_id = tracker.current_state()['sender_id']
@@ -459,6 +460,8 @@ class ActionChooseActivity(Action):
         logging.info("Chosen activity: "+ str(personal_act_df.loc[ chosen_ind_activity,'Content']))
 
         #[TODO: check if it's text/video or activity and make it work accordingly]
+
+        saveActivityToDB(prolific_id, chosen_ind_activity)
 
         dispatcher.utter_message(text=str(personal_act_df.loc[ chosen_ind_activity,'Content']))
         return []

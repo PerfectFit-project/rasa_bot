@@ -18,7 +18,7 @@ rules:
   - slot_was_set:
     - session_loaded: true
   - action: utter_greet_first_time
-  - action: action_choose_activity      # add this for testing, remove for production
+  #- action: action_choose_activity      # add this for testing, remove for production
   - action: user_name_form
   - active_loop: user_name_form
   wait_for_user_input: false

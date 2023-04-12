@@ -682,7 +682,7 @@ responses:
         - type: slot
           name: session_num
           value: "1"
-      text: "I'll continue when you're done reading about your first activity."
+      text: "I'll continue when you're done reading about your activity."
       buttons:
       - payload: /confirm_activity_read
         title: "I'm done"
