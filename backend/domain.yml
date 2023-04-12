@@ -1252,7 +1252,6 @@ forms:
 actions:
 - action_load_session_first
 - action_load_session_not_first
-- action_save_activity_experience
 - action_save_name_to_db
 - action_save_session
 
@@ -1260,6 +1259,7 @@ actions:
 - validate_activity_experience_form
 - validate_activity_experience_mod_form
 
+- action_start_PMT_questions
 - action_choose_activity
 
 - action_end_dialog

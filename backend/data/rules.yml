@@ -74,9 +74,13 @@ rules:
 - rule: state questions session
   steps:
   - intent: confirm_intro_session
+  - action: action_start_PMT_questions
+
+- rule: start PMT questions
+  steps:
   - action: utter_state_question_intro
-#  - action: utter_state_question_PMT_V   # comment this line for testing
-  - action: utter_state_question_PMT_SE   # only for testing, or else remove it
+  - action: utter_state_question_PMT_V   # comment this line for testing
+  #- action: utter_state_question_PMT_SE   # only for testing, or else remove it
 
 - rule: state question severity
   steps:
@@ -93,56 +97,6 @@ rules:
   - intent: confirm_state_PMT_RE
   - action: utter_state_question_PMT_SE
 
-  
-
-- rule: activity experience
-  steps:
-  - intent: effort_answer
-  - action: utter_respond_effort
-  - action: activity_experience_form
-  - active_loop: activity_experience_form
-  wait_for_user_input: false
-  
-- rule: activity experience ask add or change
-  condition:
-    - active_loop: activity_experience_form
-  steps:
-  - action: activity_experience_form
-  - active_loop: null
-  - action: utter_repeat_activity_completion_answer
-  
-- rule: activity experience confirmed so give dropout question
-  steps:
-  - intent: confirm_activity_experience
-  - action: utter_great
-  - action: utter_ask_dropout
-  
-- rule: response dropout question and start state questions
-  steps:
-  - intent: confirm_dropout
-  - action: action_save_activity_experience
-  - action: utter_thanks
-  - action: utter_state_question_intro
-  - action: utter_state_question_PMT_V
-  
-- rule: activity experience denied
-  steps:
-  - intent: deny_activity_experience
-  - action: activity_experience_mod_form
-  - active_loop: activity_experience_mod_form
-  wait_for_user_input: false
-  
-  
-- rule: activity experience modified so give dropout question
-  condition:
-    - active_loop: activity_experience_mod_form
-  steps:
-  - action: activity_experience_mod_form
-  - active_loop: null
-  - action: utter_thank_activity_experience_mod
-  - action: utter_ask_dropout
-
-  
 - rule: end state answering
   steps:
   - intent: confirm_state_PMT_SE
@@ -156,8 +110,9 @@ rules:
   steps:
   - intent: confirm_activity_read
   - action: utter_cool
-  - action: utter_email_reminder
-  - action: utter_remind_next_part
+  - action: action_start_PMT_questions
+  #- action: utter_email_reminder
+  #- action: utter_remind_next_part
   
 - rule: confirm next part and save states to db
   steps:

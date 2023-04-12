@@ -50,6 +50,20 @@ class ActionDefaultFallbackEndDialog(Action):
 
         # End the dialog, which leads to a restart.
         return [FollowupAction('action_end_dialog')]
+    
+class ActionStartPMTQuestions(Action):
+    def name(self) -> Text:
+        return "action_start_PMT_questions"
+
+    def run(self, 
+            dispatcher: CollectingDispatcher, 
+            tracker: Tracker, 
+            domain: Dict[Text, Any]
+        ) -> List[Dict[Text, Any]]:
+        
+
+        return [FollowupAction("utter_state_question_intro")]
+
 
 
 def get_latest_bot_utterance(events) -> Optional[Any]:
@@ -219,7 +233,7 @@ class ActionSaveNameToDB(Action):
         return []
     
 
-class ActionSaveActivityExperience(Action):
+""" class ActionSaveActivityExperience(Action):
     def name(self):
         return "action_save_activity_experience"
 
@@ -251,7 +265,7 @@ class ActionSaveActivityExperience(Action):
                                    slot, tracker.get_slot(slot),
                                    formatted_date)
 
-        conn.close()
+        conn.close() """
     
     
 def save_sessiondata_entry(cur, conn, prolific_id, session_num, response_type,
