@@ -52,6 +52,10 @@ class ActionDefaultFallbackEndDialog(Action):
         return [FollowupAction('action_end_dialog')]
     
 class ActionStartPMTQuestions(Action):
+    """ 
+        Start asking the PMT questions and providing an activity to do.
+        Repeat the action as many times as defined in the round_num value.
+    """
     def name(self) -> Text:
         return "action_start_PMT_questions"
 
@@ -60,9 +64,14 @@ class ActionStartPMTQuestions(Action):
             tracker: Tracker, 
             domain: Dict[Text, Any]
         ) -> List[Dict[Text, Any]]:
-        
 
-        return [FollowupAction("utter_state_question_intro")]
+        round_num = tracker.get_slot("round_num")
+        round_num += 1
+        
+        if round_num == 3:          # we will have only 2 rounds
+            return [FollowupAction("utter_email_reminder")]
+        else:
+            return [SlotSet("round_num", round_num), FollowupAction("utter_state_question_intro")]
 
 
 
@@ -232,46 +241,11 @@ class ActionSaveNameToDB(Action):
 
         return []
     
-
-""" class ActionSaveActivityExperience(Action):
-    def name(self):
-        return "action_save_activity_experience"
-
-    async def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        
-        now = datetime.now()
-        formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
-
-        conn = mysql.connector.connect(
-            user=DATABASE_USER,
-            password=DATABASE_PASSWORD,
-            host=DATABASE_HOST,
-            port=DATABASE_PORT,
-            database='db'
-        )
-        cur = conn.cursor(prepared=True)
-        
-        prolific_id = tracker.current_state()['sender_id']
-        session_num = tracker.get_slot("session_num")
-        
-        slots_to_save = ["effort", "activity_experience_slot",
-                         "activity_experience_mod_slot",
-                         "dropout_response"]
-        for slot in slots_to_save:
-        
-            save_sessiondata_entry(cur, conn, prolific_id, session_num,
-                                   slot, tracker.get_slot(slot),
-                                   formatted_date)
-
-        conn.close() """
     
-    
-def save_sessiondata_entry(cur, conn, prolific_id, session_num, response_type,
+def save_sessiondata_entry(cur, conn, prolific_id, session_num, round_num, response_type,
                            response_value, time):
-    query = "INSERT INTO sessiondata(prolific_id, session_num, response_type, response_value, time) VALUES(%s, %s, %s, %s, %s)"
-    cur.execute(query, [prolific_id, session_num, response_type,
+    query = "INSERT INTO sessiondata(prolific_id, session_num, round_num, response_type, response_value, time) VALUES(%s, %s, %s, %s, %s, %s)"
+    cur.execute(query, [prolific_id, session_num, round_num, response_type,
                         response_value, time])
     conn.commit()
     
@@ -280,7 +254,7 @@ class ActionSaveSession(Action):
     def name(self):
         return "action_save_session"
 
-    async def run(self, dispatcher: CollectingDispatcher,
+    def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         
@@ -298,11 +272,11 @@ class ActionSaveSession(Action):
         
         prolific_id = tracker.current_state()['sender_id']
         session_num = tracker.get_slot("session_num")
+        round_num = tracker.get_slot("round_num")
         
         slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE"]
         for slot in slots_to_save:
-        
-            save_sessiondata_entry(cur, conn, prolific_id, session_num,
+            save_sessiondata_entry(cur, conn, prolific_id, session_num, round_num, 
                                    slot, tracker.get_slot(slot),
                                    formatted_date)
 
@@ -352,28 +326,6 @@ class ValidateActivityExperienceForm(FormValidationAction):
             return {"activity_experience_slot": None}
 
         return {"activity_experience_slot": value}
-    
-
-class ValidateActivityExperienceModForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_activity_experience_mod_form'
-
-    def validate_activity_experience_mod_slot(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate activity_experience_mod_slot input."""
-        last_utterance = get_latest_bot_utterance(tracker.events)
-
-        if last_utterance != 'utter_ask_activity_experience_mod_slot':
-            return {"activity_experience_mod_slot": None}
-
-        # people should either type "none" or say a bit more
-        if not (len(value) >= 5 or "none" in value.lower()):
-            dispatcher.utter_message(response="utter_provide_more_detail")
-            return {"activity_experience_mod_slot": None}
-
-        return {"activity_experience_mod_slot": value}
 
 def getPersonalizedActivitiesList(age, gender):
 
@@ -418,7 +370,7 @@ def get_user_activity_history(prolific_id):
         
     return already_done_activities_indices
 
-def saveActivityToDB(prolific_id, chosen_activity_index):
+def saveActivityToDB(prolific_id, round_num, chosen_activity_index):
 
         now = datetime.now()
         formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
@@ -432,9 +384,10 @@ def saveActivityToDB(prolific_id, chosen_activity_index):
         )
 
         cur = conn.cursor(prepared=True)
-        query = "INSERT INTO activity_history(prolific_id, activity_index, activity_response, time) VALUES(%s, %s, %s, %s)"
+        query = "INSERT INTO activity_history(prolific_id, round_num, activity_index, activity_response, time) VALUES(%s, %s, %s, %s, %s)"
         queryMatch = [prolific_id, 
-                      chosen_activity_index,
+                      round_num,
+                      str(chosen_activity_index),
                       None,
                       formatted_date]
         cur.execute(query, queryMatch)
@@ -452,6 +405,7 @@ class ActionChooseActivity(Action):
 
         age = 29                # for testing purposes, delete them on production
         gender = "female"
+        round_num = tracker.get_slot("round_num")
 
         prolific_id = tracker.current_state()['sender_id']
 
@@ -475,109 +429,8 @@ class ActionChooseActivity(Action):
 
         #[TODO: check if it's text/video or activity and make it work accordingly]
 
-        saveActivityToDB(prolific_id, chosen_ind_activity)
+        saveActivityToDB(prolific_id, round_num, chosen_ind_activity)
 
         dispatcher.utter_message(text=str(personal_act_df.loc[ chosen_ind_activity,'Content']))
         return []
-
-
-""" def get_activity_cluster_counts_from_db():
-    "Compute how many times each activity cluster has already been chosen."
-
-    conn = mysql.connector.connect(
-        user=DATABASE_USER,
-        password=DATABASE_PASSWORD,
-        host=DATABASE_HOST,
-        port=DATABASE_PORT,
-        database='db'
-    )
-    cur = conn.cursor(prepared=True)
-    
-    # Get cluster indices from database
-    query = ("SELECT response_value FROM sessiondata WHERE response_type = %s")
-    cur.execute(query, ["cluster_new_index"])
-    result = cur.fetchall()
-    
-    cluster_indices = [int(i[0]) for i in result]
-    
-    #logging.info("Cluster indices db:" + str(cluster_indices))
-    
-    cluster_counts = [cluster_indices.count(i) for i in ACTIVITY_CLUSTERS]
-    
-    return cluster_counts """
-
-
-""" def get_activity_counts_from_db():
-    "Compute how many times each activity has already been chosen."
-
-    conn = mysql.connector.connect(
-        user=DATABASE_USER,
-        password=DATABASE_PASSWORD,
-        host=DATABASE_HOST,
-        port=DATABASE_PORT,
-        database='db'
-    )
-    cur = conn.cursor(prepared=True)
-    
-    # Get cluster indices from database
-    query = ("SELECT response_value FROM sessiondata WHERE response_type = %s")
-    cur.execute(query, ["activity_new_index"])
-    result = cur.fetchall()
-    
-    activity_indices = [int(i[0]) for i in result]
-    
-    #logging.info("Activity indices db:" + str(activity_indices))
-    
-    activity_counts = [activity_indices.count(i) for i in range(0, NUM_ACTIVITIES)]
-    
-    return activity_counts """
-
-    
-""" class ActionChooseActivity(Action):
-
-    def name(self) -> Text:
-        return "action_choose_activity"
-
-    def run(self, dispatcher, tracker, domain):
-
-        prolific_id = tracker.current_state()['sender_id']
-        session_num = tracker.get_slot("session_num")
-        state_SE = tracker.get_slot("state_SE")
-
-        # get indices of previously assigned activities
-        # this returns a list of strings
-        curr_act_ind_list = get_previous_activity_indices_from_db(prolific_id)
-        
-        if curr_act_ind_list is None:
-            curr_act_ind_list = []
-            
-        #logging.info("previous activities:" + str(curr_act_ind_list))
-        
-        # check excluded activities for previously assigned activities
-        excluded = []
-        for i in curr_act_ind_list:
-            excluded += df_act.loc[int(i), 'Exclusion']
-            
-        logging.info("excluded based on previous: " + str(excluded))
-            
-        # get eligible activities (not done before and not excluded)
-        remaining_indices = [i for i in range(NUM_ACTIVITIES) if not str(i) in curr_act_ind_list and not str(i) in excluded]
-
-        logging.info(remaining_indices)
-
-        # [TODO: add algorithm to decide which activity is selected]
-
-        logging.info(str(df_act.loc[0,"Content"]))
-
-        # [TODO: text formatting of the text]
-
-        msg = str(df_act.loc[0,"Content"])
-
-        dispatcher.utter_message(text=msg)
-        dispatcher.utter_message(text="Session num:" + session_num)
-        dispatcher.utter_message(text="Prolific id:" + prolific_id)
-        dispatcher.utter_message(text=state_SE)
-
-        
-        return [] """
     

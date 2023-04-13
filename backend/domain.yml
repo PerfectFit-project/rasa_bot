@@ -105,6 +105,13 @@ slots:
     influence_conversation: false
     mappings:
     - type: custom
+
+  round_num:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+    - type: custom
         
   ### states
   state_V:
@@ -165,14 +172,7 @@ slots:
     - type: from_text
       conditions:
         - active_loop: activity_experience_form  
-  activity_experience_mod_slot:
-    type: text
-    initial_value: ''
-    influence_conversation: false
-    mappings:
-    - type: from_text
-      conditions:
-        - active_loop: activity_experience_mod_form  
+
   # dropout
   dropout_response:
     type: text
@@ -1244,9 +1244,6 @@ forms:
   activity_experience_form:
     required_slots:
         - activity_experience_slot
-  activity_experience_mod_form:
-    required_slots:
-        - activity_experience_mod_slot
 
 
 actions:

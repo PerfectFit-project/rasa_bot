@@ -18,7 +18,7 @@ rules:
   - slot_was_set:
     - session_loaded: true
   - action: utter_greet_first_time
-  #- action: action_choose_activity      # add this for testing, remove for production
+  - action: action_choose_activity      # add this for testing, remove for production
   - action: user_name_form
   - active_loop: user_name_form
   wait_for_user_input: false
@@ -40,6 +40,7 @@ rules:
   - action: user_name_form
   - active_loop: null
   - action: utter_confirm_name
+  - action: action_save_name_to_db          # only for testing, remove this on production
 #  - action: utter_ask_for_mood_session1    # temporary disable this
   - action: utter_intro_session_7           # and enable the following line
                                             # to make testing faster  
@@ -110,14 +111,14 @@ rules:
   steps:
   - intent: confirm_activity_read
   - action: utter_cool
+  - action: action_save_session
   - action: action_start_PMT_questions
-  #- action: utter_email_reminder
-  #- action: utter_remind_next_part
   
 - rule: confirm next part and save states to db
   steps:
+  - action: utter_email_reminder
+  - action: utter_remind_next_part
   - intent: confirm_next_part
-  - action: action_save_session
   - action: utter_prolific_link
   - action: utter_goodbye
   
