@@ -247,310 +247,7 @@ responses:
     - payload : /confirm_intro_session
       title: "Now"
     text: "Let me know when you've finished reading our plan of the session."
-    
 
-
-  ### Intro last session
-  utter_intro_session_last_1:
-  - text: "So what are we going to do in our last session?"
-  utter_intro_session_last_2:
-  - text: "We are again going to look at your experience, if any, with your activity from last time."
-  utter_intro_session_last_3:
-  - text: "And after asking you some questions about your situation again, I will suggest you one final preparatory activity for after this session."
-  utter_intro_session_last_4:
-  - text: "Once you're done reading this, please let me know."
-    buttons:
-    - payload: /confirm_intro_session_notfirst
-      title: "I'm done"
-    
-  ### Ask activity experience (effort, experience, dropout)
-  utter_last_activity_short:
-  - text: "Great! Last time I suggested you to do an activity."
-  utter_last_activity_effort_intro:
-  - text: "Please rate the overall effort you put into doing this activity."
-  utter_last_activity_effort:
-  - buttons:
-    - payload: /effort_answer{"effort":"0", "effort_level":"low"}
-      title: "0 (nothing)"
-    - payload: /effort_answer{"effort":"1", "effort_level":"low"}
-      title: "1"
-    - payload: /effort_answer{"effort":"2", "effort_level":"low"}
-      title: "2"
-    - payload: /effort_answer{"effort":"3", "effort_level":"low"}
-      title: "3"
-    - payload: /effort_answer{"effort":"4", "effort_level":"medium"}
-      title: "4"
-    - payload: /effort_answer{"effort":"5", "effort_level":"medium"}
-      title: "5"
-    - payload: /effort_answer{"effort":"6", "effort_level":"medium"}
-      title: "6"
-    - payload: /effort_answer{"effort":"7", "effort_level":"high"}
-      title: "7"
-    - payload: /effort_answer{"effort":"8", "effort_level":"high"}
-      title: "8"
-    - payload: /effort_answer{"effort":"9", "effort_level":"high"}
-      title: "9"
-    - payload: /effort_answer{"effort":"10", "effort_level":"high"}
-      title: "10 (extremely strong)"
-    text: 'Please answer honestly. Recall that doing your activity is voluntary and that your answer to this question thus does not impact your payment.'
-  utter_respond_effort:
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "low"
-    text: "That's too bad. This is not uncommon at the start."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "low"
-    text: "I see, that's a pity. This can happen!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "low"
-    text: "Hmm, that's a pity. Maybe you've been busy."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "low"
-    text: "Ah that's a shame. This can happen at the beginning."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "low"
-    text: "Ah, I understand. That's unfortunate, but it happens sometimes."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "low"
-    text: "That's a shame. Don't worry, it's normal in the beginning."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "low"
-    text: "That's too bad. Maybe you had a lot going on."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "low"
-    text: "Oh, that's too bad. Perhaps you've had a lot on your plate."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "medium"
-    text: "Nice that you gave it a try!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "medium"
-    text: "Cool, I'm happy to hear that you worked on the activity."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "medium"
-    text: "Nice to hear that you tried the activity!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "medium"
-    text: "Cool, it's nice that you gave it a shot!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "medium"
-    text: "I'm happy to hear that you gave the activity a shot."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "medium"
-    text: "That's good to hear that you worked on the activity."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "medium"
-    text: "Thanks for giving the activity a go!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "high"
-    text: "Yay, congrats!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "high"
-    text: "Nice, good job!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "high"
-    text: "Awesome, well done!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "high"
-    text: "Nice, congratulations!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "high"
-    text: "Excellent, way to go!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "high"
-    text: "Yay, nice work!"
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "high"
-    text: "Ah nicely done!"
-  utter_ask_activity_experience_slot:
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "high"
-    text: "How did you approach, do, or experience your assigned activity? Use the text field."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "medium"
-    text: "How did you approach, do, or experience your assigned activity? Use the text field."
-  - condition:
-      - type: slot
-        name: effort_level
-        value: "low"
-    text: "How did you approach, do, or experience your assigned activity? If you have no feedback on the activity, just type 'None' in the text field."
-  utter_repeat_activity_completion_answer:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "This is what I got: {activity_experience_slot}\nWould you like to add or change anything?"
-      buttons:
-      - payload: /deny_activity_experience
-        title: Yes
-      - payload: /confirm_activity_experience
-        title: No
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "I got this: {activity_experience_slot}\nDo you want to add or modify anything?"
-      buttons:
-      - payload: /deny_activity_experience
-        title: Yes
-      - payload: /confirm_activity_experience
-        title: No
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "I received this: {activity_experience_slot}\nIs there something that you'd like to add or change?"
-      buttons:
-      - payload: /deny_activity_experience
-        title: Yes
-      - payload: /confirm_activity_experience
-        title: No
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5"
-      text: "I got this from you: {activity_experience_slot}\nIs there anything that I should add or modify about your response?"
-      buttons:
-      - payload: /deny_activity_experience
-        title: Yes
-      - payload: /confirm_activity_experience
-        title: No
-        
-    - text: "This is the response I got: {activity_experience_slot}\nDo you want to add or change anything?"
-      buttons:
-      - payload: /deny_activity_experience
-        title: Yes
-      - payload: /confirm_activity_experience
-        title: No
-
-  utter_ask_activity_experience_mod_slot:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "1"
-      text: "Okay, please tell me what you'd like to add or alter."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "OK, what would you like to add or change? Use the text field."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "Okay, what is it that you'd like to add or alter? Use the text field."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "Okay, kindly tell me what it is that you'd like to add or modify."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5"
-      text: "I see, what do you want to modify or add?"
-      
-    - text: "Alright, can you tell me what modifications or additions you'd like to make?"
-  utter_thank_activity_experience_mod:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "1"
-      text: "Alright, thanks for the clarification!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "Cool, thanks for clarifying that."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "Cool, thanks for making that clear."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "Alright, good that you point that out!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5"
-      text: "I see. Thank you for the clarification."
-      
-    - text: "Got it! Thanks for letting me know."
-
-  utter_ask_dropout:
-  - text: "Currently you are taking part in a paid experiment. Imagine this was an unpaid smoking cessation program.\nHow likely would you then have quit the program or returned to this session?"
-    buttons:
-    - payload: /confirm_dropout{"dropout_response":"-5"}
-      title: "-5 (definitely would have quit the program)"
-    - payload: /confirm_dropout{"dropout_response":"-4"}
-      title: "-4"
-    - payload: /confirm_dropout{"dropout_response":"-3"}
-      title: "-3"
-    - payload: /confirm_dropout{"dropout_response":"-2"}
-      title: "-2"
-    - payload: /confirm_dropout{"dropout_response":"-1"}
-      title: "-1"
-    - payload: /confirm_dropout{"dropout_response":"0"}
-      title: "0 (neutral)"
-    - payload: /confirm_dropout{"dropout_response":"1"}
-      title: "1"
-    - payload: /confirm_dropout{"dropout_response":"2"}
-      title: "2"
-    - payload: /confirm_dropout{"dropout_response":"3"}
-      title: "3"
-    - payload: /confirm_dropout{"dropout_response":"4"}
-      title: "4"
-    - payload: /confirm_dropout{"dropout_response":"5"}
-      title: "5 (definitely would have returned to this session)"
     
   ### Ask state questions
   utter_state_question_intro:
@@ -559,7 +256,7 @@ responses:
   utter_state_question_PMT_V:
   - buttons:
     - payload: /confirm_state_PMT_V{"state_V":"1"}
-      title: "1 (definitely disagree)"
+      title: "1 (Not at all likely)"
     - payload: /confirm_state_PMT_V{"state_V":"2"}
       title: "2"
     - payload: /confirm_state_PMT_V{"state_V":"3"}
@@ -571,13 +268,13 @@ responses:
     - payload: /confirm_state_PMT_V{"state_V":"6"}
       title: "6"
     - payload: /confirm_state_PMT_V{"state_V":"7"}
-      title: "7 (definitely agree)"
-    text: "[Vulnerability item question]"
+      title: "7 (Almost certain)"
+    text: "On a scale of 1 to 7, how likely do you think it is that you will experience harm or negative consequences as a result of smoking?"
 
   utter_state_question_PMT_S:
   - buttons:
     - payload: /confirm_state_PMT_S{"state_S":"1"}
-      title: "1 (definitely disagree)"
+      title: "1 (Not at all serious)"
     - payload: /confirm_state_PMT_S{"state_S":"2"}
       title: "2"
     - payload: /confirm_state_PMT_S{"state_S":"3"}
@@ -589,13 +286,13 @@ responses:
     - payload: /confirm_state_PMT_S{"state_S":"6"}
       title: "6"
     - payload: /confirm_state_PMT_S{"state_S":"7"}
-      title: "7 (definitely agree)"
-    text: "[Severity item question]"
+      title: "7 (Severely serious)"
+    text: "On a scale of 1 to 7, how serious do you think the potential harm or threat is if you continue to smoke?"
 
   utter_state_question_PMT_RE:
   - buttons:
     - payload: /confirm_state_PMT_RE{"state_RE":"1"}
-      title: "1 (definitely disagree)"
+      title: "1 (Not at all likely)"
     - payload: /confirm_state_PMT_RE{"state_RE":"2"}
       title: "2"
     - payload: /confirm_state_PMT_RE{"state_RE":"3"}
@@ -607,13 +304,13 @@ responses:
     - payload: /confirm_state_PMT_RE{"state_RE":"6"}
       title: "6"
     - payload: /confirm_state_PMT_RE{"state_RE":"7"}
-      title: "7 (definitely agree)"
-    text: "[Response efficacy item question]"
+      title: "7 (Almost certain)"
+    text: "On a scale of 1 to 7, how likely do you think it is that you will experience harm or negative consequences as a result of smoking?"
 
   utter_state_question_PMT_SE:
   - buttons:
     - payload: /confirm_state_PMT_SE{"state_SE":"1"}
-      title: "1 (definitely disagree)"
+      title: "1 (Not at all confident)"
     - payload: /confirm_state_PMT_SE{"state_SE":"2"}
       title: "2"
     - payload: /confirm_state_PMT_SE{"state_SE":"3"}
@@ -625,8 +322,8 @@ responses:
     - payload: /confirm_state_PMT_SE{"state_SE":"6"}
       title: "6"
     - payload: /confirm_state_PMT_SE{"state_SE":"7"}
-      title: "7 (definitely agree)"
-    text: "[Self efficacy item question]"
+      title: "7 (Completely confident)"
+    text: "On a scale of 1 to 7, how confident are you that you can successfully increase your physical activity levels?"
   
   ### Propose activity
   utter_transition_new_activity:
@@ -659,38 +356,8 @@ responses:
     - text: "Now let's turn our attention to an activity that can benefit your current situation."
     - text: "Let's move on to an activity that can support you in your efforts to prepare for quitting smoking."
     - text: "Next, we'll take a closer look at an activity that can assist you in preparing to quit smoking."
-  
-  utter_propose_new_activity_intro:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "1"
-      text: "I think that this activity would be beneficial for you:"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "This is the new activity that I think would help you:"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "Here is the new activity that I think would help you prepare for quitting smoking:"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "I believe this new activity would help you:"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5"
-      text: "I expect that this new activity is helpful for you:"
-      
-    - text: "I think that this activity would be useful for you:"
+
     
-  utter_activity:
-    - text: "I suggest you visualize your desired future self."
   utter_activity_read:
     - condition:
         - type: slot

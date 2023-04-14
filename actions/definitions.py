@@ -12,6 +12,6 @@ DATABASE_USER = "root"
 
 # List of activities
 df_act = pd.read_excel("PMT_actions_2023_03_24.xlsx", 
-                       converters={'Number': int, 'Construct':str, 'Gender':str, 'Age':int, 'Content':str})
+                       converters={'Number': int, 'Construct':str, 'Gender':str, 'Age':int, 'User input':bool,'Content':str})
 # Turn columns into lists
 df_act["Content"] = [list(df_act.iloc[i]["Content"].split("|")) if not pd.isna(df_act.iloc[i]["Content"]) else [] for i in range(len(df_act))]

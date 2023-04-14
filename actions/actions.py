@@ -421,7 +421,9 @@ class ActionChooseActivity(Action):
             logging.info("Select random activity from the newly available activities list")
             personal_act_ind_list = [x for x in personal_act_ind_list if x not in set(done_activities_list)]
 
-        chosen_activity_index = random.choice(personal_act_ind_list)
+        #chosen_activity_index = random.choice(personal_act_ind_list)          # only for testing, uncomment on production
+        chosen_activity_index = 22           # only for testing, remove on production
+
         chosen_activity_media = str(personal_act_df.loc[ chosen_activity_index,'Media'])
 
         logging.info("Chosen activity: "+ str(personal_act_df.loc[ chosen_activity_index,'Content']))
@@ -491,4 +493,10 @@ class ActionActivityActivity(Action):
         for line in text_content:
             dispatcher.utter_message(text=line)
 
+
+        # if the user is requested to answer, then call the user_input action
+        #if df_act.loc[ chosen_activity_index,'User input']:
+        #    return FollowupAction("action_activity_activity")
+        
+        #else: return []
         return []
