@@ -112,6 +112,20 @@ slots:
     influence_conversation: false
     mappings:
     - type: custom
+
+  chosen_activity_index:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+    - type: custom
+
+  chosen_activity_media:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    mappings:
+    - type: custom
         
   ### states
   state_V:
@@ -1258,6 +1272,7 @@ actions:
 
 - action_start_PMT_questions
 - action_choose_activity
+- action_activity_activity
 
 - action_end_dialog
 - action_default_fallback_end_dialog

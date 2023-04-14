@@ -105,8 +105,23 @@ rules:
   - action: action_choose_activity
   #- action: utter_propose_new_activity_intro
   #- action: utter_activity
+  #- action: utter_activity_read
+
+- rule: text activity
+  steps:
+  - action: action_text_activity
   - action: utter_activity_read
-  
+
+- rule: video activity
+  steps:
+  - action: action_video_activity
+  - action: utter_activity_read
+
+- rule: activity activity
+  steps:
+  - action: action_activity_activity
+  - action: utter_activity_read
+
 - rule: read activity
   steps:
   - intent: confirm_activity_read

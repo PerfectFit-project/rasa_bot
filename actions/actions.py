@@ -6,10 +6,8 @@
 
 
 from datetime import datetime
-from definitions import (ACTIVITY_CLUSTERS, 
-                         DATABASE_HOST, DATABASE_PASSWORD, 
-                         DATABASE_PORT, DATABASE_USER, df_act,
-                         NUM_ACTIVITIES)
+from definitions import (DATABASE_HOST, DATABASE_PASSWORD, 
+                         DATABASE_PORT, DATABASE_USER, df_act)
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import FollowupAction, SlotSet
@@ -423,14 +421,74 @@ class ActionChooseActivity(Action):
             logging.info("Select random activity from the newly available activities list")
             personal_act_ind_list = [x for x in personal_act_ind_list if x not in set(done_activities_list)]
 
-        chosen_ind_activity = random.choice(personal_act_ind_list)
+        chosen_activity_index = random.choice(personal_act_ind_list)
+        chosen_activity_media = str(personal_act_df.loc[ chosen_activity_index,'Media'])
 
-        logging.info("Chosen activity: "+ str(personal_act_df.loc[ chosen_ind_activity,'Content']))
+        logging.info("Chosen activity: "+ str(personal_act_df.loc[ chosen_activity_index,'Content']))
 
-        #[TODO: check if it's text/video or activity and make it work accordingly]
-
-        saveActivityToDB(prolific_id, round_num, chosen_ind_activity)
-
-        dispatcher.utter_message(text=str(personal_act_df.loc[ chosen_ind_activity,'Content']))
-        return []
+        #saveActivityToDB(prolific_id, round_num, chosen_activity_index)
     
+        if chosen_activity_media == "text":
+            return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
+                    SlotSet("chosen_activity_media", chosen_activity_media),
+                    FollowupAction("action_text_activity")]
+        elif chosen_activity_media == "video":
+            return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
+                    SlotSet("chosen_activity_media", chosen_activity_media),
+                    FollowupAction("action_video_activity")]
+        else: 
+            return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
+                    SlotSet("chosen_activity_media", chosen_activity_media),
+                    FollowupAction("action_activity_activity")]
+    
+
+class ActionTextActivity(Action):   
+
+    def name(self) -> Text:
+        return "action_text_activity"
+
+    def run(self, dispatcher, tracker, domain):
+
+        chosen_activity_index = tracker.get_slot("chosen_activity_index")
+        logging.info("ActionTextActivity act_index:"+ str(chosen_activity_index))
+        
+        text_content = df_act.loc[ chosen_activity_index,'Content'][0].split("\n")
+
+        for line in text_content:
+            dispatcher.utter_message(text=line)
+
+        return []
+
+class ActionVideoActivity(Action):   
+
+    def name(self) -> Text:
+        return "action_video_activity"
+
+    def run(self, dispatcher, tracker, domain):
+
+        chosen_activity_index = tracker.get_slot("chosen_activity_index")
+        logging.info("ActionVideoActivity act_index:"+ str(chosen_activity_index))
+        
+        text_content = df_act.loc[ chosen_activity_index,'Content'][0].split("\n")
+
+        for line in text_content:
+            dispatcher.utter_message(text=line)
+
+        return []
+
+class ActionActivityActivity(Action):   
+
+    def name(self) -> Text:
+        return "action_activity_activity"
+
+    def run(self, dispatcher, tracker, domain):
+
+        chosen_activity_index = tracker.get_slot("chosen_activity_index")
+        logging.info("ActionActivityActivity act_index:"+ str(chosen_activity_index))
+        
+        text_content = df_act.loc[ chosen_activity_index,'Content'][0].split("\n")
+
+        for line in text_content:
+            dispatcher.utter_message(text=line)
+
+        return []
