@@ -330,7 +330,7 @@ def getPersonalizedActivitiesList(age, gender):
     df_act_copy = df_act.copy(True)
 
     for index, row in df_act_copy.iterrows():
-        if (row['Gender'] == 'female' and gender == 'male') or (row['Gender'] == 'male' and gender == 'female'):        # delete rows that are of opposite gender
+        if (row['Gender'] == 'female' and gender == '0') or (row['Gender'] == 'male' and gender == '1'):        # delete rows that are of opposite gender
             df_act_copy.drop(index, inplace=True)
 
         if (row['Age']) == '50' and (age < 50 or age > 60):     # delete rows that are of a different age range (50-60 only)
@@ -401,8 +401,8 @@ class ActionChooseActivity(Action):
 
     def run(self, dispatcher, tracker, domain):
 
-        age = 29                # for testing purposes, delete them on production
-        gender = "female"
+        age = tracker.get_slot("age")
+        gender = tracker.get_slot("gender")
         round_num = tracker.get_slot("round_num")
 
         prolific_id = tracker.current_state()['sender_id']

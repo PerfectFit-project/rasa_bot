@@ -31,6 +31,12 @@ entities:
 - session_num:
     influence_conversation: false
 
+- age:
+    influence_conversation: false
+
+- gender:
+    influence_conversation: false
+
 - mood:
     influence_conversation: false
 - mood_quadrant:
@@ -70,6 +76,20 @@ slots:
     mappings:
     - type: from_entity
       entity: session_num
+  age:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: age
+  gender:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: gender
   mood:
     type: text
     initial_value: ''
