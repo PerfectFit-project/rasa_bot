@@ -13,8 +13,8 @@ $(document).ready(function () {
 	// get user age
 	userAge = urlParams.get('a');
 
-	// get user gender
-	const userGender = urlParams.get('g');
+	// get user gender - male: 0 and female: 1
+	userGender = urlParams.get('g');
 
 		// Make fullscreen
 		if ($('.widget').width() == 350) {
@@ -27,7 +27,7 @@ $(document).ready(function () {
 	
 	
 	//start a session
-	send('/start_session1{"session_num":"1"}');
+	send('/start_session1{"session_num":"1", "age":' + userAge + ',"gender":' + userGender + '}');
 })
 
 //=====================================	user enter or sends the message =====================
