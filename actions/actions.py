@@ -330,16 +330,20 @@ def getPersonalizedActivitiesList(age, gender):
     df_act_copy = df_act.copy(True)
 
     for index, row in df_act_copy.iterrows():
-        if (row['Gender'] == 'female' and gender == '0') or (row['Gender'] == 'male' and gender == '1'):        # delete rows that are of opposite gender
+        # delete rows that are of opposite gender
+        if (row['Gender'] == 'female' and gender == '0') or (row['Gender'] == 'male' and gender == '1'):     
             df_act_copy.drop(index, inplace=True)
 
-        if (row['Age']) == '50' and (age < 50 or age > 60):     # delete rows that are of a different age range (50-60 only)
+        # delete rows that are of a different age range (50-60 only)
+        if (row['Age']) == '50' and (age < 50 or age > 60):     
             df_act_copy.drop(index, inplace=True)
 
-        if (row['Age']) == '40' and (age < 40 or age > 49):     # delete rows that are of a different age range (40-49 only)
+        # delete rows that are of a different age range (40-49 only)
+        if (row['Age']) == '40' and (age < 40 or age > 49):     
             df_act_copy.drop(index, inplace=True)
 
-        if (row['Age']) == '30' and (age > 39):     # delete rows that are of a different age range (39++ only)
+        # delete rows that are of a different age range (39++ only)
+        if (row['Age']) == '30' and (age > 39):     
             df_act_copy.drop(index, inplace=True)
 
     return df_act_copy
@@ -361,12 +365,48 @@ def get_user_activity_history(prolific_id):
     result = cur.fetchall()
 
     already_done_activities_indices = [int(i[0]) for i in result]
-    
-    logging.info("Already done activities indices: " + str(already_done_activities_indices))
 
     conn.close()
         
     return already_done_activities_indices
+
+
+def construct_activity_random_selection(personalized_list, history_list):
+    # create a dictionary to map the labels to the values
+    labels = {}
+    for i in range(1, 11):
+        labels["S"] = labels.get("S", []) + [i]
+    for i in range(11, 19):
+        labels["V"] = labels.get("V", []) + [i]
+    for i in range(19, 26):
+        labels["SE"] = labels.get("SE", []) + [i]
+    for i in range(26, 32):
+        labels["RE"] = labels.get("RE", []) + [i]
+
+    # merge the two lists and assign labels to each value
+    merged = {}
+    for val in personalized_list + history_list:
+        for key in labels:
+            if val in labels[key]:
+                merged[val] = key
+
+    # count the frequency of each label
+    freq = {}
+    for key in labels:
+        freq[key] = 0
+    for val in merged.values():
+        freq[val] += 1
+
+    # randomly choose a label among the least frequent ones
+    least_freq = min(freq.values())
+    least_freq_labels = [key for key in freq if freq[key] == least_freq]
+    chosen_label = random.choice(least_freq_labels)
+
+    # get the possible values for the chosen label
+    possible_values = [val for val in merged if merged[val] == chosen_label]
+
+    return(random.choice(possible_values))
+
 
 def saveActivityToDB(prolific_id, round_num, chosen_activity_index):
 
@@ -393,7 +433,8 @@ def saveActivityToDB(prolific_id, round_num, chosen_activity_index):
         conn.close()
 
         return []
-    
+
+
 class ActionChooseActivity(Action):
         
     def name(self) -> Text:
@@ -410,27 +451,31 @@ class ActionChooseActivity(Action):
         # get a df with personalized activities
         personal_act_df = getPersonalizedActivitiesList(age, gender)
 
-        # get list of indices of personalized activities
-        personal_act_ind_list = personal_act_df['Number']
+        # get list of indices of personalized activities and get all the main items. This can be [1,2,3]
+        personal_act_ind_list = [int(x) for x in personal_act_df['Number'] if int(x) == x]      
 
-        # get list of indices of previously done activities
-        done_activities_list = get_user_activity_history(prolific_id)
+        # get list of indices of previously done activities. This can be [1.3, 4, 5.1]
+        history_activities_list = get_user_activity_history(prolific_id)
 
-        if done_activities_list !=[]:
-            # remove already_done_activities from the personalized_list and create a new list with available activities
-            logging.info("Select random activity from the newly available activities list")
-            personal_act_ind_list = [x for x in personal_act_ind_list if x not in set(done_activities_list)]
+        # get the main items of the history list. So we have [1, 4, 5]
+        history_activities_list = [int(x) for x in history_activities_list if int(x) == x]
+        logging.info("History activity list:" + str(history_activities_list))
 
-        #chosen_activity_index = random.choice(personal_act_ind_list)          # only for testing, uncomment on production
-        chosen_activity_index = 22           # only for testing, remove on production
+        # get a randlomly chosen activity, among the least selected construct so far
+        chosen_activity_index = construct_activity_random_selection(personal_act_ind_list, history_activities_list)
 
         chosen_activity_media = str(personal_act_df.loc[ chosen_activity_index,'Media'])
 
+        logging.info("Chosen activity index: " + str(personal_act_df.loc[ chosen_activity_index,'Number']))
         logging.info("Chosen activity: "+ str(personal_act_df.loc[ chosen_activity_index,'Content']))
 
         #saveActivityToDB(prolific_id, round_num, chosen_activity_index)
+
+        return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
+                    SlotSet("chosen_activity_media", chosen_activity_media),
+                    FollowupAction("action_activity_activity")]
     
-        if chosen_activity_media == "text":
+"""         if chosen_activity_media == "text":
             return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
                     SlotSet("chosen_activity_media", chosen_activity_media),
                     FollowupAction("action_text_activity")]
@@ -441,7 +486,7 @@ class ActionChooseActivity(Action):
         else: 
             return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
                     SlotSet("chosen_activity_media", chosen_activity_media),
-                    FollowupAction("action_activity_activity")]
+                    FollowupAction("action_activity_activity")] """
     
 
 class ActionTextActivity(Action):   
