@@ -111,7 +111,13 @@ def check_session_not_done_before(cur, prolific_id, session_num):
         
     return not_done_before
     
+def showText(dispatcher, item_index):
+    text_content = df_act.loc[df_act['Number'] == item_index, 'Content'].values[0]
 
+    for line in text_content:
+        dispatcher.utter_message(text=line)   
+
+    return
 
 class ActionLoadSessionFirst(Action):
     
@@ -404,8 +410,25 @@ def construct_activity_random_selection(personalized_list, history_list):
 
     # get the possible values for the chosen label
     possible_values = [val for val in merged if merged[val] == chosen_label]
+    logging.info("Possible values:" + str(possible_values) )
 
     return(random.choice(possible_values))
+
+
+def has_children(activity_chosen_index):
+    matches = []
+
+    print(df_act['Number'].to_list())
+
+    for num in df_act['Number'].to_list():
+        if int(num) == activity_chosen_index and num != activity_chosen_index:
+            matches.append(num)
+
+    if matches:
+        selected_sub_activity_index = random.choice(matches)
+        return selected_sub_activity_index
+    else:
+        return activity_chosen_index
 
 
 def saveActivityToDB(prolific_id, round_num, chosen_activity_index):
@@ -452,7 +475,8 @@ class ActionChooseActivity(Action):
         personal_act_df = getPersonalizedActivitiesList(age, gender)
 
         # get list of indices of personalized activities and get all the main items. This can be [1,2,3]
-        personal_act_ind_list = [int(x) for x in personal_act_df['Number'] if int(x) == x]      
+        personal_act_ind_list = [int(x) for x in personal_act_df['Number'] if int(x) == x]     
+        logging.info("Personalized activity list:" + str(personal_act_ind_list)) 
 
         # get list of indices of previously done activities. This can be [1.3, 4, 5.1]
         history_activities_list = get_user_activity_history(prolific_id)
@@ -463,33 +487,51 @@ class ActionChooseActivity(Action):
 
         # get a randlomly chosen activity, among the least selected construct so far
         chosen_activity_index = construct_activity_random_selection(personal_act_ind_list, history_activities_list)
+        logging.info("Chosen activity index: " + str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Number'].values[0]))
+        
+        chosen_activity_index = 2              # only for testing, remove on production
 
-        chosen_activity_media = str(personal_act_df.loc[ chosen_activity_index,'Media'])
+        # get the activity's type of media
+        chosen_activity_media = str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Media'].values[0])
 
-        logging.info("Chosen activity index: " + str(personal_act_df.loc[ chosen_activity_index,'Number']))
-        logging.info("Chosen activity: "+ str(personal_act_df.loc[ chosen_activity_index,'Content']))
+        # check if the activity has children, if not return the same index, else randomly choose and return a child activity
+        chosen_activity_child_index = has_children(chosen_activity_index)
+        logging.info("Chosen activity child index: " + str(chosen_activity_child_index))
+
+        # the chosen activity doesn't have children, so it's only activity or video
+        if chosen_activity_child_index == chosen_activity_index:
+            saveActivityToDB(prolific_id, round_num, chosen_activity_index)
+            return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
+                    SlotSet("chosen_activity_media", chosen_activity_media),
+                    FollowupAction("action_activity_activity")]
+        
+        # TODO: create a condition in case, there's a user input for video and activity
+        
+            """         if chosen_activity_media == "text":
+                return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
+                        SlotSet("chosen_activity_media", chosen_activity_media),
+                        FollowupAction("action_text_activity")]
+            elif chosen_activity_media == "video":
+                return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
+                        SlotSet("chosen_activity_media", chosen_activity_media),
+                        FollowupAction("action_video_activity")]
+            else: 
+                return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
+                        SlotSet("chosen_activity_media", chosen_activity_media),
+                        FollowupAction("action_activity_activity")] """
+            
+        # the chosen activity has children, so it's a text
+        # we reverse chosen_activity_index slot with the child's activity index
+        # because we need to assign to user_input the parent's activity index
+        else: 
+            return [SlotSet("chosen_activity_index", float(chosen_activity_child_index)), 
+                    SlotSet("user_input", float(chosen_activity_index)),
+                    SlotSet("chosen_activity_media", chosen_activity_media),
+                    FollowupAction("action_user_input")]
 
         #saveActivityToDB(prolific_id, round_num, chosen_activity_index)
 
-        return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
-                    SlotSet("chosen_activity_media", chosen_activity_media),
-                    FollowupAction("action_activity_activity")]
-    
-"""         if chosen_activity_media == "text":
-            return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
-                    SlotSet("chosen_activity_media", chosen_activity_media),
-                    FollowupAction("action_text_activity")]
-        elif chosen_activity_media == "video":
-            return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
-                    SlotSet("chosen_activity_media", chosen_activity_media),
-                    FollowupAction("action_video_activity")]
-        else: 
-            return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
-                    SlotSet("chosen_activity_media", chosen_activity_media),
-                    FollowupAction("action_activity_activity")] """
-    
-
-class ActionTextActivity(Action):   
+class ActionTextActivity(Action):
 
     def name(self) -> Text:
         return "action_text_activity"
@@ -499,10 +541,7 @@ class ActionTextActivity(Action):
         chosen_activity_index = tracker.get_slot("chosen_activity_index")
         logging.info("ActionTextActivity act_index:"+ str(chosen_activity_index))
         
-        text_content = df_act.loc[ chosen_activity_index,'Content'][0].split("\n")
-
-        for line in text_content:
-            dispatcher.utter_message(text=line)
+        showText(dispatcher, chosen_activity_index)
 
         return []
 
@@ -516,10 +555,7 @@ class ActionVideoActivity(Action):
         chosen_activity_index = tracker.get_slot("chosen_activity_index")
         logging.info("ActionVideoActivity act_index:"+ str(chosen_activity_index))
         
-        text_content = df_act.loc[ chosen_activity_index,'Content'][0].split("\n")
-
-        for line in text_content:
-            dispatcher.utter_message(text=line)
+        showText(dispatcher, chosen_activity_index)
 
         return []
 
@@ -533,10 +569,7 @@ class ActionActivityActivity(Action):
         chosen_activity_index = tracker.get_slot("chosen_activity_index")
         logging.info("ActionActivityActivity act_index:"+ str(chosen_activity_index))
         
-        text_content = df_act.loc[ chosen_activity_index,'Content'][0].split("\n")
-
-        for line in text_content:
-            dispatcher.utter_message(text=line)
+        showText(dispatcher, chosen_activity_index)
 
 
         # if the user is requested to answer, then call the user_input action
@@ -544,4 +577,19 @@ class ActionActivityActivity(Action):
         #    return FollowupAction("action_activity_activity")
         
         #else: return []
+        return []
+    
+class ActionUserInput(Action):   
+
+    def name(self) -> Text:
+        return "action_user_input"
+
+    def run(self, dispatcher, tracker, domain):
+
+        chosen_activity_index = tracker.get_slot("chosen_activity_index")
+        user_input = tracker.get_slot("user_input")
+
+        logging.info("ActionUserInput user_input: "+ str(user_input))
+        logging.info("ActionUserInput chosen_activity_index: "+ str(chosen_activity_index))
+
         return []

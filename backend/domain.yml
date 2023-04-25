@@ -140,6 +140,13 @@ slots:
     mappings:
     - type: custom
 
+  user_input:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+    - type: custom
+
   chosen_activity_media:
     type: text
     initial_value: ''
@@ -960,6 +967,7 @@ actions:
 - action_start_PMT_questions
 - action_choose_activity
 - action_activity_activity
+- action_user_input
 
 - action_end_dialog
 - action_default_fallback_end_dialog

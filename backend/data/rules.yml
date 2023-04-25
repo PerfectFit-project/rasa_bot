@@ -119,6 +119,11 @@ rules:
   - action: action_activity_activity
   - action: utter_activity_read
 
+- rule: user input
+  steps:
+  - action: action_user_input
+  - action: utter_activity_read
+
 - rule: read activity
   steps:
   - intent: confirm_activity_read
