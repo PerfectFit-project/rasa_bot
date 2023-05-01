@@ -10,7 +10,8 @@ from definitions import (DATABASE_HOST, DATABASE_PASSWORD,
                          DATABASE_PORT, DATABASE_USER, df_act)
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import FollowupAction, SlotSet
+from rasa_sdk.events import FollowupAction, SlotSet, EventType
+from rasa_sdk.types import DomainDict
 from typing import Any, Dict, List, Optional, Text
 
 import logging
@@ -527,7 +528,7 @@ class ActionChooseActivity(Action):
             return [SlotSet("chosen_activity_index", float(chosen_activity_child_index)), 
                     SlotSet("user_input", float(chosen_activity_index)),
                     SlotSet("chosen_activity_media", chosen_activity_media),
-                    FollowupAction("action_user_input")]
+                    FollowupAction("action_text_activity")]
 
         #saveActivityToDB(prolific_id, round_num, chosen_activity_index)
 
@@ -536,14 +537,28 @@ class ActionTextActivity(Action):
     def name(self) -> Text:
         return "action_text_activity"
 
-    def run(self, dispatcher, tracker, domain):
+    def run(self, dispatcher: CollectingDispatcher,
+                tracker: Tracker,
+                domain: DomainDict) -> List[EventType]:
 
-        chosen_activity_index = tracker.get_slot("chosen_activity_index")
-        logging.info("ActionTextActivity act_index:"+ str(chosen_activity_index))
+        user_input = tracker.get_slot("user_input")
+        logging.info("ActionTextActivity act_index:"+ str(user_input))
+
+        text_content = df_act.loc[df_act['Number'] == user_input, 'Content'].values[0]
+
+        text_content_split = text_content[0].split("\n")
+
+        buttons = []
+        for answer in text_content_split[2].split(";"):
+                btn = {"title":' ' + answer + ' ', "payload": '/user_input{"u_input":"whatever"}'}
+                buttons.append(btn)
+
         
-        showText(dispatcher, chosen_activity_index)
+        dispatcher.utter_message(text=text_content_split[0],buttons=buttons)
 
         return []
+
+
 
 class ActionVideoActivity(Action):   
 
@@ -583,13 +598,14 @@ class ActionUserInput(Action):
 
     def name(self) -> Text:
         return "action_user_input"
-
+    
     def run(self, dispatcher, tracker, domain):
 
         chosen_activity_index = tracker.get_slot("chosen_activity_index")
-        user_input = tracker.get_slot("user_input")
 
-        logging.info("ActionUserInput user_input: "+ str(user_input))
         logging.info("ActionUserInput chosen_activity_index: "+ str(chosen_activity_index))
 
+        showText(dispatcher, chosen_activity_index)
+
         return []
+    

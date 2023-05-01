@@ -27,6 +27,8 @@ intents:
 - confirm_next_part
 - confirm_goodbye
 
+- user_input
+
 entities:
 - session_num:
     influence_conversation: false
@@ -60,7 +62,8 @@ entities:
     influence_conversation: false
 - dropout_response:
     influence_conversation: false
-
+- u_input:
+    influence_conversation: false
 
 slots:
   ### intro/general
@@ -185,8 +188,15 @@ slots:
     influence_conversation: false
     mappings:
     - type: from_entity
-      entity: state_SE    
+      entity: state_SE
 
+  u_input:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: u_input
       
   ### activity experience
   # effort
@@ -967,6 +977,8 @@ actions:
 - action_start_PMT_questions
 - action_choose_activity
 - action_activity_activity
+- action_text_activity
+- action_video_activity
 - action_user_input
 
 - action_end_dialog

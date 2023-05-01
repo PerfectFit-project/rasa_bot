@@ -107,8 +107,10 @@ rules:
 - rule: text activity
   steps:
   - action: action_text_activity
+  - intent: user_input
+  - action: action_user_input
   - action: utter_activity_read
-
+  
 - rule: video activity
   steps:
   - action: action_video_activity
@@ -117,11 +119,6 @@ rules:
 - rule: activity activity
   steps:
   - action: action_activity_activity
-  - action: utter_activity_read
-
-- rule: user input
-  steps:
-  - action: action_user_input
   - action: utter_activity_read
 
 - rule: read activity
