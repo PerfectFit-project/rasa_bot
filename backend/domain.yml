@@ -121,6 +121,14 @@ slots:
     - type: from_text
       conditions:
         - active_loop: user_name_form
+  user_input_activity_slot:
+    type: text
+    initial_value: ''
+    influence_conversation: false
+    mappings:
+    - type: from_text
+      conditions:
+        - active_loop: user_input_activity_form
   # User name in later sessions
   user_name_slot_not_first:
     type: text
@@ -242,9 +250,14 @@ responses:
   - text: "How may I call you?"
   utter_confirm_name:
   - text: "Hi {user_name_slot}, it's nice to meet you."
+  utter_ask_user_input_activity_slot:
+  - text: "Type here everything that comes to your mind."
+  - text: "Type in your thoughts here."
   utter_longer_name:
   - text: "Please let me know how I can call you. It does not need to be your real name."
   - text: "Kindly tell me how I can call you. This does not need to be your real name. A nickname works too."
+  utter_longer_answer_activity:
+  - text: "Please type in a longer answer"
   utter_purpose_1:
   - text: "I have mentioned by name, but let me also tell you bit about what I do: My goal is to help people prepare for quitting smoking. And since becoming more physically active may make it easier to quit smoking, I also want to prepare people for becoming more physically active."
   utter_purpose_2:
@@ -962,6 +975,9 @@ forms:
   activity_experience_form:
     required_slots:
         - activity_experience_slot
+  user_input_activity_form:
+    required_slots:
+        - user_input_activity_slot
 
 
 actions:
@@ -973,6 +989,7 @@ actions:
 - validate_user_name_form
 - validate_activity_experience_form
 - validate_activity_experience_mod_form
+- validate_user_input_activity_form
 
 - action_start_PMT_questions
 - action_choose_activity

@@ -119,6 +119,15 @@ rules:
 - rule: activity activity
   steps:
   - action: action_activity_activity
+  - action: user_input_activity_form
+  - active_loop: user_input_activity_form
+
+- rule: activity read
+  condition:
+    - active_loop: user_input_activity_form
+  steps:
+  - action: user_input_activity_form
+  - active_loop: null
   - action: utter_activity_read
 
 - rule: read activity
