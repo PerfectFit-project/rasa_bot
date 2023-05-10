@@ -490,7 +490,7 @@ class ActionChooseActivity(Action):
         chosen_activity_index = construct_activity_random_selection(personal_act_ind_list, history_activities_list)
         logging.info("Chosen activity index: " + str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Number'].values[0]))
         
-        chosen_activity_index = 9            # only for testing, remove on production
+        chosen_activity_index = 16            # only for testing, remove on production
 
         # get the activity's type of media
         chosen_activity_media = str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Media'].values[0])
@@ -544,7 +544,8 @@ class ActionTextActivity(Action):
 
         buttons = []
         for answer in text_content_split[2].split(";"):
-                btn = {"title":' ' + answer + ' ', "payload": '/user_input{"u_input":"whatever"}'}
+                logging.info("Button:" + answer)
+                btn = {"title":' ' + answer + ' ', "payload": '/user_input{"u_input":"'+ answer +'"}'}
                 buttons.append(btn)
 
         
@@ -587,8 +588,28 @@ class ActionActivityActivity(Action):
         
         #else: return []
         return []
-    
-class ActionUserInput(Action):   
+
+
+def activityIsOne(tracker):
+    if (tracker.get_slot("u_input") == "physical health"):
+        chosen_activity_index = 1.1
+    elif (tracker.get_slot("u_input") == "heart diseases"):
+        chosen_activity_index = 1.2
+    elif (tracker.get_slot("u_input") == "appearance"):
+        chosen_activity_index = 1.3
+    elif (tracker.get_slot("u_input") == "oral health"):
+        chosen_activity_index = 1.4
+    elif (tracker.get_slot("u_input") == "respiratory illnesses"):
+        chosen_activity_index = 1.5
+    elif (tracker.get_slot("u_input") == "life expectancy"):
+        chosen_activity_index = 1.6
+    elif (tracker.get_slot("u_input") == "fertility"):
+        chosen_activity_index = 1.7
+
+    return chosen_activity_index
+
+
+class ActionUserInput(Action):
 
     def name(self) -> Text:
         return "action_user_input"
@@ -597,7 +618,12 @@ class ActionUserInput(Action):
 
         prolific_id = tracker.current_state()['sender_id']
         round_num = tracker.get_slot("round_num")
-        chosen_activity_index = tracker.get_slot("chosen_activity_index")
+
+        # in case of action no.1, the text is dependent on the user's answer
+        if (tracker.get_slot("user_input") == 1):
+            chosen_activity_index = activityIsOne(tracker)
+        else: chosen_activity_index = tracker.get_slot("chosen_activity_index")
+
 
         logging.info("ActionUserInput chosen_activity_index: "+ str(chosen_activity_index))
 
