@@ -257,7 +257,7 @@ responses:
   - text: "Please let me know how I can call you. It does not need to be your real name."
   - text: "Kindly tell me how I can call you. This does not need to be your real name. A nickname works too."
   utter_longer_answer_activity:
-  - text: "Please type in a longer answer"
+  - text: "Please type in a longer answer."
   utter_purpose_1:
   - text: "I have mentioned by name, but let me also tell you bit about what I do: My goal is to help people prepare for quitting smoking. And since becoming more physically active may make it easier to quit smoking, I also want to prepare people for becoming more physically active."
   utter_purpose_2:
@@ -413,7 +413,7 @@ responses:
         - type: slot
           name: session_num
           value: "1"
-      text: "I'll continue when you're done reading about your activity."
+      text: "I'll continue when you're done reading."
       buttons:
       - payload: /confirm_activity_read
         title: "I'm done"

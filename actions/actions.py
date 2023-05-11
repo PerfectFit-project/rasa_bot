@@ -490,7 +490,7 @@ class ActionChooseActivity(Action):
         chosen_activity_index = construct_activity_random_selection(personal_act_ind_list, history_activities_list)
         logging.info("Chosen activity index: " + str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Number'].values[0]))
         
-        chosen_activity_index = 16            # only for testing, remove on production
+        chosen_activity_index = 9            # only for testing, remove on production
 
         # get the activity's type of media
         chosen_activity_media = str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Media'].values[0])
@@ -581,12 +581,6 @@ class ActionActivityActivity(Action):
         
         showText(dispatcher, chosen_activity_index)
 
-
-        # if the user is requested to answer, then call the user_input action
-        #if df_act.loc[ chosen_activity_index,'User input']:
-        #    return FollowupAction("action_activity_activity")
-        
-        #else: return []
         return []
 
 
@@ -644,11 +638,13 @@ class ValidateUserInputActivityForm(FormValidationAction):
         # pylint: disable=unused-argument
         """Validate user_input_activity_slot input."""
         last_utterance = get_latest_bot_utterance(tracker.events)
+        last_user_message = tracker.latest_message.get('text')
 
         if last_utterance != 'utter_ask_user_input_activity_slot':
             return {"user_input_activity_slot": None}
 
-        if not len(last_utterance) >= 1:
+        # require the user to enter at least 200 chars
+        if not len(last_user_message) >= 200:
             dispatcher.utter_message(response="utter_longer_answer_activity")
             return {"user_input_activity_slot": None}
 
