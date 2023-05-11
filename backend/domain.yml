@@ -993,9 +993,8 @@ actions:
 
 - action_start_PMT_questions
 - action_choose_activity
-- action_activity_activity
+- action_vid_act_activity
 - action_text_activity
-- action_video_activity
 - action_user_input
 
 - action_end_dialog

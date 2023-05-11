@@ -490,7 +490,7 @@ class ActionChooseActivity(Action):
         chosen_activity_index = construct_activity_random_selection(personal_act_ind_list, history_activities_list)
         logging.info("Chosen activity index: " + str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Number'].values[0]))
         
-        chosen_activity_index = 9            # only for testing, remove on production
+        chosen_activity_index = 16            # only for testing, remove on production
 
         # get the activity's type of media
         chosen_activity_media = str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Media'].values[0])
@@ -505,17 +505,10 @@ class ActionChooseActivity(Action):
         
             saveActivityToDB(prolific_id, round_num, chosen_activity_index)
 
-            if chosen_activity_media == 'activity':
-                logging.info("Activity action")
-                return[SlotSet("chosen_activity_index", float(chosen_activity_index)), 
-                        SlotSet("chosen_activity_media", chosen_activity_media),
-                        FollowupAction("action_activity_activity")]
-            else:
-                logging.info("Video action")
-                return [SlotSet("chosen_activity_index", float(chosen_activity_index)), 
-                        SlotSet("chosen_activity_media", chosen_activity_media),
-                        FollowupAction("action_video_activity")]
-        
+            logging.info(chosen_activity_media + " action")
+            return[SlotSet("chosen_activity_index", float(chosen_activity_index)), 
+                    SlotSet("chosen_activity_media", chosen_activity_media),
+                    FollowupAction("action_vid_act_activity")]  
             
         # the chosen activity has children, so it's a text
         # we reverse chosen_activity_index slot with the child's activity index
@@ -553,31 +546,15 @@ class ActionTextActivity(Action):
 
         return []
 
-
-
-class ActionVideoActivity(Action):   
+class ActionVidActActivity(Action):   
 
     def name(self) -> Text:
-        return "action_video_activity"
+        return "action_vid_act_activity"
 
     def run(self, dispatcher, tracker, domain):
 
         chosen_activity_index = tracker.get_slot("chosen_activity_index")
-        logging.info("ActionVideoActivity act_index:"+ str(chosen_activity_index))
-        
-        showText(dispatcher, chosen_activity_index)
-
-        return []
-
-class ActionActivityActivity(Action):   
-
-    def name(self) -> Text:
-        return "action_activity_activity"
-
-    def run(self, dispatcher, tracker, domain):
-
-        chosen_activity_index = tracker.get_slot("chosen_activity_index")
-        logging.info("ActionActivityActivity act_index:"+ str(chosen_activity_index))
+        logging.info("ActionVidActActivity act_index:"+ str(chosen_activity_index))
         
         showText(dispatcher, chosen_activity_index)
 
@@ -644,7 +621,8 @@ class ValidateUserInputActivityForm(FormValidationAction):
             return {"user_input_activity_slot": None}
 
         # require the user to enter at least 200 chars
-        if not len(last_user_message) >= 200:
+        #if not len(last_user_message) >= 200:      # uncomment on production
+        if not len(last_user_message) >= 1:         # only for testing, remove on production
             dispatcher.utter_message(response="utter_longer_answer_activity")
             return {"user_input_activity_slot": None}
 

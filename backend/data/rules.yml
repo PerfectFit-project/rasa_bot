@@ -110,15 +110,10 @@ rules:
   - intent: user_input
   - action: action_user_input
   - action: utter_activity_read
-  
-- rule: video activity
-  steps:
-  - action: action_video_activity
-  - action: utter_activity_read
 
-- rule: activity activity
+- rule: video-activity activity
   steps:
-  - action: action_activity_activity
+  - action: action_vid_act_activity
   - action: user_input_activity_form
   - active_loop: user_input_activity_form
 
