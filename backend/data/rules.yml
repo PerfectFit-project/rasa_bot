@@ -67,7 +67,6 @@ rules:
 #   - action: utter_intro_session_1
 #   - action: utter_intro_session_2
 #   - action: utter_intro_session_3
-#   - action: utter_intro_session_4
 #   - action: utter_intro_session_5
 #   - action: utter_intro_session_6
 #   - action: utter_intro_session_7
@@ -132,16 +131,10 @@ rules:
   - action: action_save_session
   - action: action_start_PMT_questions
   
-- rule: confirm next part and save states to db
-  steps:
-  - action: utter_email_reminder
-  - action: utter_remind_next_part
-  - intent: confirm_next_part
-  - action: utter_prolific_link
-  - action: utter_goodbye
-  
 - rule: end
   steps:
+  - action: utter_end_of_session
+  - action: utter_goodbye
   - intent: confirm_goodbye
   - action: utter_final_close_session
   - action: action_end_dialog

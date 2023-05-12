@@ -296,7 +296,7 @@ responses:
   - buttons:
     - payload : /confirm_intro_session
       title: "Now"
-    text: "Let me know when you've finished reading our plan of the session."
+    text: "Let me know when you've finished reading our plan."
 
     
   ### Ask state questions
@@ -413,42 +413,10 @@ responses:
         - type: slot
           name: session_num
           value: "1"
-      text: "I'll continue when you're done reading."
+      text: "I'll continue when you're done."
       buttons:
       - payload: /confirm_activity_read
         title: "I'm done"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "Let me know once you're done reading your activity."
-      buttons:
-      - payload: /confirm_activity_read
-        title: "I'm done!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "Just use the button below to continue after you've read the activity description."
-      buttons:
-      - payload: /confirm_activity_read
-        title: "I've finished reading"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "Please tell me when you've finished reading the description."
-      buttons:
-      - payload: /confirm_activity_read
-        title: "I've read everything"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5"
-      text: "Once you're done reading about your activity, let me know."
-      buttons:
-      - payload: /confirm_activity_read
-        title: "Done!"
 
     - text: "Use the button below once you've finished reading, then I'll continue."
       buttons:
@@ -461,163 +429,20 @@ responses:
     
     
   ### End session
-  utter_email_reminder:
+  utter_end_of_session:
     - condition:
-        - type: slot
-          name: session_num
-          value: "1"
-      text: "This is all for this session. Of course, I'll send you a message with your activity on Prolific."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "Then that's it for this session. Naturally, I'll send you a reminder with your activity on Prolific."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "I've said all I wanted for this session. Of course, I'll send you a reminder with your activity on Prolific."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "You've made it to the end of this session! Needless to say, you'll get a message with your activity on Prolific."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5"
-      text: "That concludes our session. I'll send you a message shortly with your activity on Prolific."
-    
-    - text: "That's all for this session. I'll be sending you a message with your activity on Prolific right after this session."
-  
-  utter_remind_next_part:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "1"
-      text: "Oh, and besides the activity reminder message, keep an eye out for the invitation to your next session with me."
-      buttons:
-      - payload: /confirm_next_part
-        title: "Sure!"
-      - payload: /confirm_next_part
-        title: "Yes"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "Also watch out for the invitation to you next session with me."
-      buttons:
-      - payload: /confirm_next_part
-        title: "Alright!"
-      - payload: /confirm_next_part
-        title: "Sure"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "And remember that there's another conversation with me that you'll get invited to."
-      buttons:
-      - payload: /confirm_next_part
-        title: "Yes!"
-      - payload: /confirm_next_part
-        title: "Sounds good"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "And recall that you'll also get invited to another session with me."
-      buttons:
-      - payload: /confirm_next_part
-        title: "Yes!"
-      - payload: /confirm_next_part
-        title: "OK!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5" 
-      text: "Oh, and besides the activity reminder message, keep an eye out for the invitation to the post-questionnaire. Invitations will be sent about 2 days from now. Okay?"
-      buttons:
-      - payload: /confirm_next_part
-        title: "Alright"
-      - payload: /confirm_next_part
-        title: "Yes!"
-    
-    - text: "And remember to look out for the invitation to your next conversation with me. Alright?"
-      buttons:
-      - payload: /confirm_next_part
-        title: "Sure!"
-      - payload: /confirm_next_part
-        title: "Okay!"
-        
-  utter_prolific_link:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "1" 
-      text: "Cool! Here is your Prolific completion link: ... ."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2" 
-      text: "Cool! And here is your completion link: ... ."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3" 
-      text: "Perfect! And this is your Prolific completion link: ... ."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4" 
-      text: "Nice! And here you have your completion link: ... ."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5" 
-      text: "Perfect! Here is your completion link for this session: ... ."
-     
-    - text: "Alright! Then here is your completion link: ... ."
+      - type: slot
+        name: session_num
+        value: "1"
+      text: "This is the end of the session."
+
     
   utter_goodbye:
     - condition:
         - type: slot
           name: session_num
           value: "1" 
-      text: "Bye, see you in the next session!"
-      buttons:
-      - payload: /confirm_goodbye
-        title: "Goodbye!"
-      - payload: /confirm_goodbye
-        title: "Bye, see you next time!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2" 
-      text: "Bye, see you next time!"
-      buttons:
-      - payload: /confirm_goodbye
-        title: "Goodbye!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3" 
-      text: "Goodbye, until next time!"
-      buttons:
-      - payload: /confirm_goodbye
-        title: "Bye!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4" 
-      text: "Looking forward to our next session already, bye for now!"
-      buttons:
-      - payload: /confirm_goodbye
-        title: "Until nex time!"
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5" 
-      text: "Thanks for taking the time to talk to me in our 5 sessions together. Goodbye!"
+      text: "Thanks for taking the time to talk to me. Goodbye!"
       buttons:
       - payload: /confirm_goodbye
         title: "Bye!"
