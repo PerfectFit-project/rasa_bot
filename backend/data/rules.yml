@@ -18,7 +18,7 @@ rules:
   - slot_was_set:
     - session_loaded: true
   - action: utter_greet_first_time
-  - action: action_choose_activity      # add this for testing, remove for production
+  #- action: action_choose_activity      # add this for testing, remove for production
   - action: user_name_form
   - active_loop: user_name_form
   wait_for_user_input: false
@@ -40,36 +40,36 @@ rules:
   - action: user_name_form
   - active_loop: null
   - action: utter_confirm_name
-  - action: action_save_name_to_db          # only for testing, remove this on production
-#  - action: utter_ask_for_mood_session1    # temporary disable this
-  - action: utter_intro_session_7           # and enable the following line
+  #- action: action_save_name_to_db          # only for testing, remove this on production
+  - action: utter_ask_for_mood_session1    # temporary disable this
+  #- action: utter_intro_session_7           # and enable the following line
                                             # to make testing faster  
-# - rule: mood session 1 
-#   steps:
-#   - intent: mood_curr_session1
-#   - action: utter_mood_response
-#   - action: action_save_name_to_db
-#   - action: utter_purpose_1
-#   - action: utter_purpose_2
-#   - action: utter_purpose_3
-#   - action: utter_purpose_4
-#   - action: utter_purpose_5
+- rule: mood session 1 
+  steps:
+  - intent: mood_curr_session1
+  - action: utter_mood_response
+  - action: action_save_name_to_db
+  - action: utter_purpose_1
+  - action: utter_purpose_2
+  - action: utter_purpose_3
+  - action: utter_purpose_4
+  - action: utter_purpose_5
   
-# - rule: usage session 1
-#   steps:
-#   - intent: confirm_purpose
-#   - action: utter_prompt_usage
-#   - action: utter_explain_usage
+- rule: usage session 1
+  steps:
+  - intent: confirm_purpose
+  - action: utter_prompt_usage
+  - action: utter_explain_usage
   
-# - rule: intro session
-#   steps:
-#   - intent: confirm_usage
-#   - action: utter_intro_session_1
-#   - action: utter_intro_session_2
-#   - action: utter_intro_session_3
-#   - action: utter_intro_session_5
-#   - action: utter_intro_session_6
-#   - action: utter_intro_session_7
+- rule: intro session
+  steps:
+  - intent: confirm_usage
+  - action: utter_intro_session_1
+  - action: utter_intro_session_2
+  - action: utter_intro_session_3
+  - action: utter_intro_session_5
+  - action: utter_intro_session_6
+  - action: utter_intro_session_7
 
 - rule: state questions session
   steps:
@@ -108,6 +108,7 @@ rules:
   - action: action_text_activity
   - intent: user_input
   - action: action_user_input
+  - action: action_save_activity_to_db
   - action: utter_activity_read
 
 - rule: video-activity activity
@@ -122,6 +123,7 @@ rules:
   steps:
   - action: user_input_activity_form
   - active_loop: null
+  - action: action_save_activity_to_db
   - action: utter_activity_read
 
 - rule: read activity

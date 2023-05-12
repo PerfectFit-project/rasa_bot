@@ -431,8 +431,14 @@ def has_children(activity_chosen_index):
     else:
         return activity_chosen_index
 
+class ActionSaveActivityToDB(Action):
 
-def saveActivityToDB(prolific_id, round_num, chosen_activity_index):
+    def name(self) -> Text:
+        return "action_save_activity_to_db"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         now = datetime.now()
         formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
@@ -447,10 +453,10 @@ def saveActivityToDB(prolific_id, round_num, chosen_activity_index):
 
         cur = conn.cursor(prepared=True)
         query = "INSERT INTO activity_history(prolific_id, round_num, activity_index, activity_response, time) VALUES(?, ?, ?, ?, ?)"
-        queryMatch = [prolific_id, 
-                      round_num,
-                      chosen_activity_index,
-                      None,
+        queryMatch = [tracker.current_state()['sender_id'], 
+                      tracker.get_slot("round_num"),
+                      tracker.get_slot("chosen_activity_index"),
+                      tracker.get_slot("user_input_activity_slot"),
                       formatted_date]
         cur.execute(query, queryMatch)
         conn.commit()
@@ -490,7 +496,7 @@ class ActionChooseActivity(Action):
         chosen_activity_index = construct_activity_random_selection(personal_act_ind_list, history_activities_list)
         logging.info("Chosen activity index: " + str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Number'].values[0]))
         
-        #chosen_activity_index = 6            # only for testing, remove on production
+        #chosen_activity_index = 16            # only for testing, remove on production
 
         # get the activity's type of media
         chosen_activity_media = str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Media'].values[0])
@@ -502,9 +508,6 @@ class ActionChooseActivity(Action):
         # the chosen activity doesn't have children, so it's only activity or video
         logging.info("Chosen activity index: " + str(chosen_activity_index))
         if chosen_activity_child_index == chosen_activity_index:
-        
-            saveActivityToDB(prolific_id, round_num, chosen_activity_index)
-
             logging.info(chosen_activity_media + " action")
             return[SlotSet("chosen_activity_index", float(chosen_activity_index)), 
                     SlotSet("chosen_activity_media", chosen_activity_media),
@@ -599,8 +602,6 @@ class ActionUserInput(Action):
         logging.info("ActionUserInput chosen_activity_index: "+ str(chosen_activity_index))
 
         showText(dispatcher, chosen_activity_index)
-        saveActivityToDB(prolific_id, round_num, chosen_activity_index)
-
         return []
     
 
@@ -621,8 +622,8 @@ class ValidateUserInputActivityForm(FormValidationAction):
             return {"user_input_activity_slot": None}
 
         # require the user to enter at least 200 chars
-        #if not len(last_user_message) >= 200:      # uncomment on production
-        if not len(last_user_message) >= 1:         # only for testing, remove on production
+        if not len(last_user_message) >= 200:      # uncomment on production
+        #if not len(last_user_message) >= 1:         # only for testing, remove on production
             dispatcher.utter_message(response="utter_longer_answer_activity")
             return {"user_input_activity_slot": None}
 

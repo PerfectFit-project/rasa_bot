@@ -438,16 +438,7 @@ responses:
 
     
   utter_goodbye:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "1" 
-      text: "Thanks for taking the time to talk to me. Goodbye!"
-      buttons:
-      - payload: /confirm_goodbye
-        title: "Bye!"
-        
-    - text: "Bye!"
+    - text: "Thanks for taking the time to talk to me. Goodbye!"
       buttons:
       - payload: /confirm_goodbye
         title: "Goodbye!"
@@ -809,6 +800,7 @@ actions:
 - action_load_session_first
 - action_load_session_not_first
 - action_save_name_to_db
+- action_save_activity_to_db
 - action_save_session
 
 - validate_user_name_form
