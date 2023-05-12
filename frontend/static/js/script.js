@@ -94,7 +94,7 @@ function send(message) {
 	var url = document.location.protocol + "//" + document.location.hostname;
 	$.ajax({
 
-		url: "http://localhost:5005/webhooks/rest/webhook",
+		url: "http://34.175.153.111:5005/webhooks/rest/webhook",
 		type: "POST",
 		contentType: "application/json",
 		data: JSON.stringify({ message: message, sender: user_id }),
