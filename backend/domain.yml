@@ -232,19 +232,16 @@ responses:
   utter_greet_first_time:
   - text: "Hey there, I'm your virtual coach Sam."
   utter_ask_user_input_activity_slot:
-  - text: "Type here everything that comes to your mind."
-  - text: "Type in your thoughts here."
-  utter_longer_name:
-  - text: "Please let me know how I can call you. It does not need to be your real name."
-  - text: "Kindly tell me how I can call you. This does not need to be your real name. A nickname works too."
+  - text: "Type here everything that comes to your mind. Make sure to write at least 2 sentences!"
+  - text: "Type in your thoughts here, and make sure to write at least 2 sentences."
+  - text: "Feel free to write down your thoughts right here! (at least 2 sentences)"
+  - text: "What do you think? Type it here below (at least 2 sentences)"
   utter_longer_answer_activity:
   - text: "Please type in a longer answer."
   utter_purpose_1:
-  - text: "I have mentioned by name, but let me also tell you bit about what I do: My goal is to help people prepare for quitting smoking. And since becoming more physically active may make it easier to quit smoking, I also want to prepare people for becoming more physically active."
-  utter_purpose_2:
-  - text: "Why prepare to quit? Because proper preparation can help to quit successfully."
+  - text: "I have mentioned by name, but let me also tell you bit about what I do: My goal is to help people become more physically active when trying to quit smoking."
   utter_purpose_3:
-  - text: "And how do I prepare people? I propose activities that help build the competencies needed for quitting."
+  - text: "And how do I achieve that? I propose activities that demonstrate the benefits of exercising over smoking."
   utter_purpose_4:
   - text: "Ultimately, I want to be able to propose activities that match the situation a person is in."
   utter_purpose_5:
@@ -262,13 +259,11 @@ responses:
       title: "Nice, sounds easy enough!"
     text: "Most of the time, you can just click on one of the buttons like you already did. If no buttons appear, just make use of the text field below."
   utter_intro_session_1:
-  - text: "Now, let me tell you what we will do in this session."
+  - text: "Now, let me tell you what we will do today."
   utter_intro_session_2:
-  - text: "First, I'll ask you a question to learn about your current situation with regard to preparing for quitting smoking."
+  - text: "First, I'll ask you a few questions to learn about your current situation with regard to quitting smoking."
   utter_intro_session_3:
   - text: "Next, I'll recommend you to read a text, watch a video or do an activity."
-  utter_intro_session_4:
-  - text: "And in the end, I'll briefly tell you about our next session."
   utter_intro_session_5:
   - text: "We will repeat this a few times. I will let you know when it's the end to close the window."
   utter_intro_session_6:
@@ -286,8 +281,10 @@ responses:
 
   utter_state_question_PMT_V:
   - buttons:
+    - payload: /confirm_state_PMT_V{"state_V":"0"}
+      title: "0 (Not at all likely)"
     - payload: /confirm_state_PMT_V{"state_V":"1"}
-      title: "1 (Not at all likely)"
+      title: "1"
     - payload: /confirm_state_PMT_V{"state_V":"2"}
       title: "2"
     - payload: /confirm_state_PMT_V{"state_V":"3"}
@@ -299,13 +296,21 @@ responses:
     - payload: /confirm_state_PMT_V{"state_V":"6"}
       title: "6"
     - payload: /confirm_state_PMT_V{"state_V":"7"}
-      title: "7 (Almost certain)"
-    text: "On a scale of 1 to 7, how likely do you think it is that you will experience harm or negative consequences as a result of smoking?"
+      title: "7"
+    - payload: /confirm_state_PMT_V{"state_V":"8"}
+      title: "8"
+    - payload: /confirm_state_PMT_V{"state_V":"9"}
+      title: "9"
+    - payload: /confirm_state_PMT_V{"state_V":"10"}
+      title: "10 (Completely likely)"
+    text: "On a scale of 0 to 10, how likely do you think it is that you will experience harm or negative consequences as a result of smoking?"
 
   utter_state_question_PMT_S:
   - buttons:
+    - payload: /confirm_state_PMT_S{"state_S":"0"}
+      title: "0 (Not at all serious)"
     - payload: /confirm_state_PMT_S{"state_S":"1"}
-      title: "1 (Not at all serious)"
+      title: "1"
     - payload: /confirm_state_PMT_S{"state_S":"2"}
       title: "2"
     - payload: /confirm_state_PMT_S{"state_S":"3"}
@@ -317,13 +322,21 @@ responses:
     - payload: /confirm_state_PMT_S{"state_S":"6"}
       title: "6"
     - payload: /confirm_state_PMT_S{"state_S":"7"}
-      title: "7 (Severely serious)"
-    text: "On a scale of 1 to 7, how serious do you think the potential harm or threat is if you continue to smoke?"
+      title: "7"
+    - payload: /confirm_state_PMT_S{"state_S":"8"}
+      title: "8"
+    - payload: /confirm_state_PMT_S{"state_S":"9"}
+      title: "9"
+    - payload: /confirm_state_PMT_S{"state_S":"10"}
+      title: "10 (Severely serious)"
+    text: "On a scale of 0 to 10, how serious do you think the potential harm or threat is if you continue to smoke?"
 
   utter_state_question_PMT_RE:
   - buttons:
+    - payload: /confirm_state_PMT_RE{"state_RE":"0"}
+      title: "0 (Not at all confident)"
     - payload: /confirm_state_PMT_RE{"state_RE":"1"}
-      title: "1 (Not at all likely)"
+      title: "1"
     - payload: /confirm_state_PMT_RE{"state_RE":"2"}
       title: "2"
     - payload: /confirm_state_PMT_RE{"state_RE":"3"}
@@ -335,13 +348,21 @@ responses:
     - payload: /confirm_state_PMT_RE{"state_RE":"6"}
       title: "6"
     - payload: /confirm_state_PMT_RE{"state_RE":"7"}
-      title: "7 (Almost certain)"
-    text: "On a scale of 1 to 7, how likely do you think it is that you will experience harm or negative consequences as a result of smoking?"
+      title: "7"
+    - payload: /confirm_state_PMT_RE{"state_RE":"8"}
+      title: "8"
+    - payload: /confirm_state_PMT_RE{"state_RE":"9"}
+      title: "9"
+    - payload: /confirm_state_PMT_RE{"state_RE":"10"}
+      title: "10 (Completely confident)"
+    text: "On a scale of 0 to 10, how confident are you that increasing your physical activity levels will lead to improved health and fitness outcomes?"
 
   utter_state_question_PMT_SE:
   - buttons:
+    - payload: /confirm_state_PMT_SE{"state_SE":"0"}
+      title: "0 (Not at all confident)"
     - payload: /confirm_state_PMT_SE{"state_SE":"1"}
-      title: "1 (Not at all confident)"
+      title: "1"
     - payload: /confirm_state_PMT_SE{"state_SE":"2"}
       title: "2"
     - payload: /confirm_state_PMT_SE{"state_SE":"3"}
@@ -353,8 +374,14 @@ responses:
     - payload: /confirm_state_PMT_SE{"state_SE":"6"}
       title: "6"
     - payload: /confirm_state_PMT_SE{"state_SE":"7"}
-      title: "7 (Completely confident)"
-    text: "On a scale of 1 to 7, how confident are you that you can successfully increase your physical activity levels?"
+      title: "7"
+    - payload: /confirm_state_PMT_SE{"state_SE":"8"}
+      title: "8"
+    - payload: /confirm_state_PMT_SE{"state_SE":"9"}
+      title: "9"
+    - payload: /confirm_state_PMT_SE{"state_SE":"10"}
+      title: "10 (Completely confident)"
+    text: "On a scale of 0 to 10, how confident are you that you can successfully increase your physical activity levels?"
   
   ### Propose activity
   utter_transition_new_activity:
@@ -362,7 +389,7 @@ responses:
         - type: slot
           name: session_num
           value: "1"
-      text: "Now let's look at a preparatory activity that can help you in your current situation."
+      text: "Now let's look at an activity that can help you in your current situation."
     - condition:
         - type: slot
           name: session_num
@@ -409,7 +436,15 @@ responses:
         title: "Let's continue"
     
     
+
   ### End session
+  utter_email_reminder:
+    - condition:
+        - type: slot
+          name: session_num
+          value: "1"
+      text: "That concludes our session. I'll send you a message next week on Prolific with some last questions."
+
   utter_end_of_session:
     - condition:
       - type: slot

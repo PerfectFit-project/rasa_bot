@@ -68,7 +68,7 @@ class ActionStartPMTQuestions(Action):
         round_num += 1
         
         if round_num == 3:          # we will have only 2 rounds
-            return [FollowupAction("utter_end_of_session")]
+            return [FollowupAction("utter_email_reminder")]
         else:
             return [SlotSet("round_num", round_num), FollowupAction("utter_state_question_intro")]
 
@@ -558,7 +558,7 @@ class ValidateUserInputActivityForm(FormValidationAction):
             return {"user_input_activity_slot": None}
 
         # require the user to enter at least 200 chars
-        if not len(last_user_message) >= 200:      # uncomment on production
+        if not len(last_user_message) >= 100:      # uncomment on production
         #if not len(last_user_message) >= 1:         # only for testing, remove on production
             dispatcher.utter_message(response="utter_longer_answer_activity")
             return {"user_input_activity_slot": None}

@@ -38,7 +38,6 @@ rules:
   - intent: mood_curr_session1
   - action: utter_mood_response
   - action: utter_purpose_1
-  - action: utter_purpose_2
   - action: utter_purpose_3
   - action: utter_purpose_4
   - action: utter_purpose_5
@@ -123,6 +122,7 @@ rules:
   
 - rule: end
   steps:
+  - action: utter_email_reminder
   - action: utter_end_of_session
   - action: utter_goodbye
   - intent: confirm_goodbye
