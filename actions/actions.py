@@ -171,81 +171,38 @@ class ActionLoadSessionNotFirst(Action):
         )
         cur = conn.cursor(prepared=True)
         
-        # get user name from database
-        query = ("SELECT name FROM users WHERE prolific_id = %s")
-        cur.execute(query, [prolific_id])
-        user_name_result = cur.fetchone()
+            
+        # check if user has done previous session before '
+        # (i.e., if session data is saved from previous session)
+        query = ("SELECT * FROM sessiondata WHERE prolific_id = %s and session_num = %s and response_type = %s")
+        cur.execute(query, [prolific_id, str(int(session_num) - 1), "state_V"])
+        done_previous_result = cur.fetchone()
         
-        if user_name_result is None:
+        if done_previous_result is None:
             session_loaded = False
             
         else:
-            user_name_result = user_name_result[0]
+            # check if user has not done this session before
+            # checks if some data on this session is already saved in database
+            # this basically means that it checks whether the user has already 
+            # completed the session part until the dropout question before,
+            # since that is when we first save something to the database
+            session_loaded = check_session_not_done_before(cur, prolific_id, 
+                                                            session_num)
             
-            # check if user has done previous session before '
-            # (i.e., if session data is saved from previous session)
-            query = ("SELECT * FROM sessiondata WHERE prolific_id = %s and session_num = %s and response_type = %s")
-            cur.execute(query, [prolific_id, str(int(session_num) - 1), "state_V"])
-            done_previous_result = cur.fetchone()
-            
-            if done_previous_result is None:
-                session_loaded = False
-                
-            else:
-                # check if user has not done this session before
-                # checks if some data on this session is already saved in database
-                # this basically means that it checks whether the user has already 
-                # completed the session part until the dropout question before,
-                # since that is when we first save something to the database
-                session_loaded = check_session_not_done_before(cur, prolific_id, 
-                                                               session_num)
-                
-                if session_loaded:
-                    # Get mood from previous session
-                    query = ("SELECT response_value FROM sessiondata WHERE prolific_id = %s and session_num = %s and response_type = %s")
-                    cur.execute(query, [prolific_id, str(int(session_num) - 1), "mood"])
-                    mood_prev = cur.fetchone()[0]
+            if session_loaded:
+                # Get mood from previous session
+                query = ("SELECT response_value FROM sessiondata WHERE prolific_id = %s and session_num = %s and response_type = %s")
+                cur.execute(query, [prolific_id, str(int(session_num) - 1), "mood"])
+                mood_prev = cur.fetchone()[0]
                     
         
         conn.close()
 
         
-        return [SlotSet("user_name_slot_not_first", user_name_result),
-                SlotSet("mood_prev_session", mood_prev),
+        return [SlotSet("mood_prev_session", mood_prev),
                 SlotSet("session_loaded", session_loaded)]
         
-        
-    
-class ActionSaveNameToDB(Action):
-
-    def name(self) -> Text:
-        return "action_save_name_to_db"
-
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        
-        now = datetime.now()
-        formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
-
-        conn = mysql.connector.connect(
-            user=DATABASE_USER,
-            password=DATABASE_PASSWORD,
-            host=DATABASE_HOST,
-            port=DATABASE_PORT,
-            database='db'
-        )
-        cur = conn.cursor(prepared=True)
-        query = "INSERT INTO users(prolific_id, name, time) VALUES(%s, %s, %s)"
-        queryMatch = [tracker.current_state()['sender_id'], 
-                      tracker.get_slot("user_name_slot"),
-                      formatted_date]
-        cur.execute(query, queryMatch)
-        conn.commit()
-        conn.close()
-
-        return []
-    
     
 def save_sessiondata_entry(cur, conn, prolific_id, session_num, round_num, response_type,
                            response_value, time):
@@ -288,27 +245,6 @@ class ActionSaveSession(Action):
         conn.close()
         
         return []
-    
-
-class ValidateUserNameForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_user_name_form'
-
-    def validate_user_name_slot(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate user_name_slot input."""
-        last_utterance = get_latest_bot_utterance(tracker.events)
-
-        if last_utterance != 'utter_ask_user_name_slot':
-            return {"user_name_slot": None}
-
-        if not len(value) >= 1:
-            dispatcher.utter_message(response="utter_longer_name")
-            return {"user_name_slot": None}
-
-        return {"user_name_slot": value}
     
 
 class ValidateActivityExperienceForm(FormValidationAction):

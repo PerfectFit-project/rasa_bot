@@ -113,14 +113,6 @@ slots:
     influence_conversation: false
     mappings:
     - type: custom
-  user_name_slot:
-    type: text
-    initial_value: ''
-    influence_conversation: false
-    mappings:
-    - type: from_text
-      conditions:
-        - active_loop: user_name_form
   user_input_activity_slot:
     type: text
     initial_value: ''
@@ -129,13 +121,6 @@ slots:
     - type: from_text
       conditions:
         - active_loop: user_input_activity_form
-  # User name in later sessions
-  user_name_slot_not_first:
-    type: text
-    initial_value: ''
-    influence_conversation: false
-    mappings:
-    - type: custom
 
   round_num:
     type: float
@@ -246,10 +231,6 @@ responses:
   ### Intro first session
   utter_greet_first_time:
   - text: "Hey there, I'm your virtual coach Sam."
-  utter_ask_user_name_slot:
-  - text: "How may I call you?"
-  utter_confirm_name:
-  - text: "Hi {user_name_slot}, it's nice to meet you."
   utter_ask_user_input_activity_slot:
   - text: "Type here everything that comes to your mind."
   - text: "Type in your thoughts here."
@@ -270,7 +251,7 @@ responses:
   - buttons:
     - payload: /confirm_purpose
       title: "I'm ready"
-    text: "And this is why you are here, {user_name_slot}: I want to learn how an activity I propose helps you in your specific situation.\nLet me know when you have read what my purpose is and are ready to continue."
+    text: "And this is why you are here: I want to learn how an activity I propose helps you in your specific situation.\nLet me know when you have read what my purpose is and are ready to continue."
   utter_prompt_usage:
   - text: "Okay! Before we start, let me explain how you can communicate with me."
   utter_explain_usage:
@@ -785,9 +766,6 @@ config:
   
   
 forms:
-  user_name_form:
-    required_slots:
-        - user_name_slot
   activity_experience_form:
     required_slots:
         - activity_experience_slot
@@ -799,11 +777,9 @@ forms:
 actions:
 - action_load_session_first
 - action_load_session_not_first
-- action_save_name_to_db
 - action_save_activity_to_db
 - action_save_session
 
-- validate_user_name_form
 - validate_activity_experience_form
 - validate_activity_experience_mod_form
 - validate_user_input_activity_form

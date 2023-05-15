@@ -30,7 +30,7 @@ services:
       restart: always
       environment:
         MYSQL_DATABASE: "db"
-        MYSQL_ROOT_PASSWORD: 'password'
+        MYSQL_ROOT_PASSWORD: 'pmt_chatbot_2023'
       ports:
         - "3306:3306"
       volumes:
