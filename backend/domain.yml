@@ -434,26 +434,13 @@ responses:
       buttons:
       - payload: /confirm_activity_read
         title: "Let's continue"
-
-  utter_action_one:
-    - text: "Smoking has many negative consequences: on the long-run it is quite unhealthy for your body. 
-    I know that it can be uncomfortable to think about such negative consequences, 
-    but doing so can increase your motivation to quit smoking. 
-    Especially when you find out that quitting smoking reduces your chance to face these negative consequences 
-    no matter how long you have smoked. 
-    Choose a topic to find out more:"
-
-    - text: "Smoking comes with a lot of negative consequences: it's not good for your body in the long term. 
-    I know it can be uncomfortable to think about all the bad things, but doing so can give you more reasons to quit smoking. 
-    The good part is that quitting smoking lowers the chances of experiencing these negative consequences, 
-    regardless of how long you've been a smoker. Check out different topics to learn more: "
-
-    - text: "Smoking has lots of bad effects: it's really unhealthy for your body in the long run. 
-    I know it might feel weird to think about all the negative stuff, but doing so can make you more motivated to quit smoking. 
-    And guess what? When you quit, your chances of dealing with these bad effects go down, no matter how long you've been smoking. 
-    Pick a topic to learn more about: "
     
-    
+  utter_action_one_repeated:
+    - text: "We have already looked at some negative consequences of smoking, but it is good to look also at other negative consequences. Pick a topic to learn more about: "
+    - text: "While we've touched upon certain negative outcomes of smoking, it's worthwhile to delve into additional detrimental consequences. Check out different topics to learn more: "
+    - text: "We've covered some of the downsides of smoking, but it's beneficial to examine further negative consequences too. Check out different topics to learn more: "
+    - text: "We already mentioned before the negative impact smoking has in your health. However, it is good to look into it even deeper. Choose another topic from below to find out more: "
+
   ### End session
   utter_email_reminder:
     - condition:

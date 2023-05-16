@@ -18,6 +18,8 @@ import logging
 import mysql.connector
 import random
 
+history_session_list = []
+
 class ActionEndDialog(Action):
     """Action to cleanly terminate the dialog."""
     # ATM this action just call the default restart action
@@ -480,12 +482,13 @@ class ActionTextActivity(Action):
                 btn = {"title":' ' + answer + ' ', "payload": '/user_input{"u_input":"'+ answer +'"}'}
                 buttons.append(btn)
 
-        
-        if (tracker.get_slot("user_input") == 1):
-            dispatcher.utter_message(template="utter_action_one",buttons=buttons)
+        # if the activity 1 has been suggested to the user in the past
+        if (tracker.get_slot("user_input") == 1 and 1 in history_session_list):
+            dispatcher.utter_message(template="utter_action_one_repeated",buttons=buttons)
         else:
             dispatcher.utter_message(text=text_content_split[0],buttons=buttons)
 
+        history_session_list.append(user_input)
         return []
 
 class ActionVidActActivity(Action):   
@@ -499,6 +502,7 @@ class ActionVidActActivity(Action):
         logging.info("ActionVidActActivity act_index:"+ str(chosen_activity_index))
         
         showText(dispatcher, chosen_activity_index)
+        history_session_list.append(chosen_activity_index)
 
         return []
 
