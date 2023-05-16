@@ -3,11 +3,15 @@ Store definitions used in rasa actions (e.g., related to database).
 """
 
 import pandas as pd
+import configparser
 
-DATABASE_HOST = "mysql"
-DATABASE_PASSWORD = "pmt_chatbot_2023"
-DATABASE_PORT = 3306
-DATABASE_USER = "root"
+config = configparser.ConfigParser()
+config.read("config.ini")
+
+DATABASE_HOST = config.get('Credentials', 'host')
+DATABASE_PASSWORD = config.get('Credentials', 'password')
+DATABASE_PORT = config.getint('Credentials', 'port')
+DATABASE_USER = config.get('Credentials', 'user')
 
 
 # List of activities

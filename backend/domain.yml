@@ -443,16 +443,8 @@ responses:
         - type: slot
           name: session_num
           value: "1"
-      text: "That concludes our session. I'll send you a message next week on Prolific with some last questions."
+      text: "This is the end of the session. I'll send you a message next week on Prolific with some last questions."
 
-  utter_end_of_session:
-    - condition:
-      - type: slot
-        name: session_num
-        value: "1"
-      text: "This is the end of the session."
-
-    
   utter_goodbye:
     - text: "Thanks for taking the time to talk to me. Goodbye!"
       buttons:

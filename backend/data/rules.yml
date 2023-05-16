@@ -123,7 +123,6 @@ rules:
 - rule: end
   steps:
   - action: utter_email_reminder
-  - action: utter_end_of_session
   - action: utter_goodbye
   - intent: confirm_goodbye
   - action: utter_final_close_session
