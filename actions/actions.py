@@ -434,7 +434,7 @@ class ActionChooseActivity(Action):
         chosen_activity_index = construct_activity_random_selection(personal_act_ind_list, history_activities_list)
         logging.info("Chosen activity index: " + str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Number'].values[0]))
         
-        #chosen_activity_index = 1           # only for testing, remove on production
+        chosen_activity_index = 1           # only for testing, remove on production
 
         # get the activity's type of media
         chosen_activity_media = str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Media'].values[0])
@@ -477,16 +477,23 @@ class ActionTextActivity(Action):
         text_content_split = text_content[0].split("\n")
 
         buttons = []
-        for answer in text_content_split[2].split(";"):
+        for answer in text_content_split[-1].split(";"):
                 logging.info("Button:" + answer)
                 btn = {"title":' ' + answer + ' ', "payload": '/user_input{"u_input":"'+ answer +'"}'}
                 buttons.append(btn)
 
         # if the activity 1 has been suggested to the user in the past
         if (tracker.get_slot("user_input") == 1 and 1 in history_session_list):
-            dispatcher.utter_message(template="utter_action_one_repeated",buttons=buttons)
+                dispatcher.utter_message(template="utter_action_one_repeated", buttons=buttons)
         else:
-            dispatcher.utter_message(text=text_content_split[0],buttons=buttons)
+            for line in text_content_split[:-3]:
+                dispatcher.utter_message(text=line)
+
+            if text_content_split[-3]:
+                dispatcher.utter_message(text=text_content_split[-3], buttons=buttons)
+            else:
+                dispatcher.utter_message(text=text_content_split[-2], buttons=buttons)
+            
 
         history_session_list.append(user_input)
         return []
@@ -507,7 +514,7 @@ class ActionVidActActivity(Action):
         return []
 
 
-def activityIsOne(tracker):
+def activityIsUserConditional(tracker):
     if (tracker.get_slot("u_input") == "physical health"):
         chosen_activity_index = 1.1
     elif (tracker.get_slot("u_input") == "heart diseases"):
@@ -521,7 +528,13 @@ def activityIsOne(tracker):
     elif (tracker.get_slot("u_input") == "life expectancy"):
         chosen_activity_index = 1.6
     elif (tracker.get_slot("u_input") == "fertility"):
-        chosen_activity_index = 1.7
+        chosen_activity_index = 1.7        
+    elif (tracker.get_slot("u_input") == "running" or tracker.get_slot("u_input") == "cycling"):
+        chosen_activity_index = 24.1
+    elif (tracker.get_slot("u_input") == "home-workout"):
+        chosen_activity_index = 24.2
+    elif (tracker.get_slot("u_input") == "other" or tracker.get_slot("u_input") == "I don't know"):
+        chosen_activity_index = 24.3
 
     return chosen_activity_index
 
@@ -537,8 +550,8 @@ class ActionUserInput(Action):
         round_num = tracker.get_slot("round_num")
 
         # in case of action no.1, the text is dependent on the user's answer
-        if (tracker.get_slot("user_input") == 1):
-            chosen_activity_index = activityIsOne(tracker)
+        if (tracker.get_slot("user_input") == 1 or tracker.get_slot("user_input") == 24):
+            chosen_activity_index = activityIsUserConditional(tracker) 
         else: chosen_activity_index = tracker.get_slot("chosen_activity_index")
 
 
