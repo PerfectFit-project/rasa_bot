@@ -436,10 +436,14 @@ responses:
         title: "Let's continue"
     
   utter_action_one_repeated:
-    - text: "We have already looked at some negative consequences of smoking, but it is good to look also at other negative consequences. Pick a topic to learn more about: "
-    - text: "While we've touched upon certain negative outcomes of smoking, it's worthwhile to delve into additional detrimental consequences. Check out different topics to learn more: "
-    - text: "We've covered some of the downsides of smoking, but it's beneficial to examine further negative consequences too. Check out different topics to learn more: "
-    - text: "We already mentioned before the negative impact smoking has in your health. However, it is good to look into it even deeper. Choose another topic from below to find out more: "
+    - text: "We have already looked at some negative consequences of smoking, but it is good to look also at other negative consequences.
+    This can help understanding why it's so important to quit smoking. Pick a topic to learn more about: "
+    - text: "We've touched upon certain negative outcomes of smoking already. 
+    However, it's worthwhile to delve into additional detrimental consequences as acknowledging them can serve as a powerful catalyst for change. 
+    Choose a topic to learn more: "
+    - text: "We've covered some of the downsides of smoking, but it's beneficial to examine further negative consequences too. 
+    Becoming aware of the consequences of smoking can help you increase your motivation to quit. Check out different topics to learn more: "
+    - text: "We already mentioned before the negative impact smoking has in your health. However, it is good to look into it even deeper and understand why quiting smoking is crucial. Choose another topic from below to find out more: "
 
   ### End session
   utter_email_reminder:
