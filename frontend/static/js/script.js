@@ -185,9 +185,15 @@ function doScaledTimeout(i, response, summed_timeout) {
 			
 		//check if the response contains "text"
 		if (response[i].hasOwnProperty("text")) {
-			var response_text = response[i].text.split("\n")
+			var response_text = response[i].text.split("\n")		
 			for (j = 0; j < response_text.length; j++){
-				var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><p class="botMsg">' + response_text[j] + '</p><div class="clearfix"></div>';
+
+				if (response_text[j].includes("youtube")){
+					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><iframe width="560" height="315" src="' + response_text[j] + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><div class="clearfix"></div>';												
+				}
+				else{
+					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><p class="botMsg">' + response_text[j] + '</p><div class="clearfix"></div>';
+				}
 				$(BotResponse).appendTo(".chats").hide().fadeIn(1000);
 			}
 		}
@@ -195,8 +201,9 @@ function doScaledTimeout(i, response, summed_timeout) {
 		//check if the response contains "buttons" 
 		if (response[i].hasOwnProperty("buttons")) {
 			addSuggestion(response[i].buttons);
-		}
-		
+		}	
+
+
 		scrollToBottomOfResults();
 		
 		if (i < response.length - 1){
