@@ -228,10 +228,21 @@ function addSuggestion(textToAdd) {
 		$(".usrInput").prop('placeholder', "Use one of the buttons to answer.");
 		var suggestions = textToAdd;
 		var suggLength = textToAdd.length;
-		$(' <div class="singleCard"> <div class="suggestions"><div class="menu"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
-		// Loop through suggestions
+
+		if (suggestions[0].title === "Satisfied"){
+			$(' <div class="singleCard"> <div class="suggestions"><div class="menu" style="display: flex;flex-wrap: wrap;"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
+		}
+		else{
+			$(' <div class="singleCard"> <div class="suggestions"><div class="menu"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
+		}
+			// Loop through suggestions
 		for (i = 0; i < suggLength; i++) {
-			$('<div class="menuChips" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+			if (suggestions[0].title === "Satisfied"){
+				$('<div class="menuChips" style="width: calc(100% / 7); margin: 5px;" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+			}
+			else{
+				$('<div class="menuChips" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+			}
 		}
 		scrollToBottomOfResults();
 	}, 1000);
