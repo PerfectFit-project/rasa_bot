@@ -189,7 +189,7 @@ function doScaledTimeout(i, response, summed_timeout) {
 			for (j = 0; j < response_text.length; j++){
 
 				if (response_text[j].includes("youtube")){
-					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><iframe width="560" height="315" src="' + response_text[j] + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><div class="clearfix"></div>';												
+					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><iframe width="560" height="315" src="' + response_text[j] + '?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><div class="clearfix"></div>';												
 				}
 				else{
 					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><p class="botMsg">' + response_text[j] + '</p><div class="clearfix"></div>';
@@ -232,6 +232,9 @@ function addSuggestion(textToAdd) {
 		if (suggestions[0].title === "Satisfied"){
 			$(' <div class="singleCard"> <div class="suggestions"><div class="menu" style="display: flex;flex-wrap: wrap;"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
 		}
+		else if(suggestions[0].title.includes("-5")){
+			$(' <div class="singleCard"> <div class="suggestions"><div class="menu" style="display: flex;flex-wrap: wrap;justify-content: center;"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
+		}
 		else{
 			$(' <div class="singleCard"> <div class="suggestions"><div class="menu"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
 		}
@@ -239,6 +242,9 @@ function addSuggestion(textToAdd) {
 		for (i = 0; i < suggLength; i++) {
 			if (suggestions[0].title === "Satisfied"){
 				$('<div class="menuChips" style="width: calc(100% / 7); margin: 5px;" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+			}
+			else if (suggestions[0].title.includes("-5")){
+				$('<div class="menuChips" style="margin: 5px;padding: 10px;" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
 			}
 			else{
 				$('<div class="menuChips" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");

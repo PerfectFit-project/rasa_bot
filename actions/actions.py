@@ -71,8 +71,10 @@ class ActionStartPMTQuestions(Action):
         
         if round_num == 3:          # we will have only 2 rounds
             return [FollowupAction("utter_email_reminder")]
-        else:
+        elif round_num == 1:
             return [SlotSet("round_num", round_num), FollowupAction("utter_state_question_intro")]
+        else:
+            return [SlotSet("round_num", round_num), FollowupAction("utter_one_more_time")]
 
 
 
@@ -400,7 +402,7 @@ class ActionSaveActivityToDB(Action):
         conn.commit()
         conn.close()
 
-        return []
+        return [FollowupAction("utter_cool")]
 
 
 class ActionChooseActivity(Action):
@@ -434,7 +436,7 @@ class ActionChooseActivity(Action):
         chosen_activity_index = construct_activity_random_selection(personal_act_ind_list, history_activities_list)
         logging.info("Chosen activity index: " + str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Number'].values[0]))
         
-        chosen_activity_index = 1           # only for testing, remove on production
+        #chosen_activity_index = 29           # only for testing, remove on production
 
         # get the activity's type of media
         chosen_activity_media = str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Media'].values[0])

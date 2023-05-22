@@ -239,7 +239,7 @@ responses:
   utter_longer_answer_activity:
   - text: "Please type in a longer answer."
   utter_purpose_1:
-  - text: "I have mentioned by name, but let me also tell you bit about what I do: My goal is to help people become more physically active when trying to quit smoking."
+  - text: "I have mentioned by name, but let me also tell you bit about what I do: My goal is to help people engage more in free-time activities, such as becoming more physically active when trying to quit smoking."
   utter_purpose_3:
   - text: "And how do I achieve that? I propose activities that demonstrate the benefits of exercising over smoking."
   utter_purpose_4:
@@ -265,9 +265,7 @@ responses:
   utter_intro_session_3:
   - text: "Next, I'll recommend you to read a text, watch a video or do an activity."
   utter_intro_session_5:
-  - text: "We will repeat this a few times. I will let you know when it's the end to close the window."
-  utter_intro_session_6:
-  - text: "Please note that doing your recommended activity is voluntary and does not impact your payment."
+  - text: "Finally, I will let you know when it's the end to close the window."
   utter_intro_session_7:
   - buttons:
     - payload : /confirm_intro_session
@@ -281,8 +279,18 @@ responses:
 
   utter_state_question_PMT_V:
   - buttons:
+    - payload: /confirm_state_PMT_V{"state_V":"-5"}
+      title: "-5 (Not at all likely)"
+    - payload: /confirm_state_PMT_V{"state_V":"-4"}
+      title: "-4"
+    - payload: /confirm_state_PMT_V{"state_V":"-3"}
+      title: "-3"
+    - payload: /confirm_state_PMT_V{"state_V":"-2"}
+      title: "-2"
+    - payload: /confirm_state_PMT_V{"state_V":"-1"}
+      title: "-1"
     - payload: /confirm_state_PMT_V{"state_V":"0"}
-      title: "0 (Not at all likely)"
+      title: "0"
     - payload: /confirm_state_PMT_V{"state_V":"1"}
       title: "1"
     - payload: /confirm_state_PMT_V{"state_V":"2"}
@@ -292,23 +300,23 @@ responses:
     - payload: /confirm_state_PMT_V{"state_V":"4"}
       title: "4"
     - payload: /confirm_state_PMT_V{"state_V":"5"}
-      title: "5"
-    - payload: /confirm_state_PMT_V{"state_V":"6"}
-      title: "6"
-    - payload: /confirm_state_PMT_V{"state_V":"7"}
-      title: "7"
-    - payload: /confirm_state_PMT_V{"state_V":"8"}
-      title: "8"
-    - payload: /confirm_state_PMT_V{"state_V":"9"}
-      title: "9"
-    - payload: /confirm_state_PMT_V{"state_V":"10"}
-      title: "10 (Completely likely)"
-    text: "On a scale of 0 to 10, how likely do you think it is that you will experience harm or negative consequences as a result of smoking?"
+      title: "5 (Completely likely)"
+    text: "On a scale of -5 to 5, how likely do you think it is that you will experience helpful or beneficial consequences as a result of long-term smoking?"
 
   utter_state_question_PMT_S:
   - buttons:
+    - payload: /confirm_state_PMT_S{"state_S":"-5"}
+      title: "-5 (Not at all serious)"
+    - payload: /confirm_state_PMT_S{"state_S":"-4"}
+      title: "-4"
+    - payload: /confirm_state_PMT_S{"state_S":"-3"}
+      title: "-3"
+    - payload: /confirm_state_PMT_S{"state_S":"-2"}
+      title: "-2"
+    - payload: /confirm_state_PMT_S{"state_S":"-1"}
+      title: "-1"
     - payload: /confirm_state_PMT_S{"state_S":"0"}
-      title: "0 (Not at all serious)"
+      title: "0"
     - payload: /confirm_state_PMT_S{"state_S":"1"}
       title: "1"
     - payload: /confirm_state_PMT_S{"state_S":"2"}
@@ -318,49 +326,49 @@ responses:
     - payload: /confirm_state_PMT_S{"state_S":"4"}
       title: "4"
     - payload: /confirm_state_PMT_S{"state_S":"5"}
-      title: "5"
-    - payload: /confirm_state_PMT_S{"state_S":"6"}
-      title: "6"
-    - payload: /confirm_state_PMT_S{"state_S":"7"}
-      title: "7"
-    - payload: /confirm_state_PMT_S{"state_S":"8"}
-      title: "8"
-    - payload: /confirm_state_PMT_S{"state_S":"9"}
-      title: "9"
-    - payload: /confirm_state_PMT_S{"state_S":"10"}
-      title: "10 (Severely serious)"
-    text: "On a scale of 0 to 10, how serious do you think the potential harm or threat is if you continue to smoke?"
+      title: "5 (Severely serious)"
+    text: "On a scale of -5 to 5, how serious do you think the potential harm or threat is if you continue to smoke?"
 
   utter_state_question_PMT_RE:
   - buttons:
+    - payload: /confirm_state_PMT_RE{"state_RE":"-5"}
+      title: "-5 (Not at all confident)"
+    - payload: /confirm_state_PMT_RE{"state_RE":"-4"}
+      title: "-4"
+    - payload: /confirm_state_PMT_RE{"state_RE":"-3"}
+      title: "-3"
+    - payload: /confirm_state_PMT_RE{"state_RE":"-2"}
+      title: "-2"
+    - payload: /confirm_state_PMT_RE{"state_RE":"-1"}
+      title: "-1"
     - payload: /confirm_state_PMT_RE{"state_RE":"0"}
-      title: "0 (Not at all confident)"
+      title: "0"
     - payload: /confirm_state_PMT_RE{"state_RE":"1"}
       title: "1"
     - payload: /confirm_state_PMT_RE{"state_RE":"2"}
       title: "2"
     - payload: /confirm_state_PMT_RE{"state_RE":"3"}
       title: "3"
-    - payload: /confirm_state_PMT_RE{"state_RE":"4"}
+    - payload: /confirm_state_PMT_RE{"state_RE":4"}
       title: "4"
     - payload: /confirm_state_PMT_RE{"state_RE":"5"}
-      title: "5"
-    - payload: /confirm_state_PMT_RE{"state_RE":"6"}
-      title: "6"
-    - payload: /confirm_state_PMT_RE{"state_RE":"7"}
-      title: "7"
-    - payload: /confirm_state_PMT_RE{"state_RE":"8"}
-      title: "8"
-    - payload: /confirm_state_PMT_RE{"state_RE":"9"}
-      title: "9"
-    - payload: /confirm_state_PMT_RE{"state_RE":"10"}
-      title: "10 (Completely confident)"
-    text: "On a scale of 0 to 10, how confident are you that increasing your physical activity levels will lead to improved health and fitness outcomes?"
+      title: "5 (Completely confident)"
+    text: "On a scale of -5 to 5, how confident are you that increasing your physical activity levels as an aid to quitting smoking will lead to improved health and fitness outcomes?"
 
   utter_state_question_PMT_SE:
   - buttons:
+    - payload: /confirm_state_PMT_SE{"state_SE":"-5"}
+      title: "-5 (Not at all confident)"
+    - payload: /confirm_state_PMT_SE{"state_SE":"-4"}
+      title: "-4"
+    - payload: /confirm_state_PMT_SE{"state_SE":"-3"}
+      title: "-3"
+    - payload: /confirm_state_PMT_SE{"state_SE":"-2"}
+      title: "-2"
+    - payload: /confirm_state_PMT_SE{"state_SE":"-1"}
+      title: "-1"
     - payload: /confirm_state_PMT_SE{"state_SE":"0"}
-      title: "0 (Not at all confident)"
+      title: "0"
     - payload: /confirm_state_PMT_SE{"state_SE":"1"}
       title: "1"
     - payload: /confirm_state_PMT_SE{"state_SE":"2"}
@@ -370,50 +378,14 @@ responses:
     - payload: /confirm_state_PMT_SE{"state_SE":"4"}
       title: "4"
     - payload: /confirm_state_PMT_SE{"state_SE":"5"}
-      title: "5"
-    - payload: /confirm_state_PMT_SE{"state_SE":"6"}
-      title: "6"
-    - payload: /confirm_state_PMT_SE{"state_SE":"7"}
-      title: "7"
-    - payload: /confirm_state_PMT_SE{"state_SE":"8"}
-      title: "8"
-    - payload: /confirm_state_PMT_SE{"state_SE":"9"}
-      title: "9"
-    - payload: /confirm_state_PMT_SE{"state_SE":"10"}
-      title: "10 (Completely confident)"
-    text: "On a scale of 0 to 10, how confident are you that you can successfully increase your physical activity levels?"
+      title: "5 (Completely confident)"
+    text: "On a scale of -5 to 5, how confident are you that you can successfully increase your physical activity levels as an aid to quitting smoking?"
   
   ### Propose activity
   utter_transition_new_activity:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "1"
-      text: "Now let's look at an activity that can help you in your current situation."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "2"
-      text: "Our next step is to look at a new activity that will help you prepare for quitting smoking."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "3"
-      text: "Next, we'll look at a new activity that will help you get ready for quitting smoking."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "4"
-      text: "Let's move on to looking at a new activity that will help you get ready for quitting smoking."
-    - condition:
-        - type: slot
-          name: session_num
-          value: "5"
-      text: "We'll now look at a new preparatory activity that I think is relevant to your current situation."
-      
-    - text: "Now let's turn our attention to an activity that can benefit your current situation."
-    - text: "Let's move on to an activity that can support you in your efforts to prepare for quitting smoking."
-    - text: "Next, we'll take a closer look at an activity that can assist you in preparing to quit smoking."
+    - text: "Now let's turn our attention to an activity that can benefit your current situation, in case you want to quit smoking."
+    - text: "Now, let's move on to an activity that can support you in your efforts to prepare for quitting smoking, in case you want to quit smoking."
+    - text: "Next, we'll take a closer look at an activity that can assist you in preparing to quit smoking, in case you want to quit smoking."
 
     
   utter_activity_read:
@@ -426,11 +398,11 @@ responses:
       - payload: /confirm_activity_read
         title: "I'm done"
 
-    - text: "Use the button below once you've finished reading, then I'll continue."
+    - text: "Use the button below once you've finished, then I'll continue."
       buttons:
       - payload: /confirm_activity_read
         title: "Finished!"
-    - text: "Let me know when you've finished reading the description and we can continue."
+    - text: "Let me know when you've finished and we can continue."
       buttons:
       - payload: /confirm_activity_read
         title: "Let's continue"
@@ -445,13 +417,18 @@ responses:
     Becoming aware of the consequences of smoking can help you increase your motivation to quit. Check out different topics to learn more: "
     - text: "We already mentioned before the negative impact smoking has in your health. However, it is good to look into it even deeper and understand why quiting smoking is crucial. Choose another topic from below to find out more: "
 
+  utter_one_more_time:
+    - text: "Now, let's go over the questions we did before one more time."
+    - text: "Now, let's revisit the questions we previously discussed once again."
+    - text: "Now, let's take another look at the questions we previously covered."
+
   ### End session
   utter_email_reminder:
     - condition:
         - type: slot
           name: session_num
           value: "1"
-      text: "This is the end of the session. I'll send you a message next week on Prolific with some last questions."
+      text: "This is the end of the session. I'll send you a message in the next days on Prolific with some last questions."
 
   utter_goodbye:
     - text: "Thanks for taking the time to talk to me. Goodbye!"
@@ -763,9 +740,9 @@ responses:
   - text: Awesome!
   
   utter_cool:
-  - text: Nice!
-  - text: Cool!
-  - text: Perfect!
+  - text: Nice! Thanks for your input!
+  - text: Cool! Thanks for letting me know!
+  - text: Perfect! Thanks for you telling me!
   
   utter_thanks:
   - text: "Thanks!"
