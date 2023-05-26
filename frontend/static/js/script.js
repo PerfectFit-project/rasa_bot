@@ -232,7 +232,7 @@ function addSuggestion(textToAdd) {
 		if (suggestions[0].title === "Satisfied"){
 			$(' <div class="singleCard"> <div class="suggestions"><div class="menu" style="display: flex;flex-wrap: wrap;"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
 		}
-		else if(suggestions[0].title.includes("-5")){
+		else if(suggestions[0].title.includes("-5") || suggestions[0].title.includes("0")){
 			$(' <div class="singleCard"> <div class="suggestions"><div class="menu" style="display: flex;flex-wrap: wrap;justify-content: center;"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
 		}
 		else{
@@ -243,7 +243,7 @@ function addSuggestion(textToAdd) {
 			if (suggestions[0].title === "Satisfied"){
 				$('<div class="menuChips" style="width: calc(100% / 7); margin: 5px;" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
 			}
-			else if (suggestions[0].title.includes("-5")){
+			else if (suggestions[0].title.includes("-5") || suggestions[0].title.includes("0")){
 				$('<div class="menuChips" style="margin: 5px;padding: 10px;" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
 			}
 			else{

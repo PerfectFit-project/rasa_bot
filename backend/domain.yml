@@ -240,8 +240,6 @@ responses:
   - text: "Please type in a longer answer."
   utter_purpose_1:
   - text: "I have mentioned by name, but let me also tell you bit about what I do: My goal is to help people engage more in free-time activities, such as becoming more physically active when trying to quit smoking."
-  utter_purpose_3:
-  - text: "And how do I achieve that? I propose activities that demonstrate the benefits of exercising over smoking."
   utter_purpose_4:
   - text: "Ultimately, I want to be able to propose activities that match the situation a person is in."
   utter_purpose_5:
@@ -275,12 +273,12 @@ responses:
     
   ### Ask state questions
   utter_state_question_intro:
-  - text: "Now I will ask you to rate the following statement based on your current situation regarding preparing for quitting smoking."
+  - text: "Now I will ask you to rate the following statement based on your beliefs about free-time activities and quitting smoking."
 
   utter_state_question_PMT_V:
   - buttons:
     - payload: /confirm_state_PMT_V{"state_V":"-5"}
-      title: "-5 (Not at all likely)"
+      title: "-5 (Very likely harmful)"
     - payload: /confirm_state_PMT_V{"state_V":"-4"}
       title: "-4"
     - payload: /confirm_state_PMT_V{"state_V":"-3"}
@@ -290,7 +288,7 @@ responses:
     - payload: /confirm_state_PMT_V{"state_V":"-1"}
       title: "-1"
     - payload: /confirm_state_PMT_V{"state_V":"0"}
-      title: "0"
+      title: "0 (Neutral)"
     - payload: /confirm_state_PMT_V{"state_V":"1"}
       title: "1"
     - payload: /confirm_state_PMT_V{"state_V":"2"}
@@ -300,23 +298,13 @@ responses:
     - payload: /confirm_state_PMT_V{"state_V":"4"}
       title: "4"
     - payload: /confirm_state_PMT_V{"state_V":"5"}
-      title: "5 (Completely likely)"
-    text: "On a scale of -5 to 5, how likely do you think it is that you will experience helpful or beneficial consequences as a result of long-term smoking?"
+      title: "5 (Very likely helpful)"
+    text: "On a scale of -5 to 5, how likely do you think it is that you will overall experience harmful or helpful consequences as a result of long-term smoking?"
 
   utter_state_question_PMT_S:
   - buttons:
-    - payload: /confirm_state_PMT_S{"state_S":"-5"}
-      title: "-5 (Not at all serious)"
-    - payload: /confirm_state_PMT_S{"state_S":"-4"}
-      title: "-4"
-    - payload: /confirm_state_PMT_S{"state_S":"-3"}
-      title: "-3"
-    - payload: /confirm_state_PMT_S{"state_S":"-2"}
-      title: "-2"
-    - payload: /confirm_state_PMT_S{"state_S":"-1"}
-      title: "-1"
     - payload: /confirm_state_PMT_S{"state_S":"0"}
-      title: "0"
+      title: "0 (No threat)"
     - payload: /confirm_state_PMT_S{"state_S":"1"}
       title: "1"
     - payload: /confirm_state_PMT_S{"state_S":"2"}
@@ -326,13 +314,23 @@ responses:
     - payload: /confirm_state_PMT_S{"state_S":"4"}
       title: "4"
     - payload: /confirm_state_PMT_S{"state_S":"5"}
-      title: "5 (Severely serious)"
-    text: "On a scale of -5 to 5, how serious do you think the potential harm or threat is if you continue to smoke?"
+      title: "5"
+    - payload: /confirm_state_PMT_S{"state_S":"6"}
+      title: "6"
+    - payload: /confirm_state_PMT_S{"state_S":"7"}
+      title: "7"
+    - payload: /confirm_state_PMT_S{"state_S":"8"}
+      title: "8"
+    - payload: /confirm_state_PMT_S{"state_S":"9"}
+      title: "9"
+    - payload: /confirm_state_PMT_S{"state_S":"10"}
+      title: "10 (Very severe threat)"
+    text: "On a scale from 0 to 10, how severe do you think are any harmful consequences of long-term smoking?"
 
   utter_state_question_PMT_RE:
   - buttons:
     - payload: /confirm_state_PMT_RE{"state_RE":"-5"}
-      title: "-5 (Not at all confident)"
+      title: "-5 (Makes it a lot harder)"
     - payload: /confirm_state_PMT_RE{"state_RE":"-4"}
       title: "-4"
     - payload: /confirm_state_PMT_RE{"state_RE":"-3"}
@@ -352,23 +350,13 @@ responses:
     - payload: /confirm_state_PMT_RE{"state_RE":4"}
       title: "4"
     - payload: /confirm_state_PMT_RE{"state_RE":"5"}
-      title: "5 (Completely confident)"
-    text: "On a scale of -5 to 5, how confident are you that increasing your physical activity levels as an aid to quitting smoking will lead to improved health and fitness outcomes?"
+      title: "5 (Makes it a lot easier)"
+    text: "On a scale from -5 to 5, how does becoming more physically active affect quitting smoking?"
 
   utter_state_question_PMT_SE:
   - buttons:
-    - payload: /confirm_state_PMT_SE{"state_SE":"-5"}
-      title: "-5 (Not at all confident)"
-    - payload: /confirm_state_PMT_SE{"state_SE":"-4"}
-      title: "-4"
-    - payload: /confirm_state_PMT_SE{"state_SE":"-3"}
-      title: "-3"
-    - payload: /confirm_state_PMT_SE{"state_SE":"-2"}
-      title: "-2"
-    - payload: /confirm_state_PMT_SE{"state_SE":"-1"}
-      title: "-1"
     - payload: /confirm_state_PMT_SE{"state_SE":"0"}
-      title: "0"
+      title: "0 (Not at all confident)"
     - payload: /confirm_state_PMT_SE{"state_SE":"1"}
       title: "1"
     - payload: /confirm_state_PMT_SE{"state_SE":"2"}
@@ -378,8 +366,18 @@ responses:
     - payload: /confirm_state_PMT_SE{"state_SE":"4"}
       title: "4"
     - payload: /confirm_state_PMT_SE{"state_SE":"5"}
-      title: "5 (Completely confident)"
-    text: "On a scale of -5 to 5, how confident are you that you can successfully increase your physical activity levels as an aid to quitting smoking?"
+      title: "5"
+    - payload: /confirm_state_PMT_SE{"state_SE":"6"}
+      title: "6"
+    - payload: /confirm_state_PMT_SE{"state_SE":"7"}
+      title: "7"
+    - payload: /confirm_state_PMT_SE{"state_SE":"8"}
+      title: "8"
+    - payload: /confirm_state_PMT_SE{"state_SE":"9"}
+      title: "9"
+    - payload: /confirm_state_PMT_SE{"state_SE":"10"}
+      title: "10 (Completely confident)"
+    text: "On a scale of 0 to 10, how confident are you that you can become more physically active?"
   
   ### Propose activity
   utter_transition_new_activity:
