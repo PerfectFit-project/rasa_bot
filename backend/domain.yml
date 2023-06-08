@@ -982,6 +982,7 @@ actions:
 - action_load_session_not_first
 - action_save_activity_to_db
 - action_save_session
+- action_save_end_session
 
 - validate_activity_experience_form
 - validate_activity_experience_mod_form

@@ -242,8 +242,41 @@ class ActionSaveSession(Action):
         session_num = tracker.get_slot("session_num")
         round_num = tracker.get_slot("round_num")
         
-        slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE",
-                         "int_att_q1", "int_att_q2", "int_att_q3", "int_att_q4", "int_att_q5"]
+        slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE"]
+        for slot in slots_to_save:
+            save_sessiondata_entry(cur, conn, prolific_id, session_num, round_num, 
+                                   slot, tracker.get_slot(slot),
+                                   formatted_date)
+
+        conn.close()
+        
+        return []
+    
+class ActionSaveEndSession(Action):
+    def name(self):
+        return "action_save_end_session"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        now = datetime.now()
+        formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+
+        conn = mysql.connector.connect(
+            user=DATABASE_USER,
+            password=DATABASE_PASSWORD,
+            host=DATABASE_HOST,
+            port=DATABASE_PORT,
+            database='db'
+        )
+        cur = conn.cursor(prepared=True)
+        
+        prolific_id = tracker.current_state()['sender_id']
+        session_num = tracker.get_slot("session_num")
+        round_num = tracker.get_slot("round_num")
+        
+        slots_to_save = ["int_att_q1", "int_att_q2", "int_att_q3", "int_att_q4", "int_att_q5"]
         for slot in slots_to_save:
             save_sessiondata_entry(cur, conn, prolific_id, session_num, round_num, 
                                    slot, tracker.get_slot(slot),

@@ -119,6 +119,7 @@ rules:
 - rule: read activity
   steps:
   - action: utter_cool
+  - action: action_save_session
   - action: action_start_PMT_questions
 
 - rule: intentions and attitude questions
@@ -150,7 +151,7 @@ rules:
 - rule: confirm int_att_q5
   steps:
   - intent: confirm_state_int_att_q5
-  - action: action_save_session
+  - action: action_save_end_session
   - action: utter_email_reminder
   - action: utter_goodbye
 
