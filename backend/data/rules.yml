@@ -119,13 +119,43 @@ rules:
 - rule: read activity
   steps:
   - action: utter_cool
-  - action: action_save_session
   - action: action_start_PMT_questions
-  
-- rule: end
+
+- rule: intentions and attitude questions
   steps:
+  - action: utter_intentions_attitude_intro
+  - action: utter_intentions_attitude_questions
+  - action: utter_state_question_int_att_q1
+
+- rule: state question int_att_q2
+  steps:
+  - intent: confirm_state_int_att_q1
+  - action: utter_state_question_int_att_q2 
+
+- rule: state question int_att_q3
+  steps:
+  - intent: confirm_state_int_att_q2
+  - action: utter_state_question_int_att_q3
+
+- rule: state question int_att_q4
+  steps:
+  - intent: confirm_state_int_att_q3
+  - action: utter_state_question_int_att_q4
+
+- rule: state question int_att_q5
+  steps:
+  - intent: confirm_state_int_att_q4
+  - action: utter_state_question_int_att_q5  
+
+- rule: confirm int_att_q5
+  steps:
+  - intent: confirm_state_int_att_q5
+  - action: action_save_session
   - action: utter_email_reminder
   - action: utter_goodbye
+
+- rule: end
+  steps:
   - intent: confirm_goodbye
   - action: utter_final_close_session
   - action: action_end_dialog

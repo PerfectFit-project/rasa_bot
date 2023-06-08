@@ -13,6 +13,8 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import FollowupAction, SlotSet, EventType
 from rasa_sdk.types import DomainDict
 from typing import Any, Dict, List, Optional, Text
+from collections import Counter
+
 
 import logging
 import mysql.connector
@@ -70,7 +72,7 @@ class ActionStartPMTQuestions(Action):
         round_num += 1
         
         if round_num == 3:          # we will have only 2 rounds
-            return [FollowupAction("utter_email_reminder")]
+            return [FollowupAction("utter_intentions_attitude_intro")]
         elif round_num == 1:
             return [SlotSet("round_num", round_num), FollowupAction("utter_state_question_intro")]
         else:
@@ -240,7 +242,8 @@ class ActionSaveSession(Action):
         session_num = tracker.get_slot("session_num")
         round_num = tracker.get_slot("round_num")
         
-        slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE"]
+        slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE",
+                         "int_att_q1", "int_att_q2", "int_att_q3", "int_att_q4", "int_att_q5"]
         for slot in slots_to_save:
             save_sessiondata_entry(cur, conn, prolific_id, session_num, round_num, 
                                    slot, tracker.get_slot(slot),
