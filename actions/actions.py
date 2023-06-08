@@ -321,42 +321,86 @@ def get_user_activity_history(prolific_id):
     return already_done_activities_indices
 
 
-def construct_activity_random_selection(personalized_list, history_list):
-    # create a dictionary to map the labels to the values
-    labels = {}
-    for i in range(1, 11):
-        labels["S"] = labels.get("S", []) + [i]
-    for i in range(11, 19):
-        labels["V"] = labels.get("V", []) + [i]
-    for i in range(19, 26):
-        labels["SE"] = labels.get("SE", []) + [i]
-    for i in range(26, 32):
-        labels["RE"] = labels.get("RE", []) + [i]
+def get_all_users_activity_history():
+        
+    conn = mysql.connector.connect(
+        user=DATABASE_USER,
+        password=DATABASE_PASSWORD,
+        host=DATABASE_HOST,
+        port=DATABASE_PORT,
+        database='db'
+    )
+    cur = conn.cursor(prepared=True)
+    
+    query = ("SELECT activity_index FROM activity_history")
+    cur.execute(query)
+    result = cur.fetchall()
 
-    # merge the two lists and assign labels to each value
-    merged = {}
-    for val in personalized_list + history_list:
-        for key in labels:
-            if val in labels[key]:
-                merged[val] = key
+    already_done_activities_indices = [int(i[0]) for i in result]
 
-    # count the frequency of each label
-    freq = {}
-    for key in labels:
-        freq[key] = 0
-    for val in merged.values():
-        freq[val] += 1
+    conn.close()
+        
+    return already_done_activities_indices
 
-    # randomly choose a label among the least frequent ones
-    least_freq = min(freq.values())
-    least_freq_labels = [key for key in freq if freq[key] == least_freq]
-    chosen_label = random.choice(least_freq_labels)
 
-    # get the possible values for the chosen label
-    possible_values = [val for val in merged if merged[val] == chosen_label]
-    logging.info("Possible values:" + str(possible_values) )
+def random_action_selection(all_users_history):
+    
+    # get the main items for each list, i.e, [1,2,3]
+    all_users_history_main_items = [int(number) for number in all_users_history]
 
-    return(random.choice(possible_values))
+
+    # Define the labels and their corresponding value ranges
+    label_ranges = {'S': range(1, 11), 'V': range(11, 19), 'SE': range(19, 26), 'RE': range(26, 30)}
+
+    # Assign labels to the items in the list
+    labels = [next((label for label, value_range in label_ranges.items() if item in value_range), None) for item in all_users_history]
+
+    # Count the frequency of each label
+    label_counts = Counter(labels)
+
+    # Get the frequency of the labels
+    frequencies = list(label_counts.values())
+
+    # If the history is empty
+    if (frequencies == []):
+        chosen_label = random.choice(["S","V","SE","RE"])
+
+    # Check if all frequencies are the same
+    if len(set(frequencies)) == 1 and len(frequencies) == 4:
+        # Randomly choose one of the labels
+        chosen_label = random.choice(list(label_ranges.keys()))
+    else:
+        # Include labels with zero frequency
+        all_labels = list(label_ranges.keys())
+        label_counts = {label: label_counts[label] if label in label_counts else 0 for label in all_labels}
+
+        min_frequency = min(label_counts.values())
+        min_frequency_labels = [label for label, count in label_counts.items() if count == min_frequency]
+
+        # Choose a label randomly if all labels have the same frequency
+        chosen_label = random.choice(min_frequency_labels)
+    return chosen_label
+
+def random_item_selection(least_frequent_action_selected, personalized_list, user_history_list):
+    new_p_list = [x for x in personalized_list if x not in user_history_list]
+
+    labels = []
+    for value in new_p_list:
+        if 1 <= int(value) < 11:
+            labels.append("S")
+        elif 5 < int(value) < 19:
+            labels.append("V")
+        elif 10 < int(value) < 26:
+            labels.append("SE")
+        elif 15 < int(value) <= 30:
+            labels.append("RE")
+        else:
+            labels.append(None)
+
+    # Create a list of values that have the label least_frequent_action_selected
+    least_frequent_item_list = [value for value, label in zip(new_p_list, labels) if label == least_frequent_action_selected]
+
+    return(random.choice(least_frequent_item_list))
 
 
 def has_children(activity_chosen_index):
@@ -424,21 +468,21 @@ class ActionChooseActivity(Action):
         # get a df with personalized activities
         personal_act_df = getPersonalizedActivitiesList(age, gender)
 
-        # get list of indices of personalized activities and get all the main items. This can be [1,2,3]
-        personal_act_ind_list = [int(x) for x in personal_act_df['Number'] if int(x) == x]     
-        logging.info("Personalized activity list:" + str(personal_act_ind_list)) 
+        # get list of indices of personalized activities and get all the main items. This can be [1.3,2,3]
+        personalized_list = [int(x) for x in personal_act_df['Number']]     
+        logging.info("Personalized activity list:" + str(personalized_list)) 
 
         # get list of indices of previously done activities. This can be [1.3, 4, 5.1]
-        history_activities_list = get_user_activity_history(prolific_id)
+        user_history_list = get_user_activity_history(prolific_id)
+        logging.info("User history activity list:" + str(user_history_list))
 
-        # get the main items of the history list. So we have [1, 4, 5]
-        history_activities_list = [int(x) for x in history_activities_list if int(x) == x]
-        logging.info("History activity list:" + str(history_activities_list))
+        all_users_history_list = get_all_users_activity_history()
+        logging.info("All users history activity list:" + str(all_users_history_list))
 
-        # get a randlomly chosen activity, among the least selected construct so far
-        chosen_activity_index = construct_activity_random_selection(personal_act_ind_list, history_activities_list)
+        random_action_selected = random_action_selection(all_users_history_list)
+        chosen_activity_index = random_item_selection(random_action_selected, personalized_list, user_history_list)
+
         logging.info("Chosen activity index: " + str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Number'].values[0]))
-        
         #chosen_activity_index = 29           # only for testing, remove on production
 
         # get the activity's type of media
