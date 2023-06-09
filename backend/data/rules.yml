@@ -39,7 +39,6 @@ rules:
   - intent: mood_curr_session1
   - action: utter_mood_response
   - action: utter_purpose_1
-  - action: utter_purpose_4
   - action: utter_purpose_5
   
 - rule: usage session 1

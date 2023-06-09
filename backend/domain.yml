@@ -290,21 +290,19 @@ responses:
   utter_greet_first_time:
   - text: "Hey there, I'm your virtual coach Sam."
   utter_ask_user_input_activity_slot:
-  - text: "Type here everything that comes to your mind. Make sure to write at least 2 sentences!"
-  - text: "Type in your thoughts here, and make sure to write at least 2 sentences."
-  - text: "Feel free to write down your thoughts right here! (at least 2 sentences)"
-  - text: "What do you think? Type it here below (at least 2 sentences)"
+  - text: "Type here everything that comes to your mind, in about 2 sentences."
+  - text: "What do you think about this information? Write your thoughts in about 2 sentences into the chat."
+  - text: "Feel free to write down your thoughts right here in about 2 sentences!"
+  - text: "What do you think? Write your thoughts in about 2 sentences into the chat."
   utter_longer_answer_activity:
   - text: "Please type in a longer answer."
   utter_purpose_1:
-  - text: "I have mentioned by name, but let me also tell you bit about what I do: My goal is to help people engage more in free-time activities, such as becoming more physically active when trying to quit smoking."
-  utter_purpose_4:
-  - text: "Ultimately, I want to be able to propose activities that match the situation a person is in."
+  - text: "I have mentioned by name, but let me also tell you a bit about what I do: My goal is to understand how people think about free-time activities and quitting smoking."
   utter_purpose_5:
   - buttons:
     - payload: /confirm_purpose
       title: "I'm ready"
-    text: "And this is why you are here: I want to learn how an activity I propose helps you in your specific situation.\nLet me know when you have read what my purpose is and are ready to continue."
+    text: "Let me know when you are ready to continue."
   utter_prompt_usage:
   - text: "Okay! Before we start, let me explain how you can communicate with me."
   utter_explain_usage:
@@ -317,11 +315,11 @@ responses:
   utter_intro_session_1:
   - text: "Now, let me tell you what we will do today."
   utter_intro_session_2:
-  - text: "First, I'll ask you a few questions to learn about your current situation with regard to quitting smoking."
+  - text: "First, I'll ask you a few questions to learn about your beliefs on free-time activities and quitting smoking."
   utter_intro_session_3:
-  - text: "Next, I'll recommend you to read a text, watch a video or do an activity."
+  - text: "Next, I'll recommend you to read a text, watch a video or do a small exercise."
   utter_intro_session_5:
-  - text: "Finally, I will let you know when it's the end to close the window."
+  - text: "At the end of the dialog, I will send you your Prolific completion link."
   utter_intro_session_7:
   - buttons:
     - payload : /confirm_intro_session
@@ -331,7 +329,7 @@ responses:
     
   ### Ask state questions
   utter_state_question_intro:
-  - text: "Now I will ask you to rate the following statement based on your beliefs about free-time activities and quitting smoking."
+  - text: "Now I will ask you to rate the following 4 statements based on your beliefs about free-time activities and quitting smoking."
 
   utter_state_question_PMT_V:
   - buttons:
@@ -357,7 +355,7 @@ responses:
       title: "4"
     - payload: /confirm_state_PMT_V{"state_V":"5"}
       title: "5 (Very likely helpful)"
-    text: "On a scale of -5 to 5, how likely do you think it is that you will overall experience harmful or helpful consequences as a result of long-term smoking?"
+    text: "On a scale from -5 to 5, how likely do you think it is that you will overall experience harmful or helpful consequences as a result of long-term smoking?"
 
   utter_state_question_PMT_S:
   - buttons:
@@ -398,7 +396,7 @@ responses:
     - payload: /confirm_state_PMT_RE{"state_RE":"-1"}
       title: "-1"
     - payload: /confirm_state_PMT_RE{"state_RE":"0"}
-      title: "0"
+      title: "0 (Neutral)"
     - payload: /confirm_state_PMT_RE{"state_RE":"1"}
       title: "1"
     - payload: /confirm_state_PMT_RE{"state_RE":"2"}
@@ -409,7 +407,7 @@ responses:
       title: "4"
     - payload: /confirm_state_PMT_RE{"state_RE":"5"}
       title: "5 (Makes it a lot easier)"
-    text: "On a scale from -5 to 5, how does becoming more physically active affect quitting smoking?"
+    text: "On a scale from -5 to 5, how do you think becoming more physically active affects quitting smoking?"
 
   utter_state_question_PMT_SE:
   - buttons:
@@ -435,13 +433,13 @@ responses:
       title: "9"
     - payload: /confirm_state_PMT_SE{"state_SE":"10"}
       title: "10 (Completely confident)"
-    text: "On a scale of 0 to 10, how confident are you that you can become more physically active?"
+    text: "On a scale from 0 to 10, how confident are you that you can become more physically active?"
   
   ### Propose activity
   utter_transition_new_activity:
-    - text: "Now let's turn our attention to an activity that can benefit your current situation, in case you want to quit smoking."
-    - text: "Now, let's move on to an activity that can support you in your efforts to prepare for quitting smoking, in case you want to quit smoking."
-    - text: "Next, we'll take a closer look at an activity that can assist you in preparing to quit smoking, in case you want to quit smoking."
+    - text: "Now let's look at some information that can benefit your current situation, in case you want to quit smoking."
+    - text: "Now, let's explore some information that can support you in your efforts to prepare for quitting smoking, in case you want to quit smoking."
+    - text: "Next, we'll take a closer look at some information that can assist you in preparing to quit smoking, in case you want to quit smoking."
 
     
   utter_activity_read:
@@ -464,19 +462,19 @@ responses:
         title: "Let's continue"
     
   utter_action_one_repeated:
-    - text: "We have already looked at some negative consequences of smoking, but it is good to look also at other negative consequences.
-    This can help understanding why it's so important to quit smoking. Pick a topic to learn more about: "
+    - text: "We've already looked at some negative consequences of smoking, but it is good to look also at other negative consequences.
+    This can help in understanding why it's so important to quit smoking. Pick a topic to learn more about: "
     - text: "We've touched upon certain negative outcomes of smoking already. 
     However, it's worthwhile to delve into additional detrimental consequences as acknowledging them can serve as a powerful catalyst for change. 
     Choose a topic to learn more: "
     - text: "We've covered some of the downsides of smoking, but it's beneficial to examine further negative consequences too. 
     Becoming aware of the consequences of smoking can help you increase your motivation to quit. Check out different topics to learn more: "
-    - text: "We already mentioned before the negative impact smoking has in your health. However, it is good to look into it even deeper and understand why quiting smoking is crucial. Choose another topic from below to find out more: "
+    - text: "We already mentioned before the negative impact smoking has on your health. However, it is good to look into it even deeper and understand why quitting smoking is crucial. Choose another topic from below to find out more: "
 
   utter_one_more_time:
-    - text: "Now, let's go over the questions we did before one more time."
-    - text: "Now, let's revisit the questions we previously discussed once again."
-    - text: "Now, let's take another look at the questions we previously covered."
+    - text: "Now I would like to ask you to rate the 4 statements I showed you earlier again."
+    - text: "Now, let's revisit the 4 statements we previously discussed once again."
+    - text: "Now, let's take another look at the 4 statements we previously covered."
 
   ## Intentions & attitude questions
   utter_state_question_int_att_q1:
@@ -555,7 +553,7 @@ responses:
       title: "9"
     - payload: /confirm_state_int_att_q3{"int_att_q3":"10"}
       title: "10 (Very likely)"
-    text: "How likely are you to quit smoking within the next 6 months?"
+    text: "How likely are you to quit smoking in the next 6 months?"
 
   utter_state_question_int_att_q4:
   - buttons:
@@ -611,18 +609,19 @@ responses:
 
   ### End session
   utter_intentions_attitude_intro:
-    - text: "Now that we talked about some free-time activities and quitting smoking, physical activity is one type of free-time activities."
+    - text: "Now we have talked about some free-time activities and quitting smoking. Physical activity is one type of free-time activity."
   utter_intentions_attitude_questions:
-    - text: "For that I would like to discuss with you some final questions."
+    - text: "For that, I would like to discuss with you some final questions."
   utter_email_reminder:
     - condition:
         - type: slot
           name: session_num
           value: "1"
-      text: "This is the end of the session. I'll send you a message in the next days on Prolific with some last questions."
+      text: "Thanks for taking the time to talk to me and answering these questions.\nThis is the end of the session.\n
+      Please return to Prolific and enter the following completion code to register your submission: C1K9EV8X"
 
   utter_goodbye:
-    - text: "Thanks for taking the time to talk to me. Goodbye!"
+    - text: "I'll send you a message in about one week on Prolific with some last questions.\nGoodbye!"
       buttons:
       - payload: /confirm_goodbye
         title: "Goodbye!"
@@ -717,7 +716,7 @@ responses:
         - type: slot
           name: mood_quadrant
           value: "ha_hv"
-      text: "Great, I'm happy to hear that that you're feeling {mood}!"
+      text: "Great, I'm happy to hear that you're feeling {mood}!"
     - condition:
         - type: slot
           name: mood_quadrant
@@ -830,7 +829,7 @@ responses:
         - type: slot
           name: mood_quadrant
           value: "ha_lv"
-      text: "Aww I'm so sorry to hear this. Hopefully you feel less {mood} soon!"
+      text: "Aww I'm so sorry to hear this. Hopefully, you feel less {mood} soon!"
     - condition:
         - type: slot
           name: mood_quadrant
@@ -840,12 +839,12 @@ responses:
         - type: slot
           name: mood_quadrant
           value: "ha_lv"
-      text: "I hate to hear that today isn't a good day for you. Hopefully you feel better soon and that it's okay to proceed with this session!"
+      text: "I hate to hear that today isn't a good day for you. Hopefully, you feel better soon and that it's okay to proceed with this session!"
     - condition:
         - type: slot
           name: mood_quadrant
           value: "ha_lv"
-      text: "Aww what a shame. Hopefully you feel less {mood} soon!"
+      text: "Aww what a shame. Hopefully, you feel less {mood} soon!"
     - condition:
         - type: slot
           name: mood_quadrant
@@ -933,7 +932,7 @@ responses:
   utter_cool:
   - text: Nice! Thanks for your input!
   - text: Cool! Thanks for letting me know!
-  - text: Perfect! Thanks for you telling me!
+  - text: Perfect! Thanks for telling me!
   
   utter_thanks:
   - text: "Thanks!"
