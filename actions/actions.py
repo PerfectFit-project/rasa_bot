@@ -70,13 +70,19 @@ class ActionStartPMTQuestions(Action):
 
         round_num = tracker.get_slot("round_num")
         round_num += 1
-        
-        if round_num == 3:          # we will have only 2 rounds
-            return [FollowupAction("utter_intentions_attitude_intro")]
-        elif round_num == 1:
+
+        if round_num == 1:
             return [SlotSet("round_num", round_num), FollowupAction("utter_state_question_intro")]
         else:
-            return [SlotSet("round_num", round_num), FollowupAction("utter_one_more_time")]
+            good_state = False
+            good_state_score = int(tracker.get_slot("state_V")) + int(tracker.get_slot("state_S")) + int(tracker.get_slot("state_RE")) + int(tracker.get_slot("state_SE"))
+            logging.info("good_state_score:" + str(good_state_score))
+            if good_state_score/30 >= 0.8:
+                good_state = True
+            if (good_state) or round_num > 4:
+                return [FollowupAction("utter_intentions_attitude_intro")]
+            else:
+                return [SlotSet("round_num", round_num), FollowupAction("utter_one_more_time")]
 
 
 
@@ -597,19 +603,19 @@ class ActionVidActActivity(Action):
 
 
 def activityIsUserConditional(tracker):
-    if (tracker.get_slot("u_input") == "physical health"):
+    if (tracker.get_slot("u_input") == "Physical health"):
         chosen_activity_index = 1.1
-    elif (tracker.get_slot("u_input") == "heart diseases"):
+    elif (tracker.get_slot("u_input") == "Heart diseases"):
         chosen_activity_index = 1.2
-    elif (tracker.get_slot("u_input") == "appearance"):
+    elif (tracker.get_slot("u_input") == "Appearance"):
         chosen_activity_index = 1.3
-    elif (tracker.get_slot("u_input") == "oral health"):
+    elif (tracker.get_slot("u_input") == "Oral health"):
         chosen_activity_index = 1.4
-    elif (tracker.get_slot("u_input") == "respiratory illnesses"):
+    elif (tracker.get_slot("u_input") == "Respiratory illnesses"):
         chosen_activity_index = 1.5
-    elif (tracker.get_slot("u_input") == "life expectancy"):
+    elif (tracker.get_slot("u_input") == "Life expectancy"):
         chosen_activity_index = 1.6
-    elif (tracker.get_slot("u_input") == "fertility"):
+    elif (tracker.get_slot("u_input") == "Fertility"):
         chosen_activity_index = 1.7        
     elif (tracker.get_slot("u_input") == "running" or tracker.get_slot("u_input") == "cycling"):
         chosen_activity_index = 24.1

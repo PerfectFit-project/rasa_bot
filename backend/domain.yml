@@ -505,7 +505,7 @@ responses:
 
   utter_state_question_int_att_q2:
   - buttons:
-    - payload: /confirm_state_int_att_q2{"int_att_q3":"-5"}
+    - payload: /confirm_state_int_att_q2{"int_att_q2":"-5"}
       title: "-5 (Very likely harmful)"
     - payload: /confirm_state_int_att_q2{"int_att_q2":"-4"}
       title: "-4"
