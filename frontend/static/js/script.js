@@ -117,6 +117,8 @@ function send(message) {
 //=================== set bot response in the chats ===========================================
 function setBotResponse(response) {
 
+	$('.usrInput').attr("disabled", true); //To disable the chatbox
+	$(".usrInput").prop('placeholder', "Wait for Sam's response."); //The message visible for the user
 	//display bot response after the number of miliseconds caputred by the variable 'delay_first_message'
 	var delay_first_message = 500;
 	if (response.length >=1) {
@@ -194,6 +196,11 @@ function doScaledTimeout(i, response, summed_timeout) {
 				else{
 					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><p class="botMsg">' + response_text[j] + '</p><div class="clearfix"></div>';
 				}
+
+				if (response_text[j].includes("2 sentences")){
+					$('.usrInput').attr("disabled", false); //To disable the chatbox
+					$(".usrInput").prop('placeholder', "Type your answer here."); //The message visible for the user
+				}
 				$(BotResponse).appendTo(".chats").hide().fadeIn(1000);
 			}
 		}
@@ -225,7 +232,7 @@ $("#profile_div").click(function () {
 function addSuggestion(textToAdd) {
 	setTimeout(function () {
 		$('.usrInput').attr("disabled",true);
-		$(".usrInput").prop('placeholder', "Use one of the buttons to answer.");
+		$(".usrInput").prop('placeholder', "Wait for Sam's response.");
 		var suggestions = textToAdd;
 		var suggLength = textToAdd.length;
 
