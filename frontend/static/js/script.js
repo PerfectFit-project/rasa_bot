@@ -236,25 +236,23 @@ function addSuggestion(textToAdd) {
 		var suggestions = textToAdd;
 		var suggLength = textToAdd.length;
 
-		if (suggestions[0].title === "Satisfied"){
-			$(' <div class="singleCard"> <div class="suggestions"><div class="menu" style="display: flex;flex-wrap: wrap;"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
+		$(' <div class="singleCard"> <div class="suggestions"><div class="menu"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
+
+		console.log(suggLength)
+		if (suggLength > 2 && suggLength != 11 && suggLength != 7){
+			// Loop through suggestions
+			for (i = 0; i < suggLength; i++) {
+				$('<div class="menuChips" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+			}
 		}
-		else if(suggestions[0].title.includes("-5") || suggestions[0].title.includes("0")){
-			$(' <div class="singleCard"> <div class="suggestions"><div class="menu" style="display: flex;flex-wrap: wrap;justify-content: center;"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
+		else if (suggLength == 11){
+			for (i = 0; i < suggLength; i++) {
+				$('<div class="menuChips" style="width: unset;padding: 10px;" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+			}
 		}
 		else{
-			$(' <div class="singleCard"> <div class="suggestions"><div class="menu"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
-		}
-			// Loop through suggestions
-		for (i = 0; i < suggLength; i++) {
-			if (suggestions[0].title === "Satisfied"){
-				$('<div class="menuChips" style="width: calc(100% / 7); margin: 5px;" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
-			}
-			else if (suggestions[0].title.includes("-5") || suggestions[0].title.includes("0")){
-				$('<div class="menuChips" style="margin: 5px;padding: 10px;" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
-			}
-			else{
-				$('<div class="menuChips" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+			for (i = 0; i < suggLength; i++) {
+				$('<div class="menuChips" style="width: calc(100% / 4)" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
 			}
 		}
 		scrollToBottomOfResults();

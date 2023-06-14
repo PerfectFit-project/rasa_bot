@@ -408,6 +408,9 @@ div.content_data::-webkit-scrollbar {
 
 .menu {
 	padding: 5px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 }
 
 .menuChips {
@@ -416,11 +419,12 @@ div.content_data::-webkit-scrollbar {
 	color: #fff;
 	text-align: center;
 	padding: 5px;
-	margin-bottom: 5px;
 	cursor: pointer;
 	border-radius: 15px;
 	font-size: 14px;
 	word-wrap: break-word;
+	width: calc(100% / 5); 
+	margin: 5px;
 }
 
 
