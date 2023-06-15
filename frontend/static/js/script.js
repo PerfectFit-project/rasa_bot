@@ -232,27 +232,31 @@ $("#profile_div").click(function () {
 function addSuggestion(textToAdd) {
 	setTimeout(function () {
 		$('.usrInput').attr("disabled",true);
-		$(".usrInput").prop('placeholder', "Wait for Sam's response.");
+		$(".usrInput").prop('placeholder', "Use one of the buttons to answer.");
 		var suggestions = textToAdd;
 		var suggLength = textToAdd.length;
-
 		$(' <div class="singleCard"> <div class="suggestions"><div class="menu"></div></div></diV>').appendTo(".chats").hide().fadeIn(1000);
 
 		console.log(suggLength)
-		if (suggLength > 2 && suggLength != 11 && suggLength != 7){
+		if (suggLength <=4){
 			// Loop through suggestions
 			for (i = 0; i < suggLength; i++) {
+				$('<div class="menuChips fourButtons" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+			}
+		}
+		else if (suggLength == 11){	// PMT questions buttons
+			for (i = 0; i < suggLength; i++) {
+				$('<div class="menuChips elevenButtons" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+			}
+		}
+		else if (suggLength == 7){	// PMT questions buttons
+			for (i = 0; i < suggLength; i++) {
+				$('<div class="menuChips sevenButtons" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
+			}
+		}
+		else{	// mood buttons
+			for (i = 0; i < suggLength; i++) {
 				$('<div class="menuChips" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
-			}
-		}
-		else if (suggLength == 11){
-			for (i = 0; i < suggLength; i++) {
-				$('<div class="menuChips" style="width: unset;padding: 10px;" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
-			}
-		}
-		else{
-			for (i = 0; i < suggLength; i++) {
-				$('<div class="menuChips" style="width: calc(100% / 4)" data-payload=\'' + (suggestions[i].payload) + '\'>' + suggestions[i].title + "</div>").appendTo(".menu");
 			}
 		}
 		scrollToBottomOfResults();

@@ -4,7 +4,7 @@
 
 * Access the chatbot from http://localhost:3000/?userid=70&sessionid=1&a=3&g=4 where userid=`<value>` is an id given from prolific, a=`<value> is the user's age and g=<value> is the user's gender where male: 0 and female: 1.`
 * ![Alt text](Chatbot dialog flow.jpg?raw=true "Chatbot Dialog Flow")
-* The bot is configured to ask the PMT questions and recommend activities 2 times. This is hardcoded in ActionStartPMTQuestions action, in actions.py
+* **Number of iterations (pmt questions + recommended activity):** The bot is configured to ask the PMT questions and recommend activities min 1 time and max 4 times. This is done in **ActionStartPMTQuestions** action, in actions.py. The exact amount of iterations depends on the "good state" of the user. "Good state" is when the score of all PMT questions is over 80% on the previous round.
 * For each PMT question, the user's answer is saved to the sessiondata table. Since we have only one session here, session_num=1 for all. Each round is distinguised with the round_num column.
 
 ### Personalization
@@ -23,7 +23,7 @@
 
 ### Activities
 
-There are 3 types of activities: text, video, activity (which can be found in the excel). 
+There are 3 types of activities: text, video, activity (which can be found in the excel).
 
 * If an activity is "text", then we have included some interaction with the user. For that purpose, we have parent activities (i.e. 1 ) and child activities (i.e 1.1, 1.2 etc).
   * After uttering the parent's activity content, and receiving the user's answer (which is not stored anywhere, or we don't care about it), the ActionTextActivity action is called, to utter the child's activity content.

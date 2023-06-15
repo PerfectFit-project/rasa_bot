@@ -53,6 +53,7 @@ rules:
   - action: utter_intro_session_1
   - action: utter_intro_session_2
   - action: utter_intro_session_3
+  - action: utter_intro_session_4
   - action: utter_intro_session_5
   - action: utter_intro_session_7
 

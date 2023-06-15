@@ -292,10 +292,10 @@ responses:
   utter_ask_user_input_activity_slot:
   - text: "Type here everything that comes to your mind, in about 2 sentences."
   - text: "What do you think about this information? Write your thoughts in about 2 sentences into the chat."
-  - text: "Feel free to write down your thoughts right here in about 2 sentences!"
+  - text: "Please write down your thoughts here in about 2 sentences."
   - text: "What do you think? Write your thoughts in about 2 sentences into the chat."
   utter_longer_answer_activity:
-  - text: "Please type in a longer answer."
+  - text: "Can you describe this in a bit more detail?"
   utter_purpose_1:
   - text: "I have mentioned by name, but let me also tell you a bit about what I do: My goal is to understand how people think about free-time activities and quitting smoking."
   utter_purpose_5:
@@ -315,9 +315,11 @@ responses:
   utter_intro_session_1:
   - text: "Now, let me tell you what we will do today."
   utter_intro_session_2:
-  - text: "First, I'll ask you a few questions to learn about your beliefs on free-time activities and quitting smoking."
+  - text: "First, I'll ask you a few questions to learn about your beliefs about free-time activities and quitting smoking."
   utter_intro_session_3:
-  - text: "Next, I'll recommend you to read a text, watch a video or do a small exercise."
+  - text: "Next, I'll recommend you to read a text, watch a video or do a short mental exercise."
+  utter_intro_session_4:
+  - text: "We might repeat this a few times."
   utter_intro_session_5:
   - text: "At the end of the dialog, I will send you your Prolific completion link."
   utter_intro_session_7:

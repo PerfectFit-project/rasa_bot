@@ -181,6 +181,13 @@ textarea-webkit-scrollbar {
 	cursor: pointer;
 }
 
+@media (max-width: 767px) {
+	.profile_div {
+		width: 30%;
+		right: -10px;
+	}
+}
+
 
 /* css for dropdown menu of the bot */
 
@@ -414,17 +421,53 @@ div.content_data::-webkit-scrollbar {
 }
 
 .menuChips {
-	display: block;
+	display: inline-block;
 	background: #2c53af;
 	color: #fff;
-	text-align: center;
 	padding: 5px;
+	padding-left: 8px;
+	padding-right: 8px;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-bottom: 5px;
 	cursor: pointer;
 	border-radius: 15px;
 	font-size: 14px;
-	word-wrap: break-word;
-	width: calc(100% / 5); 
-	margin: 5px;
+	box-shadow: 2px 5px 5px 1px #dbdade;
+	width: calc(100%/5);
+	text-align: center;
+
+}
+
+.fourButtons{
+	width: 100% !important;
+}
+
+.sevenButtons{
+	width: calc(100%/4);
+}
+
+.elevenButtons{
+	width: unset !important;
+	padding: 10px;
+}
+
+@media (max-width: 767px) {
+	.menuChips {
+		width: calc(100%/3);
+	}
+
+	.fourButtons{
+		width: 100% !important;
+	}
+
+	.sevenButtons{
+		width: 100% !important;
+	}
+	
+	.elevenButtons{
+		width: 100% !important;
+	}
 }
 
 
