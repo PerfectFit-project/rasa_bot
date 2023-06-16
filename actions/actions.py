@@ -10,7 +10,10 @@ from definitions import (DATABASE_HOST, DATABASE_PASSWORD,
                          DATABASE_PORT, DATABASE_USER, df_act)
 from rasa_sdk import Action, FormValidationAction, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import FollowupAction, SlotSet, EventType
+from rasa_sdk.events import (FollowupAction, SlotSet, EventType, 
+                             ActionExecuted, FollowupAction, 
+                             SessionStarted, SlotSet)
+
 from rasa_sdk.types import DomainDict
 from typing import Any, Dict, List, Optional, Text
 from collections import Counter
@@ -21,6 +24,34 @@ import mysql.connector
 import random
 
 history_session_list = []
+
+class ActionSessionStart(Action):
+    def name(self) -> Text:
+        return "action_session_start"
+
+    async def run(
+      self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+
+        session_num = tracker.get_slot("session_num")
+
+        # the session should begin with a `session_started` event
+        # in case of a timed-out session, we also need this so that rasa does not
+        # continue with uncompleted forms.
+        events = [SessionStarted()]
+
+        # New session
+        if session_num == "":
+ 
+            # an `action_listen` should be added at the end as a user message follows
+            events.append(ActionExecuted("action_listen"))
+
+        # timed out session
+        else:
+            dispatcher.utter_message(template="utter_timeout")
+            events.append(FollowupAction('action_end_dialog'))
+
+        return events
 
 class ActionEndDialog(Action):
     """Action to cleanly terminate the dialog."""
@@ -666,8 +697,7 @@ class ValidateUserInputActivityForm(FormValidationAction):
             return {"user_input_activity_slot": None}
 
         # require the user to enter at least 200 chars
-        if not len(last_user_message) >= 100:      # uncomment on production
-        #if not len(last_user_message) >= 1:         # only for testing, remove on production
+        if not (len(value) >= 40 or "none" in value.lower()):
             dispatcher.utter_message(response="utter_longer_answer_activity")
             return {"user_input_activity_slot": None}
 

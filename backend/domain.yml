@@ -950,17 +950,20 @@ responses:
   
   
   utter_default:
-  - text: "There is a problem with this session."
+  - text: "THERE IS A PROBLEM WITH THIS SESSION."
   
   utter_default_close_session:
   - text: "PLEASE CLOSE THIS WINDOW AND CONTACT THE RESEARCHER ON PROLIFIC."
   
   utter_error_close_session:
   - text: "PLEASE CLOSE THIS WINDOW. ANY FURTHER TYPING IN THIS CHAT RENDERS THIS SESSION INVALID."
+  
+  utter_timeout:
+  - text: "THE SESSION HAS TIMED OUT."
  
 
 session_config:
-  session_expiration_time: 5  # these are minutes
+  session_expiration_time: 60  # these are minutes
   carry_over_slots_to_new_session: false
 
 
@@ -997,3 +1000,5 @@ actions:
 
 - action_end_dialog
 - action_default_fallback_end_dialog
+
+- action_session_start
