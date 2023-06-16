@@ -181,10 +181,19 @@ textarea-webkit-scrollbar {
 	cursor: pointer;
 }
 
+.video{
+	width: 560;
+	height: 315;
+}
+
 @media (max-width: 767px) {
 	.profile_div {
 		width: 30%;
 		right: -10px;
+	}
+
+	.video{
+		width: 330;
 	}
 }
 

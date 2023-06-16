@@ -40,7 +40,7 @@ entities:
 - session_num:
     influence_conversation: false
 
-- age:
+- age_group:
     influence_conversation: false
 
 - gender:
@@ -97,13 +97,13 @@ slots:
     mappings:
     - type: from_entity
       entity: session_num
-  age:
+  age_group:
     type: text
     initial_value: ''
     influence_conversation: false
     mappings:
     - type: from_entity
-      entity: age
+      entity: age_group
   gender:
     type: text
     initial_value: ''

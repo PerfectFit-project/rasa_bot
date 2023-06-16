@@ -7,11 +7,9 @@ $(document).ready(function () {
     const userid = urlParams.get('userid');
 	user_id = userid;
 	
-	//get session number
-	const session_num = urlParams.get('sessionid');
 
-	// get user age
-	userAge = urlParams.get('a');
+	// get user age group
+	userAgeGroup = urlParams.get('a');
 
 	// get user gender - male: 0 and female: 1
 	userGender = urlParams.get('g');
@@ -27,7 +25,7 @@ $(document).ready(function () {
 	
 	
 	//start a session
-	send('/start_session1{"session_num":"1", "age":' + userAge + ',"gender":' + userGender + '}');
+	send('/start_session1{"session_num":"1", "age_group":' + userAgeGroup + ',"gender":' + userGender + '}');
 })
 
 //=====================================	user enter or sends the message =====================
@@ -191,7 +189,7 @@ function doScaledTimeout(i, response, summed_timeout) {
 			for (j = 0; j < response_text.length; j++){
 
 				if (response_text[j].includes("youtube")){
-					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><iframe width="560" height="315" src="' + response_text[j] + '?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><div class="clearfix"></div>';												
+					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><iframe class="video" src="' + response_text[j] + '?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><div class="clearfix"></div>';												
 				}
 				else{
 					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><p class="botMsg">' + response_text[j] + '</p><div class="clearfix"></div>';

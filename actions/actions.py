@@ -108,7 +108,7 @@ class ActionStartPMTQuestions(Action):
             good_state = False
             good_state_score = int(tracker.get_slot("state_V")) + int(tracker.get_slot("state_S")) + int(tracker.get_slot("state_RE")) + int(tracker.get_slot("state_SE"))
             logging.info("good_state_score:" + str(good_state_score))
-            if good_state_score/30 >= 0.8:
+            if good_state_score/20 >= 0.8:
                 good_state = True
             if (good_state) or round_num > 4:
                 return [FollowupAction("utter_intentions_attitude_intro")]
@@ -345,25 +345,25 @@ class ValidateActivityExperienceForm(FormValidationAction):
 
         return {"activity_experience_slot": value}
 
-def getPersonalizedActivitiesList(age, gender):
+def getPersonalizedActivitiesList(age_group, gender):
 
     df_act_copy = df_act.copy(True)
 
     for index, row in df_act_copy.iterrows():
         # delete rows that are of opposite gender
-        if (row['Gender'] == 'female' and gender == '0') or (row['Gender'] == 'male' and gender == '1'):     
+        if (row['Gender'] == 'female' and gender != 1) or (row['Gender'] == 'male' and gender != 0):     
             df_act_copy.drop(index, inplace=True)
 
         # delete rows that are of a different age range (50-60 only)
-        if (row['Age']) == '50' and (age < 50 or age > 60):     
+        if (row['Age']) == '50' and (age_group != 59):     
             df_act_copy.drop(index, inplace=True)
 
         # delete rows that are of a different age range (40-49 only)
-        if (row['Age']) == '40' and (age < 40 or age > 49):     
+        if (row['Age']) == '40' and (age_group != 49):     
             df_act_copy.drop(index, inplace=True)
 
         # delete rows that are of a different age range (39++ only)
-        if (row['Age']) == '30' and (age > 39):     
+        if (row['Age']) == '30' and (age_group != 39):     
             df_act_copy.drop(index, inplace=True)
 
     return df_act_copy
@@ -529,14 +529,13 @@ class ActionChooseActivity(Action):
 
     def run(self, dispatcher, tracker, domain):
 
-        age = tracker.get_slot("age")
+        age_group = tracker.get_slot("age_group")
         gender = tracker.get_slot("gender")
-        round_num = tracker.get_slot("round_num")
 
         prolific_id = tracker.current_state()['sender_id']
 
         # get a df with personalized activities
-        personal_act_df = getPersonalizedActivitiesList(age, gender)
+        personal_act_df = getPersonalizedActivitiesList(age_group, gender)
 
         # get list of indices of personalized activities and get all the main items. This can be [1.3,2,3]
         personalized_list = [int(x) for x in personal_act_df['Number']]     
