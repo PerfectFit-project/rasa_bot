@@ -25,7 +25,7 @@ $(document).ready(function () {
 	
 	
 	//start a session
-	send('/start_session1{"session_num":"1", "age_group":' + userAgeGroup + ',"gender":' + userGender + '}');
+	send('/start_session1{"age_group":' + userAgeGroup + ',"gender":' + userGender + '}');
 })
 
 //=====================================	user enter or sends the message =====================

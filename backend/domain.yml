@@ -21,11 +21,11 @@ intents:
 - confirm_state_PMT_SE
 
 ### intentions & attitude questions
-- confirm_state_int_att_q1
-- confirm_state_int_att_q2
-- confirm_state_int_att_q3
-- confirm_state_int_att_q4
-- confirm_state_int_att_q5
+- confirm_state_intention_using_PA
+- confirm_state_attitude_using_PA
+- confirm_state_intention_quitting_smoking
+- confirm_state_intention_doing_more_PA
+- confirm_state_intention_exploring_PA
 
 ### propose new activity
 - confirm_activity_read
@@ -37,9 +37,6 @@ intents:
 - user_input
 
 entities:
-- session_num:
-    influence_conversation: false
-
 - age_group:
     influence_conversation: false
 
@@ -63,23 +60,17 @@ entities:
 - state_SE:
     influence_conversation: false
 
-- int_att_q1:
+- intention_using_PA:
     influence_conversation: false
-- int_att_q2:
+- attitude_using_PA:
     influence_conversation: false
-- int_att_q3:
+- intention_quitting_smoking:
     influence_conversation: false
-- int_att_q4:
+- intention_doing_more_PA:
     influence_conversation: false
-- int_att_q5:
+- intention_exploring_PA:
     influence_conversation: false
 
-- effort:
-    influence_conversation: false
-- effort_level:
-    influence_conversation: false
-- dropout_response:
-    influence_conversation: false
 - u_input:
     influence_conversation: false
 
@@ -90,13 +81,6 @@ slots:
     influence_conversation: true
     mappings:
     - type: custom
-  session_num:
-    type: text
-    initial_value: ''
-    influence_conversation: false
-    mappings:
-    - type: from_entity
-      entity: session_num
   age_group:
     type: text
     initial_value: ''
@@ -125,12 +109,6 @@ slots:
     mappings:
     - type: from_entity
       entity: mood_quadrant
-  mood_prev_session:
-    type: text
-    initial_value: ''
-    influence_conversation: false
-    mappings:
-    - type: custom
   user_input_activity_slot:
     type: text
     initial_value: ''
@@ -201,45 +179,45 @@ slots:
     - type: from_entity
       entity: state_SE
 
-  int_att_q1:
+  intention_using_PA:
     type: text
     initial_value: ''
     influence_conversation: false
     mappings:
     - type: from_entity
-      entity: int_att_q1
+      entity: intention_using_PA
 
-  int_att_q2:
+  attitude_using_PA:
     type: text
     initial_value: ''
     influence_conversation: false
     mappings:
     - type: from_entity
-      entity: int_att_q2
+      entity: attitude_using_PA
 
-  int_att_q3:
+  intention_quitting_smoking:
     type: text
     initial_value: ''
     influence_conversation: false
     mappings:
     - type: from_entity
-      entity: int_att_q3
+      entity: intention_quitting_smoking
 
-  int_att_q4:
+  intention_doing_more_PA:
     type: text
     initial_value: ''
     influence_conversation: false
     mappings:
     - type: from_entity
-      entity: int_att_q4
+      entity: intention_doing_more_PA
 
-  int_att_q5:
+  intention_exploring_PA:
     type: text
     initial_value: ''
     influence_conversation: false
     mappings:
     - type: from_entity
-      entity: int_att_q5
+      entity: intention_exploring_PA
 
   u_input:
     type: text
@@ -248,41 +226,6 @@ slots:
     mappings:
     - type: from_entity
       entity: u_input
-      
-  ### activity experience
-  # effort
-  effort:
-    type: text
-    initial_value: ''
-    influence_conversation: false
-    mappings:
-    - type: from_entity
-      entity: effort
-  effort_level:
-    type: text
-    initial_value: ''
-    influence_conversation: false
-    mappings:
-    - type: from_entity
-      entity: effort_level
-  # activity experience
-  activity_experience_slot:
-    type: text
-    initial_value: ''
-    influence_conversation: false
-    mappings:
-    - type: from_text
-      conditions:
-        - active_loop: activity_experience_form  
-
-  # dropout
-  dropout_response:
-    type: text
-    initial_value: ''
-    influence_conversation: false
-    mappings:
-    - type: from_entity
-      entity: dropout_response 
 
 responses:
 
@@ -445,11 +388,7 @@ responses:
 
     
   utter_activity_read:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "1"
-      text: "I'll continue when you're done."
+    - text: "I'll continue when you're done."
       buttons:
       - payload: /confirm_activity_read
         title: "I'm done"
@@ -479,133 +418,133 @@ responses:
     - text: "Now, let's take another look at the 4 statements we previously covered."
 
   ## Intentions & attitude questions
-  utter_state_question_int_att_q1:
+  utter_state_question_intention_using_PA:
   - buttons:
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"0"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"0"}
       title: "0 (Very unlikely)"
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"1"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"1"}
       title: "1"
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"2"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"2"}
       title: "2"
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"3"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"3"}
       title: "3"
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"4"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"4"}
       title: "4"
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"5"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"5"}
       title: "5"
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"6"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"6"}
       title: "6"
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"7"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"7"}
       title: "7"
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"8"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"8"}
       title: "8"
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"9"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"9"}
       title: "9"
-    - payload: /confirm_state_int_att_q1{"int_att_q1":"10"}
+    - payload: /confirm_state_intention_using_PA{"intention_using_PA":"10"}
       title: "10 (Very likely)"
     text: "If you quit smoking, how likely are you to use physical activity to help you?"
 
-  utter_state_question_int_att_q2:
+  utter_state_question_attitude_using_PA:
   - buttons:
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"-5"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"-5"}
       title: "-5 (Very likely harmful)"
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"-4"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"-4"}
       title: "-4"
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"-3"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"-3"}
       title: "-3"
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"-2"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"-2"}
       title: "-2"
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"-1"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"-1"}
       title: "-1"
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"0"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"0"}
       title: "0"
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"1"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"1"}
       title: "1"
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"2"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"2"}
       title: "2"
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"3"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"3"}
       title: "3"
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"4"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"4"}
       title: "4"
-    - payload: /confirm_state_int_att_q2{"int_att_q2":"5"}
+    - payload: /confirm_state_attitude_using_PA{"attitude_using_PA":"5"}
       title: "5 (Very likely helpful)"
     text: "How harmful or helpful do you regard physical activity when it comes to quitting smoking?"
 
-  utter_state_question_int_att_q3:
+  utter_state_question_intention_quitting_smoking:
   - buttons:
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"0"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"0"}
       title: "0 (Very unlikely)"
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"1"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"1"}
       title: "1"
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"2"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"2"}
       title: "2"
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"3"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"3"}
       title: "3"
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"4"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"4"}
       title: "4"
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"5"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"5"}
       title: "5"
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"6"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"6"}
       title: "6"
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"7"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"7"}
       title: "7"
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"8"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"8"}
       title: "8"
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"9"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"9"}
       title: "9"
-    - payload: /confirm_state_int_att_q3{"int_att_q3":"10"}
+    - payload: /confirm_state_intention_quitting_smoking{"intention_quitting_smoking":"10"}
       title: "10 (Very likely)"
     text: "How likely are you to quit smoking in the next 6 months?"
 
-  utter_state_question_int_att_q4:
+  utter_state_question_intention_doing_more_PA:
   - buttons:
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"0"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"0"}
       title: "0 (Very unlikely)"
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"1"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"1"}
       title: "1"
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"2"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"2"}
       title: "2"
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"3"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"3"}
       title: "3"
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"4"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"4"}
       title: "4"
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"5"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"5"}
       title: "5"
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"6"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"6"}
       title: "6"
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"7"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"7"}
       title: "7"
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"8"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"8"}
       title: "8"
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"9"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"9"}
       title: "9"
-    - payload: /confirm_state_int_att_q4{"int_att_q4":"10"}
+    - payload: /confirm_state_intention_doing_more_PA{"intention_doing_more_PA":"10"}
       title: "10 (Very likely)"
     text: "How likely are you to become more physically active in the next 6 months?"
 
-  utter_state_question_int_att_q5:
+  utter_state_question_intention_exploring_PA:
   - buttons:
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"0"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"0"}
       title: "0 (Very unlikely)"
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"1"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"1"}
       title: "1"
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"2"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"2"}
       title: "2"
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"3"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"3"}
       title: "3"
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"4"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"4"}
       title: "4"
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"5"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"5"}
       title: "5"
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"6"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"6"}
       title: "6"
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"7"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"7"}
       title: "7"
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"8"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"8"}
       title: "8"
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"9"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"9"}
       title: "9"
-    - payload: /confirm_state_int_att_q5{"int_att_q5":"10"}
+    - payload: /confirm_state_intention_exploring_PA{"intention_exploring_PA":"10"}
       title: "10 (Very likely)"
     text: "How likely are you to explore physical activity as an aid for quitting smoking?"
 
@@ -615,11 +554,7 @@ responses:
   utter_intentions_attitude_questions:
     - text: "For that, I would like to discuss with you some final questions."
   utter_email_reminder:
-    - condition:
-        - type: slot
-          name: session_num
-          value: "1"
-      text: "Thanks for taking the time to talk to me and answering these questions.\nThis is the end of the session.\n
+    - text: "Thanks for taking the time to talk to me and answering these questions.\nThis is the end of the session.\n
       Please return to Prolific and enter the following completion code to register your submission: C1K9EV8X"
 
   utter_goodbye:
@@ -973,9 +908,6 @@ config:
   
   
 forms:
-  activity_experience_form:
-    required_slots:
-        - activity_experience_slot
   user_input_activity_form:
     required_slots:
         - user_input_activity_slot
@@ -988,8 +920,6 @@ actions:
 - action_save_session
 - action_save_end_session
 
-- validate_activity_experience_form
-- validate_activity_experience_mod_form
 - validate_user_input_activity_form
 
 - action_start_PMT_questions

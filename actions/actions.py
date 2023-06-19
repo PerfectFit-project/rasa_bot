@@ -33,7 +33,7 @@ class ActionSessionStart(Action):
       self, dispatcher, tracker: Tracker, domain: Dict[Text, Any]
     ) -> List[Dict[Text, Any]]:
 
-        session_num = tracker.get_slot("session_num")
+        session_loaded = tracker.get_slot("session_loaded")
 
         # the session should begin with a `session_started` event
         # in case of a timed-out session, we also need this so that rasa does not
@@ -41,7 +41,7 @@ class ActionSessionStart(Action):
         events = [SessionStarted()]
 
         # New session
-        if session_num == "":
+        if session_loaded == None:
  
             # an `action_listen` should be added at the end as a user message follows
             events.append(ActionExecuted("action_listen"))
@@ -141,10 +141,10 @@ def get_latest_bot_utterance(events) -> Optional[Any]:
     return last_utterance
 
 
-def check_session_not_done_before(cur, prolific_id, session_num):
+def check_session_not_done_before(cur, prolific_id):
     
-    query = ("SELECT * FROM sessiondata WHERE prolific_id = %s and session_num = %s")
-    cur.execute(query, [prolific_id, session_num])
+    query = ("SELECT * FROM sessiondata WHERE prolific_id = %s")
+    cur.execute(query, [prolific_id])
     done_before_result = cur.fetchone()
     
     not_done_before = True
@@ -183,7 +183,7 @@ class ActionLoadSessionFirst(Action):
         )
         cur = conn.cursor(prepared=True)
         
-        session_loaded = check_session_not_done_before(cur, prolific_id, 1)
+        session_loaded = check_session_not_done_before(cur, prolific_id)
         
         conn.close()
 
@@ -200,10 +200,8 @@ class ActionLoadSessionNotFirst(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         
         prolific_id = tracker.current_state()['sender_id']
-        session_num = tracker.get_slot("session_num")
         
         session_loaded = True
-        mood_prev = ""
         
         conn = mysql.connector.connect(
             user=DATABASE_USER,
@@ -217,8 +215,8 @@ class ActionLoadSessionNotFirst(Action):
             
         # check if user has done previous session before '
         # (i.e., if session data is saved from previous session)
-        query = ("SELECT * FROM sessiondata WHERE prolific_id = %s and session_num = %s and response_type = %s")
-        cur.execute(query, [prolific_id, str(int(session_num) - 1), "state_V"])
+        query = ("SELECT * FROM sessiondata WHERE prolific_id = %s and response_type = %s")
+        cur.execute(query, [prolific_id, "state_V"])
         done_previous_result = cur.fetchone()
         
         if done_previous_result is None:
@@ -230,27 +228,18 @@ class ActionLoadSessionNotFirst(Action):
             # this basically means that it checks whether the user has already 
             # completed the session part until the dropout question before,
             # since that is when we first save something to the database
-            session_loaded = check_session_not_done_before(cur, prolific_id, 
-                                                            session_num)
-            
-            if session_loaded:
-                # Get mood from previous session
-                query = ("SELECT response_value FROM sessiondata WHERE prolific_id = %s and session_num = %s and response_type = %s")
-                cur.execute(query, [prolific_id, str(int(session_num) - 1), "mood"])
-                mood_prev = cur.fetchone()[0]
-                    
+            session_loaded = check_session_not_done_before(cur, prolific_id)              
         
         conn.close()
 
         
-        return [SlotSet("mood_prev_session", mood_prev),
-                SlotSet("session_loaded", session_loaded)]
+        return [SlotSet("session_loaded", session_loaded)]
         
     
-def save_sessiondata_entry(cur, conn, prolific_id, session_num, round_num, response_type,
+def save_sessiondata_entry(cur, conn, prolific_id, round_num, response_type,
                            response_value, time):
-    query = "INSERT INTO sessiondata(prolific_id, session_num, round_num, response_type, response_value, time) VALUES(%s, %s, %s, %s, %s, %s)"
-    cur.execute(query, [prolific_id, session_num, round_num, response_type,
+    query = "INSERT INTO sessiondata(prolific_id, round_num, response_type, response_value, time) VALUES(%s, %s, %s, %s, %s)"
+    cur.execute(query, [prolific_id, round_num, response_type,
                         response_value, time])
     conn.commit()
     
@@ -276,12 +265,11 @@ class ActionSaveSession(Action):
         cur = conn.cursor(prepared=True)
         
         prolific_id = tracker.current_state()['sender_id']
-        session_num = tracker.get_slot("session_num")
         round_num = tracker.get_slot("round_num")
         
         slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE"]
         for slot in slots_to_save:
-            save_sessiondata_entry(cur, conn, prolific_id, session_num, round_num, 
+            save_sessiondata_entry(cur, conn, prolific_id, round_num, 
                                    slot, tracker.get_slot(slot),
                                    formatted_date)
 
@@ -310,40 +298,17 @@ class ActionSaveEndSession(Action):
         cur = conn.cursor(prepared=True)
         
         prolific_id = tracker.current_state()['sender_id']
-        session_num = tracker.get_slot("session_num")
         round_num = tracker.get_slot("round_num")
         
-        slots_to_save = ["int_att_q1", "int_att_q2", "int_att_q3", "int_att_q4", "int_att_q5"]
+        slots_to_save = ["intention_using_PA", "attitude_using_PA", "intention_quitting_smoking", "intention_doing_more_PA", "intention_exploring_PA"]
         for slot in slots_to_save:
-            save_sessiondata_entry(cur, conn, prolific_id, session_num, round_num, 
+            save_sessiondata_entry(cur, conn, prolific_id, round_num, 
                                    slot, tracker.get_slot(slot),
                                    formatted_date)
 
         conn.close()
         
         return []
-    
-
-class ValidateActivityExperienceForm(FormValidationAction):
-    def name(self) -> Text:
-        return 'validate_activity_experience_form'
-
-    def validate_activity_experience_slot(
-            self, value: Text, dispatcher: CollectingDispatcher,
-            tracker: Tracker, domain: Dict[Text, Any]) -> Dict[Text, Any]:
-        # pylint: disable=unused-argument
-        """Validate activity_experience_slot input."""
-        last_utterance = get_latest_bot_utterance(tracker.events)
-
-        if last_utterance != 'utter_ask_activity_experience_slot':
-            return {"activity_experience_slot": None}
-
-        # people should either type "none" or say a bit more
-        if not (len(value) >= 10 or "none" in value.lower()):
-            dispatcher.utter_message(response="utter_provide_more_detail")
-            return {"activity_experience_slot": None}
-
-        return {"activity_experience_slot": value}
 
 def getPersonalizedActivitiesList(age_group, gender):
 
