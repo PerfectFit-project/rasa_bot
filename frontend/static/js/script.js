@@ -188,8 +188,12 @@ function doScaledTimeout(i, response, summed_timeout) {
 			var response_text = response[i].text.split("\n")		
 			for (j = 0; j < response_text.length; j++){
 
-				if (response_text[j].includes("youtube")){
+				if (isYouTubeVideoLink(response_text[j])){
 					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><iframe class="video" src="' + response_text[j] + '?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><div class="clearfix"></div>';												
+				}
+				else if(isWebLink(response_text[j])){
+					console.log("Hello")
+					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><a class="botMsg link" href="' + response_text[j] + '" target="_blank">' + response_text[j] + '</a><div class="clearfix"></div>';													
 				}
 				else{
 					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><p class="botMsg">' + response_text[j] + '</p><div class="clearfix"></div>';
@@ -289,4 +293,16 @@ function showBotTyping() {
 function hideBotTyping() {
 	$('#botAvatar').remove();
 	$('.botTyping').remove();
+}
+
+//======================================link and youtube video handling ======================================
+
+function isYouTubeVideoLink(url) {
+	var embedPattern = /^https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9_-]+$/;
+	return embedPattern.test(url);
+  }
+  
+function isWebLink(url) {
+	var webPattern = /^(https?:\/\/)?([a-zA-Z0-9_-]+\.)*[a-zA-Z0-9_-]+\.[a-zA-Z]{2,}(\/[^\s]*)?$/i;
+	return webPattern.test(url);
 }

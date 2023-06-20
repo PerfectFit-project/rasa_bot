@@ -153,6 +153,7 @@ rules:
   - intent: confirm_state_intention_exploring_PA
   - action: action_save_end_session
   - action: utter_email_reminder
+  - action: utter_prolific_link
   - action: utter_goodbye
 
 - rule: end

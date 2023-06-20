@@ -26,6 +26,9 @@ import random
 history_session_list = []
 
 class ActionSessionStart(Action):
+    """
+        Starts the session and check if there is a timeout
+    """
     def name(self) -> Text:
         return "action_session_start"
 
@@ -54,7 +57,9 @@ class ActionSessionStart(Action):
         return events
 
 class ActionEndDialog(Action):
-    """Action to cleanly terminate the dialog."""
+    """
+        Action to cleanly terminate the dialog.
+    """
     # ATM this action just call the default restart action
     # but this can be used to perform actions that might be needed
     # at the end of each dialog
@@ -67,8 +72,10 @@ class ActionEndDialog(Action):
     
 
 class ActionDefaultFallbackEndDialog(Action):
-    """Executes the fallback action and goes back to the previous state
-    of the dialogue"""
+    """
+        Executes the fallback action and goes back to the 
+        previous state of the dialogue
+    """
 
     def name(self) -> Text:
         return "action_default_fallback_end_dialog"
@@ -88,7 +95,9 @@ class ActionDefaultFallbackEndDialog(Action):
 class ActionStartPMTQuestions(Action):
     """ 
         Start asking the PMT questions and providing an activity to do.
-        Repeat the action as many times as defined in the round_num value.
+        Repeat this minimum 1 time, and maximum 4 times. The exact number of iterations is
+        computed based on the 'good state' of the participant. If the PMT values are over
+        80% then the participant is in a 'good state'.
     """
     def name(self) -> Text:
         return "action_start_PMT_questions"
@@ -245,6 +254,10 @@ def save_sessiondata_entry(cur, conn, prolific_id, round_num, response_type,
     
 
 class ActionSaveSession(Action):
+    """ 
+        Saves the session, after every iteration
+        including the answers to the PMT questions
+    """
     def name(self):
         return "action_save_session"
 
@@ -278,6 +291,10 @@ class ActionSaveSession(Action):
         return []
     
 class ActionSaveEndSession(Action):
+    """ 
+        Save the session at the end of the dialog,
+        including the beliefs and attitude questions
+    """
     def name(self):
         return "action_save_end_session"
 
@@ -311,6 +328,11 @@ class ActionSaveEndSession(Action):
         return []
 
 def getPersonalizedActivitiesList(age_group, gender):
+    """ 
+        Return a personallized list of activities. 
+        Given the activity list from the excel, every item that 
+        has different gender and age-group than the user is removed from the list.
+    """
 
     df_act_copy = df_act.copy(True)
 
@@ -335,6 +357,10 @@ def getPersonalizedActivitiesList(age_group, gender):
 
 
 def get_user_activity_history(prolific_id):
+    """
+       Return a list of the user's previously done activities from the db
+       defined by the prolific_id
+    """
         
     conn = mysql.connector.connect(
         user=DATABASE_USER,
@@ -357,6 +383,9 @@ def get_user_activity_history(prolific_id):
 
 
 def get_all_users_activity_history():
+    """
+       Return a list of all users' previously done activities from the db
+    """
         
     conn = mysql.connector.connect(
         user=DATABASE_USER,
@@ -379,11 +408,12 @@ def get_all_users_activity_history():
 
 
 def random_action_selection(all_users_history):
+    """
+        Assign labels ["S","V","SE","RE"] to the all_users_history list and count the frequency of them.
+        Then choose the least frequently used action.
+        If there are many, choose randomly.
+    """
     
-    # get the main items for each list, i.e, [1,2,3]
-    all_users_history_main_items = [int(number) for number in all_users_history]
-
-
     # Define the labels and their corresponding value ranges
     label_ranges = {'S': range(1, 11), 'V': range(11, 19), 'SE': range(19, 26), 'RE': range(26, 30)}
 
@@ -416,7 +446,13 @@ def random_action_selection(all_users_history):
         chosen_label = random.choice(min_frequency_labels)
     return chosen_label
 
+
 def random_item_selection(least_frequent_action_selected, personalized_list, user_history_list):
+    """
+        Create a new list with items that the user can do (personalized_list) but
+        has not done before (user_history_list).
+        Then, given an action index (least_frequent_action_selected), randomly select one item from that list
+    """
     new_p_list = [x for x in personalized_list if x not in user_history_list]
 
     labels = []
@@ -439,6 +475,11 @@ def random_item_selection(least_frequent_action_selected, personalized_list, use
 
 
 def has_children(activity_chosen_index):
+    """
+        Check if an action consists of items (children). 
+        If true, return the index of chosen item. 
+        If there are many items (children), a random item is chosen.
+    """
     matches = []
 
     print(df_act['Number'].to_list())
@@ -453,7 +494,12 @@ def has_children(activity_chosen_index):
     else:
         return activity_chosen_index
 
+
 class ActionSaveActivityToDB(Action):
+    """ 
+        Save the completed activity's index and the user's response 
+        to the db (activity_history).
+    """
 
     def name(self) -> Text:
         return "action_save_activity_to_db"
@@ -488,6 +534,14 @@ class ActionSaveActivityToDB(Action):
 
 
 class ActionChooseActivity(Action):
+    """
+        Action that chooses the recommended activity to do.
+        Gets the user's personalized list, history and the all users' history
+        Computes, and returns the activity index [3, 4], and the activity's type of media.
+
+        If the chosen activity index has chidren [2.1, 2.2] return this item's index, 
+        and assign the activity's index to the 'user_input' slot.
+    """
         
     def name(self) -> Text:
         return "action_choose_activity"
@@ -517,7 +571,7 @@ class ActionChooseActivity(Action):
         chosen_activity_index = random_item_selection(random_action_selected, personalized_list, user_history_list)
 
         logging.info("Chosen activity index: " + str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Number'].values[0]))
-        #chosen_activity_index = 29           # only for testing, remove on production
+        chosen_activity_index = 6           # only for testing, remove on production
 
         # get the activity's type of media
         chosen_activity_media = str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Media'].values[0])
@@ -543,7 +597,13 @@ class ActionChooseActivity(Action):
                     SlotSet("chosen_activity_media", chosen_activity_media),
                     FollowupAction("action_text_activity")]
 
+
 class ActionTextActivity(Action):
+    """
+        If the recommended activity is of 'text' media, then the user's input is expected
+        If the chosen activity index is [1], then check if it has been selected in the past, 
+        and utter different text.
+    """
 
     def name(self) -> Text:
         return "action_text_activity"
@@ -581,7 +641,12 @@ class ActionTextActivity(Action):
         history_session_list.append(user_input)
         return []
 
-class ActionVidActActivity(Action):   
+
+class ActionVidActActivity(Action):
+    """
+        If the recommended activity is of 'video' media, 
+        then show the video.
+    """
 
     def name(self) -> Text:
         return "action_vid_act_activity"
@@ -598,6 +663,9 @@ class ActionVidActActivity(Action):
 
 
 def activityIsUserConditional(tracker):
+    """
+    If the chosen action index is [1] or [24], return the chidren-items of it.
+    """
     if (tracker.get_slot("u_input") == "Physical health"):
         chosen_activity_index = 1.1
     elif (tracker.get_slot("u_input") == "Heart diseases"):
@@ -623,20 +691,21 @@ def activityIsUserConditional(tracker):
 
 
 class ActionUserInput(Action):
+    """
+        Action called when the recommended activity has chidren.
+        In case the recommended action is [1] or [24], 
+        call activityIsUserConditional to show custom buttons
+    """
 
     def name(self) -> Text:
         return "action_user_input"
     
     def run(self, dispatcher, tracker, domain):
 
-        prolific_id = tracker.current_state()['sender_id']
-        round_num = tracker.get_slot("round_num")
-
         # in case of action no.1, the text is dependent on the user's answer
         if (tracker.get_slot("user_input") == 1 or tracker.get_slot("user_input") == 24):
             chosen_activity_index = activityIsUserConditional(tracker) 
         else: chosen_activity_index = tracker.get_slot("chosen_activity_index")
-
 
         logging.info("ActionUserInput chosen_activity_index: "+ str(chosen_activity_index))
 
@@ -646,6 +715,11 @@ class ActionUserInput(Action):
 
 
 class ValidateUserInputActivityForm(FormValidationAction):
+    """
+        Validation form to validate the user's input.
+        The user is required to input minimum 40 characters, or else
+        the bot utters to provide a longer answer.
+    """
     def name(self) -> Text:
         return 'validate_user_input_activity_form'
 

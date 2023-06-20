@@ -555,7 +555,9 @@ responses:
     - text: "For that, I would like to discuss with you some final questions."
   utter_email_reminder:
     - text: "Thanks for taking the time to talk to me and answering these questions.\nThis is the end of the session.\n
-      Please return to Prolific and enter the following completion code to register your submission: C1K9EV8X"
+      Please click on the link to register your submission:"
+  utter_prolific_link:
+    - text: https://app.prolific.co/submissions/complete?cc=C1K9EV8X
 
   utter_goodbye:
     - text: "I'll send you a message in about one week on Prolific with some last questions.\nGoodbye!"
