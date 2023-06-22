@@ -65,7 +65,7 @@ To access the db in DBeaver both locally and online:
 
 ## Dialog flow design
 
-![1687358878633](image/implementation-details/1687358878633.png)
+![1687444132415](image/README/1687444132415.png)
 
 * The dialog is split into 4 parts: **Start, PMT & Activity Recommendation, Beliefs & Attitude,** and **End**.
   * **Start:** The user is introduced to the chatbot, and given instructions about how to interact with it. The bot also gathers information about the user's mood.
@@ -157,7 +157,7 @@ There are 3 media of activities: text, video, activity (as described in the [Exc
 
 ### Database structure
 
-There are 2 tables: 
+There are 2 tables:
 
 * **sessiondata** with columns:
 
@@ -177,7 +177,6 @@ There are 2 tables:
 | intention_quitting_smoking | [0,10]              | How likely are you to quit smoking in the next 6 months?<br />0: Very unlikely, 10: Very likely                                                                                                                |
 | intention_doing_more_PA    | [0,10]              | How likely are you to become more physically active in the next 6 months?<br />0: Very unlikely, 10: Very likely                                                                                               |
 | intention_exploring_PA     | [0,10]              | How likely are you to explore physical activity as an aid for quitting smoking?<br />0: Very unlikely, 10: Very likely                                                                                         |
-
 
 * activity_history with columns:
 
