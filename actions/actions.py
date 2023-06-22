@@ -571,7 +571,7 @@ class ActionChooseActivity(Action):
         chosen_activity_index = random_item_selection(random_action_selected, personalized_list, user_history_list)
 
         logging.info("Chosen activity index: " + str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Number'].values[0]))
-        chosen_activity_index = 6           # only for testing, remove on production
+        #chosen_activity_index = 6           # only for testing, remove on production
 
         # get the activity's type of media
         chosen_activity_media = str(personal_act_df.loc[personal_act_df['Number'] == chosen_activity_index, 'Media'].values[0])

@@ -192,7 +192,6 @@ function doScaledTimeout(i, response, summed_timeout) {
 					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><iframe class="video" src="' + response_text[j] + '?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><div class="clearfix"></div>';												
 				}
 				else if(isWebLink(response_text[j])){
-					console.log("Hello")
 					var BotResponse = '<img class="botAvatar" src="/img/chatbot_picture.png"/><a class="botMsg link" href="' + response_text[j] + '" target="_blank">' + response_text[j] + '</a><div class="clearfix"></div>';													
 				}
 				else{
