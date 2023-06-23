@@ -65,7 +65,7 @@ To access the db in DBeaver both locally and online:
 
 ## Dialog flow design
 
-![1687444132415](Chatbot dialog flow.jpg)
+![1687515097468](image/README/1687515097468.png)
 
 * The dialog is split into 4 parts: **Start, PMT & Activity Recommendation, Beliefs & Attitude,** and **End**.
   * **Start:** The user is introduced to the chatbot, and given instructions about how to interact with it. The bot also gathers information about the user's mood.
