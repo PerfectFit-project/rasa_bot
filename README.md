@@ -63,9 +63,9 @@ To access the db in DBeaver both locally and online:
 
 - Make sure to set "allowPublicKeyRetrieval" to "true" in "Driver properties.
 
-## Dialog flow design
+## Dialog flow design 
 
-![1687515317902](image/README/1687515317902.png)
+![1687515317902](chatbot_dialog_flow.jpg)
 
 * The dialog is split into 4 parts: **Start, PMT & Activity Recommendation, Beliefs & Attitude,** and **End**.
   * **Start:** The user is introduced to the chatbot, and given instructions about how to interact with it. The bot also gathers information about the user's mood.
