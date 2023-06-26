@@ -48,7 +48,7 @@ PASSWORD=[db_password] docker-compose up --build
    - **Locally** from: http://localhost:3000/?userid=[prolificID_value]&a=[age_group_value]&g=[gender_value]
    - **Online** from: http://34.175.153.111:3000/?userid=[prolificID_value]&a=[age_group_value]&g=[gender_value]
      - [prolificID_value] is the prolificID,
-     - [age_group_value] is the user's age group and,
+     - [age_group_value] is the user's age group when <39, 40-49, 50-59 or > 60 and has values [39,49,59,60] and,
      - [gender_value] is the user's gender where male: 0 and female: 1.
 
 ## Database access
@@ -63,13 +63,13 @@ To access the db in DBeaver both locally and online:
 
 - Make sure to set "allowPublicKeyRetrieval" to "true" in "Driver properties.
 
-## Dialog flow design 
+## Dialog flow design
 
 ![1687515317902](chatbot_dialog_flow.jpg)
 
 * The dialog is split into 4 parts: **Start, PMT & Activity Recommendation, Beliefs & Attitude,** and **End**.
   * **Start:** The user is introduced to the chatbot, and given instructions about how to interact with it. The bot also gathers information about the user's mood.
-  * **PMT & Activity Recommendation:** The user is prompted to answer 4 PMT questions. Afterward, an activity is recommended which could involve: reading a text, watching a video, or doing a short mental activity. After that, the user is prompted to reflect on this proposed activity. This process (PMT & Activity Recommendation) is repeated a minimum 1 time and maximum 4 times, as we have 4 PMT constructs. The exact number of iterations is determined by the user's "good state". More on that in the section *Implementation details*. The recommended activity is also computed based on an algorithm explained in the section *Implementation details*.
+  * **PMT & Activity Recommendation:** The user is prompted to answer 4 PMT questions. Afterward, an activity is recommended which could involve: reading a text, watching a video, or doing a short mental activity. After that, the user is prompted to reflect on this proposed activity. This process (PMT & Activity Recommendation) is repeated a minimum 1 time and maximum 4 times, as we have 4 PMT constructs. The exact number of iterations is determined by the user's "good state". If the user reaches a "good state" before the 4th iteration, the dialog continues to the next part. More on that in the section *Implementation details*. The recommended activity is also computed based on an algorithm explained in the section *Implementation details*.
   * **Beliefs & Attitude:** At the end of the dialog, the user is prompted to answer 5 questions about their beliefs and attitude towards quitting smoking and doing more PA.
   * **End:** The conversation ends with the bot thanking the user and prompting them to click on a prolific link to complete participation.
 
@@ -97,9 +97,9 @@ Hence the algorithm to calculate the "good state" score is:
 		good_state = False
 ```
 
-The process **stops** when the user reaches a "good state" score, or when there are 4 iterations, because this is the number of all different PMT constructs.
+The process **stops** when the user reaches a "good state" score, or when there are 4 iterations of PMT questions, because this is the number of all different PMT constructs.
 
-This method is implemented by **ActionStartPMTQuestions** in the actions.py
+This method is implemented by **ActionCheckGoodState** in the actions.py
 
 ### PMT questions
 

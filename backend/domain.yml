@@ -928,7 +928,7 @@ actions:
 
 - validate_user_input_activity_form
 
-- action_start_PMT_questions
+- action_check_good_state
 - action_choose_activity
 - action_vid_act_activity
 - action_text_activity

@@ -92,7 +92,8 @@ class ActionDefaultFallbackEndDialog(Action):
         # End the dialog, which leads to a restart.
         return [FollowupAction('action_end_dialog')]
     
-class ActionStartPMTQuestions(Action):
+
+class ActionCheckGoodState(Action):
     """ 
         Start asking the PMT questions and providing an activity to do.
         Repeat this minimum 1 time, and maximum 4 times. The exact number of iterations is
@@ -100,7 +101,7 @@ class ActionStartPMTQuestions(Action):
         80% then the participant is in a 'good state'.
     """
     def name(self) -> Text:
-        return "action_start_PMT_questions"
+        return "action_check_good_state"
 
     def run(self, 
             dispatcher: CollectingDispatcher, 
@@ -112,15 +113,14 @@ class ActionStartPMTQuestions(Action):
         round_num += 1
 
         if round_num == 1:
-            return [SlotSet("round_num", round_num), FollowupAction("utter_state_question_intro")]
+            return [SlotSet("round_num", round_num), FollowupAction("utter_transition_new_activity")]
         else:
             good_state = (int(tracker.get_slot("state_V")) < -3) and (int(tracker.get_slot("state_S")) >= 8) and (int(tracker.get_slot("state_RE")) >= 3) and (int(tracker.get_slot("state_SE")) >= 8)
             logging.info("Good state: ", good_state)
             if (good_state) or round_num > 4:
                 return [FollowupAction("utter_intentions_attitude_intro")]
             else:
-                return [SlotSet("round_num", round_num), FollowupAction("utter_one_more_time")]
-
+                return [SlotSet("round_num", round_num), FollowupAction("utter_transition_new_activity")]
 
 
 def get_latest_bot_utterance(events) -> Optional[Any]:
@@ -285,7 +285,7 @@ class ActionSaveSession(Action):
 
         conn.close()
         
-        return []
+        return [FollowupAction("utter_one_more_time")]
     
 class ActionSaveEndSession(Action):
     """ 
@@ -313,8 +313,10 @@ class ActionSaveEndSession(Action):
         
         prolific_id = tracker.current_state()['sender_id']
         round_num = tracker.get_slot("round_num")
+        round_num += 1
         
-        slots_to_save = ["intention_using_PA", "attitude_using_PA", "intention_quitting_smoking", "intention_doing_more_PA", "intention_exploring_PA"]
+        slots_to_save = ["state_V", "state_S","state_RE", "state_SE",
+                         "intention_using_PA", "attitude_using_PA", "intention_quitting_smoking", "intention_doing_more_PA", "intention_exploring_PA"]
         for slot in slots_to_save:
             save_sessiondata_entry(cur, conn, prolific_id, round_num, 
                                    slot, tracker.get_slot(slot),
