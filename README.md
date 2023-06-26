@@ -91,8 +91,7 @@ A user is in a "good state" when the score of all PMT questions is over 80%. In 
 Hence the algorithm to calculate the "good state" score is:
 
 ```
-            good_state_score = state_V + state_S + state_RE + state_SE
-            if good_state_score/20 >= 0.8:
+            if ((state_V < -3) and (state_S >= 8) and (state_RE >= 3) and (state_SE >= 8)):
                 good_state = True
 	    else:
 		good_state = False
@@ -152,6 +151,7 @@ There are 3 media of activities: text, video, activity (as described in the [Exc
   * After uttering the parent's activity content (i.e. 1) with the **ActionTextActivity** method, and receiving the user's answer, the **ActionUserInput** method is called, to utter the child's activity content (i.e. 1.1).
   * Unlike with videos and activities, the **chosen_activity_index** slot is set to the index of the child action, and the **user_input** slot is set to the index of the parent action.
   * There is an exception for activities with index 1 and 24 where the bot's utterance depends on the user's answer (see **activityIsUserConditional** method).
+  * Similarly, for activities with index 3,5,16,29 the bot's utterance depends on the user's answer (see **ActionUserInput** method).
 * At the end, in all media (text, video, activity) the user is prompted to reflect or type in their thoughts of the recommended activity. For that the bot utters 3 alternatives set to the **utter_ask_user_input_activity_slot** slot.
 * If the user's answer is too short (configured to be minimum 40 characters) the user is asked to expand on their answer. The validation is implemented with the **validate_user_input_activity_slot** method.
 

@@ -114,11 +114,8 @@ class ActionStartPMTQuestions(Action):
         if round_num == 1:
             return [SlotSet("round_num", round_num), FollowupAction("utter_state_question_intro")]
         else:
-            good_state = False
-            good_state_score = int(tracker.get_slot("state_V")) + int(tracker.get_slot("state_S")) + int(tracker.get_slot("state_RE")) + int(tracker.get_slot("state_SE"))
-            logging.info("good_state_score:" + str(good_state_score))
-            if good_state_score/20 >= 0.8:
-                good_state = True
+            good_state = (int(tracker.get_slot("state_V")) < -3) and (int(tracker.get_slot("state_S")) >= 8) and (int(tracker.get_slot("state_RE")) >= 3) and (int(tracker.get_slot("state_SE")) >= 8)
+            logging.info("Good state: ", good_state)
             if (good_state) or round_num > 4:
                 return [FollowupAction("utter_intentions_attitude_intro")]
             else:
@@ -694,7 +691,9 @@ class ActionUserInput(Action):
     """
         Action called when the recommended activity has chidren.
         In case the recommended action is [1] or [24], 
-        call activityIsUserConditional to show custom buttons
+        call activityIsUserConditional to show custom buttons.
+        If the recommended action is [3,5,16,29] then the bot utter's
+        an additional message depending on the user's answer.
     """
 
     def name(self) -> Text:
@@ -704,7 +703,15 @@ class ActionUserInput(Action):
 
         # in case of action no.1, the text is dependent on the user's answer
         if (tracker.get_slot("user_input") == 1 or tracker.get_slot("user_input") == 24):
-            chosen_activity_index = activityIsUserConditional(tracker) 
+            chosen_activity_index = activityIsUserConditional(tracker)
+        elif ((tracker.get_slot("user_input") == 3 or tracker.get_slot("user_input") == 5
+              or tracker.get_slot("user_input") == 16 or tracker.get_slot("user_input") == 29)):
+                if (tracker.get_slot("u_input") == "yes"):
+                    dispatcher.utter_message(response="utter_response_to_yes")
+                elif (tracker.get_slot("u_input") == "no"):
+                    dispatcher.utter_message(response="utter_response_to_no")
+                chosen_activity_index = tracker.get_slot("chosen_activity_index")
+
         else: chosen_activity_index = tracker.get_slot("chosen_activity_index")
 
         logging.info("ActionUserInput chosen_activity_index: "+ str(chosen_activity_index))
