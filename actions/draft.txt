@@ -1,0 +1,17 @@
+        #child_activity_index = tracker.get_slot("chosen_activity_index")
+        user_input = tracker.get_slot("user_input")
+        logging.info("ActionTextActivity act_index:"+ str(user_input))
+
+        #text_content = df_act.loc[df_act['Number'] == user_input, 'Content'].values[0]
+
+        text_content = "Can you estimate how many deaths per year worldwide are caused by tobacco use?\n\n10%;25%;40%"
+        tt = text_content.split("\n")
+
+        buttons = []
+        for answer in tt[2].split(";"):
+                btn = {"title":' ' + answer + ' ', "payload": "/option1"}
+                buttons.append(btn)
+
+        #logging.info("Buttons:", buttons)
+        
+        dispatcher.utter_message(text=tt[0],buttons=buttons)

@@ -558,10 +558,10 @@ responses:
         - type: slot
           name: round_num
           value: 0
-      text: "Now, it seems that you already know about the benefits of physical activity in quitting smoking."
+      text: "Thanks for letting me know what you think about quitting smoking and physical activity as a type of free-time activity."
     - text: "Now we have talked about some free-time activities and quitting smoking. Physical activity is one type of free-time activity."
   utter_intentions_attitude_questions:
-    - text: "For that, I would like to ask you to rate some final questions."
+    - text: "For that, I would now like to ask you to rate 5 more statements."
   utter_email_reminder:
     - text: "Thanks for taking the time to talk to me and answering these questions.\nThis is the end of the session.\n
       Please click on the link to register your submission:"
