@@ -112,15 +112,13 @@ class ActionCheckGoodState(Action):
         round_num = tracker.get_slot("round_num")
         round_num += 1
 
-        if round_num == 1:
-            return [SlotSet("round_num", round_num), FollowupAction("utter_transition_new_activity")]
+        good_state = (int(tracker.get_slot("state_V")) < -3) and (int(tracker.get_slot("state_S")) >= 8) and (int(tracker.get_slot("state_RE")) >= 3) and (int(tracker.get_slot("state_SE")) >= 8)
+        logging.info("Good state: ", good_state)
+
+        if (good_state) or round_num > 4:
+            return [FollowupAction("utter_intentions_attitude_intro")]
         else:
-            good_state = (int(tracker.get_slot("state_V")) < -3) and (int(tracker.get_slot("state_S")) >= 8) and (int(tracker.get_slot("state_RE")) >= 3) and (int(tracker.get_slot("state_SE")) >= 8)
-            logging.info("Good state: ", good_state)
-            if (good_state) or round_num > 4:
-                return [FollowupAction("utter_intentions_attitude_intro")]
-            else:
-                return [SlotSet("round_num", round_num), FollowupAction("utter_transition_new_activity")]
+            return [SlotSet("round_num", round_num), FollowupAction("utter_transition_new_activity")]
 
 
 def get_latest_bot_utterance(events) -> Optional[Any]:

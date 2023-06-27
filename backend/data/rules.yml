@@ -60,15 +60,10 @@ rules:
 - rule: state questions session
   steps:
   - intent: confirm_intro_session
-  - action: action_start_PMT_questions
-
-- rule: start PMT questions
-  steps:
   - action: utter_state_question_intro
-  - action: utter_state_question_PMT_V   # comment this line for testing
-  #- action: utter_state_question_PMT_SE   # only for testing, or else remove it
+  - action: utter_state_question_PMT_V
 
-- rule: start PMT quwstions again
+- rule: start PMT questions again
   steps:
   - action: utter_one_more_time
   - action: utter_state_question_PMT_V
@@ -91,6 +86,10 @@ rules:
 - rule: end state answering
   steps:
   - intent: confirm_state_PMT_SE
+  - action: action_check_good_state
+
+- rule: propose activity
+  steps:
   - action: utter_transition_new_activity
   - action: action_choose_activity
 
@@ -120,7 +119,6 @@ rules:
   steps:
   - action: utter_cool
   - action: action_save_session
-  - action: action_start_PMT_questions
 
 - rule: intentions and attitude questions
   steps:
