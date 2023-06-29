@@ -69,7 +69,7 @@ To access the db in DBeaver both locally and online:
 
 * The dialog is split into 4 parts: **Start, PMT & Activity Recommendation, Beliefs & Attitude,** and **End**.
   * **Start:** The user is introduced to the chatbot, and given instructions about how to interact with it. The bot also gathers information about the user's mood.
-  * **PMT & Activity Recommendation:** The user is prompted to answer 4 PMT questions. Afterward, an activity is recommended which could involve: reading a text, watching a video, or doing a short mental activity. After that, the user is prompted to reflect on this proposed activity. This process (PMT & Activity Recommendation) is repeated a minimum 1 time and maximum 4 times, as we have 4 PMT constructs. The exact number of iterations is determined by the user's "good state". If the user reaches a "good state" before the 4th iteration, the dialog continues to the next part. More on that in the section *Implementation details*. The recommended activity is also computed based on an algorithm explained in the section *Implementation details*.
+  * **PMT & Activity Recommendation:** The user is prompted to answer 4 PMT questions. Afterward, an activity is recommended which could involve: reading a text, watching a video, or doing a short mental activity. After that, the user is prompted to reflect on this proposed activity. This process (PMT & Activity Recommendation) is repeated a minimum 1 time and maximum 4 times, as we have 4 PMT constructs. The exact number of iterations is determined by the user's "good state". If the user reaches a "good state" before the 4th iteration, the dialog continues to the next part (without activity recommendation). More on that in the section *Implementation details*. The recommended activity is also computed based on an algorithm explained in the section *Implementation details*.
   * **Beliefs & Attitude:** At the end of the dialog, the user is prompted to answer 5 questions about their beliefs and attitude towards quitting smoking and doing more PA.
   * **End:** The conversation ends with the bot thanking the user and prompting them to click on a prolific link to complete participation.
 
@@ -185,6 +185,8 @@ There are 2 tables:
 | Values  | [prolificID] | [1-4]     | [1-30]         | [the use's input in text format] |      |
 
 ** The activity_index can have integer (i.e. 1) or float values (i.e. 1,1) depending on the index of the activity (if it was a parent or child acitivity).
+
+** In case there was only one iteration (round_num = 1), there is no activity recommended, so there will be no record of the use found in the activity_history table.
 
 ### Restart/Timeout
 

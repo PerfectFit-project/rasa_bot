@@ -115,7 +115,7 @@ class ActionCheckGoodState(Action):
         good_state = (int(tracker.get_slot("state_V")) <= -3) and (int(tracker.get_slot("state_S")) >= 8) and (int(tracker.get_slot("state_RE")) >= 3) and (int(tracker.get_slot("state_SE")) >= 8)
         logging.info("Good state: ", good_state)
 
-        if (good_state) or round_num > 4:
+        if (good_state) or round_num > 3:
             return [FollowupAction("utter_intentions_attitude_intro")]
         else:
             return [SlotSet("round_num", round_num), FollowupAction("utter_transition_new_activity")]
@@ -275,7 +275,7 @@ class ActionSaveSession(Action):
         prolific_id = tracker.current_state()['sender_id']
         round_num = tracker.get_slot("round_num")
         
-        slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE"]
+        slots_to_save = ["state_V", "state_S","state_RE", "state_SE"]
         for slot in slots_to_save:
             save_sessiondata_entry(cur, conn, prolific_id, round_num, 
                                    slot, tracker.get_slot(slot),
@@ -313,7 +313,7 @@ class ActionSaveEndSession(Action):
         round_num = tracker.get_slot("round_num")
         round_num += 1
         
-        slots_to_save = ["state_V", "state_S","state_RE", "state_SE",
+        slots_to_save = ["mood", "state_V", "state_S","state_RE", "state_SE",
                          "intention_using_PA", "attitude_using_PA", "intention_quitting_smoking", "intention_doing_more_PA", "intention_exploring_PA"]
         for slot in slots_to_save:
             save_sessiondata_entry(cur, conn, prolific_id, round_num, 
