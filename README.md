@@ -311,7 +311,7 @@ To disable the user's input see this code in the **setBotResponse** function in 
 
 ```
 $('.usrInput').attr("disabled", true); //To disable the chatbox
-$(".usrInput").prop('placeholder', "Wait for Sam's response.");
+$(".usrInput").prop('placeholder', "Wait for Kim's response.");
 ```
 
 And to enable the user's input when needed see below (not very elegant code but it works)

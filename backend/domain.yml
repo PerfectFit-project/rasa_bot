@@ -231,7 +231,7 @@ responses:
 
   ### Intro first session
   utter_greet_first_time:
-  - text: "Hey there, I'm your virtual coach Sam."
+  - text: "Hey there, I'm your virtual coach Kim."
   utter_ask_user_input_activity_slot:
   - text: "Type here everything that comes to your mind, in about 2 sentences."
   - text: "What do you think about this information? Write your thoughts in about 2 sentences into the chat."

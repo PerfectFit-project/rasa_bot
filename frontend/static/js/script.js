@@ -116,7 +116,7 @@ function send(message) {
 function setBotResponse(response) {
 
 	$('.usrInput').attr("disabled", true); //To disable the chatbox
-	$(".usrInput").prop('placeholder', "Wait for Sam's response."); //The message visible for the user
+	$(".usrInput").prop('placeholder', "Wait for Kim's response."); //The message visible for the user
 	//display bot response after the number of miliseconds caputred by the variable 'delay_first_message'
 	var delay_first_message = 500;
 	if (response.length >=1) {
